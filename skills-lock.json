@@ -19,6 +19,12 @@
       "skillPath": ".agents/skills/impeccable/SKILL.md",
       "computedHash": "195e6037eb1b57620476505efbc3aa7828a73d45f9c63c01403684f08deaa1b2"
     },
+    "opendataloader-pdf": {
+      "source": "chujianyun/skills",
+      "sourceType": "github",
+      "skillPath": "skills/media/opendataloader-pdf/SKILL.md",
+      "computedHash": "27de75206f82733197edb1031b4261ee920abee90dde3449aa9dd6d11498f1c8"
+    },
     "pdf": {
       "source": "openai/skills",
       "sourceType": "github",
