@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "debug": {
+      "source": "vltansky/debug-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "dfa99c12cbd388de850fa58776d6ee01e4d4be2456a36b938c3613ed88a4d6c8"
+    },
     "systematic-debugging": {
       "source": "obra/superpowers",
       "sourceType": "github",
