@@ -19,6 +19,12 @@
       "skillPath": ".agents/skills/impeccable/SKILL.md",
       "computedHash": "195e6037eb1b57620476505efbc3aa7828a73d45f9c63c01403684f08deaa1b2"
     },
+    "pdf": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pdf/SKILL.md",
+      "computedHash": "cfbc539377088ca7e44a813b30c306327385bbd973cd7a721e1743f60837dd62"
+    },
     "systematic-debugging": {
       "source": "obra/superpowers",
       "sourceType": "github",
