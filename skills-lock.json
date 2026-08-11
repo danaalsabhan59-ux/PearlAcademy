@@ -7,6 +7,12 @@
       "skillPath": "SKILL.md",
       "computedHash": "dfa99c12cbd388de850fa58776d6ee01e4d4be2456a36b938c3613ed88a4d6c8"
     },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "4eabc66183767153e404b39d1b839b1c37f2d82d86f0a0d7e880a579d8d62336"
+    },
     "systematic-debugging": {
       "source": "obra/superpowers",
       "sourceType": "github",
