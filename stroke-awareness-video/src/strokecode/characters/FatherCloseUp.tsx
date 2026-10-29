@@ -76,7 +76,7 @@ export const FatherCloseUp: React.FC<{
         <>
           <P x={21} y={25} w={6} h={3} c={C.eyeWhite} />
           <P x={23} y={25} w={3} h={3} c={C.eye} />
-          <P x={21} y={25} w={6} h={Math.min(3, 1 + d)} c={C.skinShade} />
+          <P x={21} y={25} w={6} h={Math.min(2, 1 + Math.floor(d / 2))} c={C.skinShade} />
           <P x={33} y={25} w={6} h={3} c={C.eyeWhite} />
           <P x={35} y={25} w={3} h={3} c={C.eye} />
           <P x={33} y={24} w={6} h={1} c={C.skinShade} />

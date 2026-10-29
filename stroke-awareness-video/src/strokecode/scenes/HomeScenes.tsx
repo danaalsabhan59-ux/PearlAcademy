@@ -76,7 +76,8 @@ export const S01Opening: React.FC<{ t: number }> = ({ t }) => {
           dir="ltr"
           style={{
             fontFamily: PX_FONT,
-            fontSize: 92,
+            fontSize: 78,
+            whiteSpace: "nowrap",
             color: C.red,
             textShadow: `0 0 28px ${C.redGlow}, 6px 6px 0 #000`,
             opacity: l2,
@@ -166,7 +167,7 @@ export const S03Onset: React.FC<{ t: number }> = ({ t }) => {
           <HomeSet t={t} />
         </Stage>
       </Viewport>
-      <Bubble x={Math.min(head.x, 620)} y={head.y - 170} opacity={speak} width={380}>
+      <Bubble x={Math.min(head.x, 560)} y={head.y - 170} opacity={speak} width={380}>
         <BrokenSpeech t={t} count={9} />
       </Bubble>
     </>
@@ -230,8 +231,8 @@ export const S04Signs: React.FC<{ t: number }> = ({ t }) => {
 
   const smile = kf(t, [[B.smileAttempt, 0], [B.smileAttempt + 0.8, 1], [B.smileAttempt + 2.6, 1], [B.armTest - 0.3, 0.2]]);
   const closeCam = faceShot
-    ? { scale: kf(t, [[B.faceCloseUp, 1], [B.armTest, 1.12]]), cx: 30, cy: 34 }
-    : { scale: kf(t, [[B.speechTest, 1.06], [B.beFast, 1.18]]), cx: 30, cy: 38 };
+    ? { scale: kf(t, [[B.faceCloseUp, 0.96], [B.armTest, 1.04]]), cx: 30, cy: 32 }
+    : { scale: kf(t, [[B.speechTest, 0.98], [B.beFast, 1.06]]), cx: 30, cy: 34 };
   const armCam = { scale: kf(t, [[B.armTest, 1.65], [B.speechTest, 1.8]]), cx: 98, cy: 92 };
   const askBubble = window01(t, B.armTest + 0.1, B.armsUp + 0.9, 0.25);
   const son1Head = artToScreen(POS.son1.x + 4, POS.son1.y - 4, armCam);
@@ -409,7 +410,7 @@ export const S05Call: React.FC<{ t: number }> = ({ t }) => {
               <HouseExterior t={t} door={prog(t, B.paramedicsOut + 0.4, 0.6)} lights={drive} />
             </Layer>
             <Layer depth={1}>
-              <Ambulance x={200 - drive * 196} y={98} t={t} moving={drive > 0 && drive < 0.98} rearOpen={prog(t, B.paramedicsOut - 0.4, 0.4)} />
+              <Ambulance x={200 - drive * 184} y={98} t={t} moving={drive > 0 && drive < 0.98} rearOpen={prog(t, B.paramedicsOut - 0.4, 0.4)} />
               {t > B.paramedicsOut ? (
                 <>
                   <Stretcher x={70 + walk * 26} y={118} wheelPhase={Math.floor(t * 12)} />

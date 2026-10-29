@@ -180,10 +180,11 @@ export const TopCaption: React.FC<{
       }}
     >
       <div
+        dir={en ? "ltr" : "rtl"}
         style={{
           fontFamily: en ? PX_FONT : AR_FONT,
           fontWeight: 800,
-          fontSize: en ? 40 : 58,
+          fontSize: en ? 40 : typeof title === "string" && title.length > 26 ? 46 : 56,
           lineHeight: en ? 1.4 : 1.35,
           color: titleColor,
           textShadow: "4px 4px 0 #000",

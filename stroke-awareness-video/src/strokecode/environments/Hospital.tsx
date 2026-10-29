@@ -169,8 +169,8 @@ export const CTSuite: React.FC = () => (
       <P key={i} x={-20 + i * 20} y={110} w={1} h={90} c="#253755" />
     ))}
     {/* couch pedestal */}
-    <P x={56} y={104} w={44} h={14} c="#c3cad4" />
-    <P x={56} y={104} w={44} h={2} c="#e9edf2" />
+    <P x={60} y={94} w={40} h={24} c="#c3cad4" />
+    <P x={60} y={94} w={40} h={2} c="#e9edf2" />
   </>
 );
 
@@ -183,34 +183,36 @@ export const CTWindowGlass: React.FC = () => (
   </>
 );
 
-/** Couch top that slides into the gantry. */
+/** Couch top that slides into the gantry bore. */
 export const CTCouch: React.FC<{ x: number }> = ({ x }) => (
   <>
-    <P x={x} y={100} w={70} h={4} c="#e9edf2" />
-    <P x={x} y={103} w={70} h={1} c="#aab3bf" />
+    <P x={x} y={90} w={74} h={4} c="#e9edf2" />
+    <P x={x} y={93} w={74} h={1} c="#aab3bf" />
   </>
 );
 
-/** Gantry seen from the side, drawn in front of the couch. */
-export const CTGantry: React.FC<{ t: number; scanning: number }> = ({ t, scanning }) => (
-  <>
-    <P x={118} y={30} w={30} h={86} c="#e9edf2" />
-    <P x={114} y={44} w={4} h={58} c="#d6dce4" />
-    <P x={148} y={44} w={4} h={58} c="#d6dce4" />
-    <P x={118} y={30} w={30} h={3} c="#ffffff" />
-    <P x={146} y={30} w={2} h={86} c="#c3cad4" />
-    <P x={114} y={92} w={4} h={14} c="#1a2233" />
-    {/* rotating-scan indicator light band */}
-    <P x={126} y={40} w={14} h={62} c="#1a2233" />
-    {scanning > 0 ? (
-      <P x={126} y={40 + Math.round(((Math.sin(t * 9) + 1) / 2) * 58)} w={14} h={4} c={C.ice} o={scanning} />
-    ) : null}
-    <P x={126} y={40} w={14} h={62} c={C.ice} o={0.08 + 0.15 * scanning} />
-    <P x={122} y={34} w={6} h={3} c={scanning > 0 ? C.green : "#3a4458"} />
-    <P x={136} y={34} w={6} h={3} c={C.amber} o={0.7} />
-    <P x={112} y={112} w={42} h={4} c="#c3cad4" />
-  </>
-);
+/** Gantry ring seen from the front, centred on the bore; draw after the patient. */
+export const CT_BORE = { cx: 138, cy: 82, r: 15 };
+export const CTGantry: React.FC<{ t: number; scanning: number }> = ({ t, scanning }) => {
+  const { cx, cy, r } = CT_BORE;
+  const R = 36;
+  const ring = `M${cx - R} ${cy} a${R} ${R} 0 1 0 ${2 * R} 0 a${R} ${R} 0 1 0 ${-2 * R} 0 Z M${cx - r} ${cy} a${r} ${r} 0 1 1 ${2 * r} 0 a${r} ${r} 0 1 1 ${-2 * r} 0 Z`;
+  const a = t * 6;
+  return (
+    <>
+      <P x={cx - 30} y={cy + 28} w={60} h={10} c="#c3cad4" />
+      <path d={ring} fill="#e9edf2" fillRule="evenodd" />
+      <circle cx={cx} cy={cy} r={R - 3} fill="none" stroke="#d3d9e1" strokeWidth={1} />
+      <circle cx={cx} cy={cy} r={r + 2} fill="none" stroke={C.ice} strokeWidth={1.2} opacity={0.25 + 0.6 * scanning} />
+      {scanning > 0 ? (
+        <circle cx={cx + Math.cos(a) * (R - 8)} cy={cy + Math.sin(a) * (R - 8)} r={2} fill={C.ice} opacity={scanning} />
+      ) : null}
+      <P x={cx - 10} y={cy - R + 6} w={20} h={5} c="#0e1730" />
+      <P x={cx - 8} y={cy - R + 7} w={5} h={3} c={scanning > 0 ? C.green : "#3a4458"} />
+      <P x={cx + 3} y={cy - R + 7} w={5} h={3} c={C.amber} o={0.7} />
+    </>
+  );
+};
 
 /** Simplified, schematic axial brain slice (illustration, not a scan). */
 export const BrainIllustration: React.FC<{ x: number; y: number; sweep: number }> = ({ x, y, sweep }) => (

@@ -38,7 +38,12 @@
     "render": "npm run check:audio && remotion render StrokeAwareness out/stroke-awareness.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=320k --crf=16",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "sc:audio": "python3 scripts/generate_strokecode_audio.py",
+    "sc:preview": "remotion studio",
+    "sc:render": "remotion render StrokeCode out/stroke-code-world-stroke-day.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=320k --crf=18 --pixel-format=yuv420p",
+    "sc:render:muted": "remotion render StrokeCode out/stroke-code-world-stroke-day-muted.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --muted",
+    "sc:qc": "node scripts/qc_strokecode.mjs"
   },
   "allowScripts": {
     "esbuild": false

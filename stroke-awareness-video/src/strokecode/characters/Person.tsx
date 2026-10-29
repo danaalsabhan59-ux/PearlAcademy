@@ -256,9 +256,11 @@ export const Person: React.FC<{ x: number; y: number; look: Look; pose: Pose; fl
 
   const legs = pose.seated ? (
     <>
-      <P x={left} y={28} w={w} h={4} c={L.topShade} />
-      <P x={left + 1} y={32} w={6} h={18} c={longGarment ? L.top : L.pants} />
-      <P x={left + w - 7} y={32} w={6} h={18} c={longGarment ? L.top : L.pants} />
+      <P x={left - 1} y={28} w={w + 2} h={5} c={longGarment ? L.top : L.pants} />
+      <P x={left - 1} y={32} w={w + 2} h={1} c={longGarment ? L.topShade : L.pantsShade} />
+      <P x={left + 7} y={28} w={1} h={5} c={longGarment ? L.topShade : L.pantsShade} />
+      <P x={left + 1} y={33} w={6} h={17} c={longGarment ? L.top : L.pants} />
+      <P x={left + w - 7} y={33} w={6} h={17} c={longGarment ? L.top : L.pants} />
       <P x={left + 6} y={32} w={1} h={18} c={longGarment ? L.topShade : L.pantsShade} />
       <P x={left + w - 2} y={32} w={1} h={18} c={longGarment ? L.topShade : L.pantsShade} />
       <P x={left + 1} y={50} w={6} h={2} c={L.shoes} />

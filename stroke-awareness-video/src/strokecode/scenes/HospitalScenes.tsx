@@ -25,6 +25,7 @@ import {
   CTGantry,
   CTSuite,
   CTWindowGlass,
+  CT_BORE,
   EDCorridor,
   PixelText,
   ReadingRoom,
@@ -105,7 +106,10 @@ export const S06CodeStroke: React.FC<{ t: number }> = ({ t }) => {
   const stretcher = walker(t, B.stretcherIn, 2.4, -90, 6);
   const ctReady = prog(t, B.teamMobilizes + 1.4, 0.2);
   const tag = (start: number) => window01(t, start, sceneEndSec("s06CodeStroke") + 1, 0.3);
-  const screen = (ax: number, ay: number) => artToScreen(ax, ay, cam);
+  const screen = (ax: number, ay: number) => {
+    const p = artToScreen(ax, ay, cam);
+    return { x: Math.min(860, Math.max(220, p.x)), y: Math.max(700, p.y) };
+  };
   const docPose: Pose = still(t, 5, { walk: doc.walk });
   const handover = t > B.stretcherIn + 2.4;
 
@@ -236,9 +240,9 @@ export const S07Assessment: React.FC<{ t: number }> = ({ t }) => {
   const label = labels[step];
   const ends = [B.glucose, B.neuro, B.nihssLkw, sceneEndSec("s07Assessment") + 0.3];
   const cam = {
-    scale: kf(t, [[B.abcs, 1.3], [B.glucose, 1.45], [B.neuro, 1.45], [B.neuro + 0.6, 1.6], [B.nihssLkw, 1.6], [B.nihssLkw + 0.8, 1.2]]),
-    cx: kf(t, [[B.abcs, 84], [B.glucose, 92], [B.neuro, 78], [B.nihssLkw, 78], [B.nihssLkw + 0.8, 108]]),
-    cy: kf(t, [[B.abcs, 96], [B.glucose, 100], [B.neuro, 96], [B.nihssLkw + 0.8, 92]]),
+    scale: kf(t, [[B.abcs, 1.15], [B.glucose, 1.3], [B.neuro, 1.3], [B.neuro + 0.6, 1.45], [B.nihssLkw, 1.45], [B.nihssLkw + 0.8, 1.15]]),
+    cx: kf(t, [[B.abcs, 96], [B.glucose, 96], [B.neuro, 80], [B.nihssLkw, 80], [B.nihssLkw + 0.8, 104]]),
+    cy: kf(t, [[B.abcs, 92], [B.glucose, 98], [B.neuro, 100], [B.nihssLkw + 0.8, 92]]),
   };
   const monitorOn = prog(t, B.abcs + 1.0, 0.5);
   const glucoseDone = t > B.glucose + 2.3;
@@ -254,7 +258,7 @@ export const S07Assessment: React.FC<{ t: number }> = ({ t }) => {
     rightArm: step === 0 ? -58 : step === 1 ? -62 : -15,
     rightHand: step === 1 ? <Glucometer done={glucoseDone} /> : null,
   });
-  const strokeX = walker(t, B.nihssLkw - 1.0, 1.4, 200, 140);
+  const strokeX = walker(t, B.nihssLkw - 1.0, 1.4, 200, 128);
 
   return (
     <>
@@ -263,28 +267,27 @@ export const S07Assessment: React.FC<{ t: number }> = ({ t }) => {
         <Stage {...cam}>
           <Layer depth={0.85}>
             <ResusBay />
-            <BedsideMonitor x={124} y={20} t={t} on={monitorOn} />
+            <BedsideMonitor x={118} y={30} t={t} on={monitorOn} />
           </Layer>
           <Layer depth={1}>
-            <Person x={34} y={82} look={ED_DOCTOR} pose={docPose} />
-            <Stretcher x={58} y={126} />
-            <LyingPatient x={60} y={117} armLift={armLift} />
-            {/* ECG leads from patient to monitor */}
-            {monitorOn > 0 ? <path d="M92 118 Q120 80 140 52" stroke="#c9d2de" strokeWidth={0.6} fill="none" opacity={monitorOn} /> : null}
-            <Person x={116} y={84} look={NURSE} pose={nursePose} />
+            {/* staff stand behind the stretcher, at the bedside */}
+            <Person x={50} y={80} look={ED_DOCTOR} pose={docPose} />
+            <Person x={98} y={81} look={NURSE} pose={nursePose} />
             {t > B.nihssLkw - 1.0 ? (
-              <Person x={strokeX.x} y={82} look={STROKE_DOCTOR} pose={still(t, 6, { walk: strokeX.walk, rightArm: -40, rightHand: <Clipboard /> })} />
+              <Person x={strokeX.x} y={80} look={STROKE_DOCTOR} pose={still(t, 6, { walk: strokeX.walk, rightArm: -40, rightHand: <Clipboard /> })} />
             ) : null}
             {t > B.nihssLkw ? (
-              <Person x={166} y={82} look={SON1} pose={still(t, 1, { face: { mouth: "worried", worried: true, blink: blinkAt(t, 1), look: -1 }, headTurn: -1 })} />
+              <Person x={152} y={80} look={SON1} pose={still(t, 1, { face: { mouth: "worried", worried: true, blink: blinkAt(t, 1), look: -1 }, headTurn: -1 })} />
             ) : null}
+            <Stretcher x={50} y={124} />
+            <LyingPatient x={52} y={115} armLift={armLift} />
           </Layer>
         </Stage>
         {step === 1 ? (
           <div
             style={{
               position: "absolute",
-              right: 24,
+              left: 24,
               top: 24,
               width: 230,
               background: "rgba(6,10,26,0.92)",
@@ -306,7 +309,7 @@ export const S07Assessment: React.FC<{ t: number }> = ({ t }) => {
             style={{
               position: "absolute",
               right: 24,
-              top: 24,
+              bottom: 24,
               background: C.amber,
               color: "#14101f",
               padding: "12px 18px",
@@ -331,7 +334,7 @@ export const S08CT: React.FC<{ t: number }> = ({ t }) => {
   const reading = t >= B.ctReading;
   const slide = prog(t, B.ctTableIn, 2.4);
   const scanning = t > B.ctScanning && !reading ? prog(t, B.ctScanning, 0.4) : 0;
-  const couchX = 30 + slide * 52;
+  const couchX = 14 + slide * 64;
   const sweep = reading ? ((t - B.ctReading) / 2.2) % 1 : 0;
   const tech: Look = CT_TECH;
 
@@ -355,10 +358,15 @@ export const S08CT: React.FC<{ t: number }> = ({ t }) => {
               <CTWindowGlass />
             </Layer>
             <Layer depth={1}>
-              <CTCouch x={couchX} />
-              {/* patient lies head-first towards the gantry (mirrored) */}
-              <g transform={`translate(${couchX + 66} 0) scale(-1 1)`}>
-                <LyingPatient x={0} y={91} />
+              <clipPath id="boreClip">
+                <rect x={-20} y={0} width={CT_BORE.cx + 20} height={180} />
+              </clipPath>
+              <g clipPath="url(#boreClip)">
+                <CTCouch x={couchX} />
+                {/* patient lies head-first towards the gantry (mirrored: head on the right) */}
+                <g transform={`translate(${couchX + 66} 0) scale(-1 1)`}>
+                  <LyingPatient x={0} y={81} />
+                </g>
               </g>
               <CTGantry t={t} scanning={scanning} />
             </Layer>
@@ -504,7 +512,7 @@ export const S10Final: React.FC<{ t: number }> = ({ t }) => {
         <br />
         <span style={{ color: C.amberSoft }}>{text.s10.messageB}</span>
       </div>
-      <div style={{ fontFamily: AR_FONT, fontWeight: 700, fontSize: 40, color: C.grey, opacity: a(B.endCall) }}>{text.s10.action}</div>
+      <div style={{ fontFamily: AR_FONT, fontWeight: 800, fontSize: 42, color: "#dfe6f5", opacity: a(B.endCall) }}>{text.s10.action}</div>
       <div dir="ltr" style={{ fontFamily: PX_FONT, fontSize: 120, color: C.red, textShadow: `8px 8px 0 ${C.redDeep}`, opacity: a(B.endCall + 0.3), transform: `scale(${pulse})` }}>
         {text.s10.number}
       </div>
