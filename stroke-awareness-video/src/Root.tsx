@@ -1,4 +1,6 @@
 import { CalculateMetadataFunction, Composition } from "remotion";
+import { StrokeCode } from "./strokecode/compositions/StrokeCode";
+import { FPS, HEIGHT, TOTAL_FRAMES, WIDTH } from "./strokecode/data/timeline";
 import { StrokeVideo, StrokeVideoProps } from "./StrokeVideo";
 import { dialogue, timeline } from "./timeline";
 
@@ -21,15 +23,26 @@ const calculateMetadata: CalculateMetadataFunction<StrokeVideoProps> = ({
 
 export const RemotionRoot: React.FC = () => {
   return (
-    <Composition
-      id="StrokeAwareness"
-      component={StrokeVideo}
-      durationInFrames={Math.ceil(timeline.duration * dialogue.fps)}
-      fps={dialogue.fps}
-      width={1920}
-      height={1080}
-      defaultProps={{ visualCheck: false }}
-      calculateMetadata={calculateMetadata}
-    />
+    <>
+      <Composition
+        id="StrokeCode"
+        component={StrokeCode}
+        durationInFrames={TOTAL_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+        defaultProps={{ showSafeZones: false, muted: false }}
+      />
+      <Composition
+        id="StrokeAwareness"
+        component={StrokeVideo}
+        durationInFrames={Math.ceil(timeline.duration * dialogue.fps)}
+        fps={dialogue.fps}
+        width={1920}
+        height={1080}
+        defaultProps={{ visualCheck: false }}
+        calculateMetadata={calculateMetadata}
+      />
+    </>
   );
 };

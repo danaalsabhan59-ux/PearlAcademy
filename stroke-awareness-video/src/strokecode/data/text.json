@@ -1,0 +1,154 @@
+{
+  "title": {
+    "line1": "اليوم العالمي للسكتة الدماغية",
+    "line2": "STROKE CODE",
+    "line3": "كل دقيقة تفرق"
+  },
+  "hud": {
+    "home": "الفصل الأول — المنزل",
+    "hospital": "الفصل الثاني — المستشفى",
+    "date": "29 OCTOBER"
+  },
+  "s02": {
+    "lkwTime": "8:30 PM",
+    "lkwLabel": "آخر وقت كان فيه طبيعيًا",
+    "lkwTag": "LAST KNOWN WELL"
+  },
+  "s03": {
+    "weakHand": "ضعف مفاجئ في اليد اليمنى",
+    "caption": "كلامه أصبح غير واضح فجأة"
+  },
+  "s04": {
+    "faceEn": "FACE",
+    "faceAr": "اعوجاج الوجه",
+    "raiseArms": "ارفع يدينك",
+    "armEn": "ARM",
+    "armAr": "ضعف الذراع",
+    "speechEn": "SPEECH",
+    "speechAr": "اضطراب الكلام",
+    "beFast": [
+      {
+        "letter": "B",
+        "en": "Balance",
+        "ar": "اختلال مفاجئ في التوازن"
+      },
+      {
+        "letter": "E",
+        "en": "Eyes",
+        "ar": "تغيّر مفاجئ في الرؤية"
+      },
+      {
+        "letter": "F",
+        "en": "Face",
+        "ar": "اعوجاج الوجه"
+      },
+      {
+        "letter": "A",
+        "en": "Arms",
+        "ar": "ضعف الذراع"
+      },
+      {
+        "letter": "S",
+        "en": "Speech",
+        "ar": "اضطراب الكلام"
+      },
+      {
+        "letter": "T",
+        "en": "Time",
+        "ar": "اتصل بالإسعاف فورًا"
+      }
+    ],
+    "observed": "العلامات التي ظهرت على الأب",
+    "notAllNeeded": "علامة واحدة تكفي",
+    "actNow": "ظهور مفاجئ لهذه الأعراض؟ تصرّف فورًا."
+  },
+  "s05": {
+    "dialing": "جارٍ الاتصال",
+    "number": "997",
+    "service": "الإسعاف",
+    "msgSuspected": "اشتباه سكتة دماغية",
+    "msgLkw": "آخر وقت طبيعي: 8:30 مساءً",
+    "support": "ابقَ بجانبه — لا طعام ولا شراب ولا دواء",
+    "onTheWay": "الإسعاف في الطريق",
+    "callTitle": "اتصل بالإسعاف فورًا"
+  },
+  "s06": {
+    "preAlertTag": "EMS PRE-ALERT",
+    "suspected": "SUSPECTED ACUTE STROKE",
+    "code": "CODE STROKE ACTIVATED",
+    "explain": "كود السكتة الدماغية: مسار استجابة عاجلة لتقييم المريض وتسريع التشخيص والعلاج.",
+    "roles": {
+      "edPhysician": "طبيب الطوارئ",
+      "nurse": "التمريض",
+      "strokeTeam": "فريق السكتة",
+      "ct": "مسار الأشعة المقطعية",
+      "paramedics": "تسليم المسعفين"
+    },
+    "ctReady": "CT READY",
+    "preAlertAr": "إشعار مسبق من الإسعاف للطوارئ"
+  },
+  "s07": {
+    "abcs": "ABCs + Vital Signs",
+    "abcsAr": "مجرى الهواء والتنفس والدورة الدموية والعلامات الحيوية",
+    "glucose": "Blood Glucose",
+    "glucoseAr": "قياس السكر لاستبعاد ما يشبه السكتة",
+    "neuro": "Neurological Assessment — NIHSS",
+    "neuroAr": "تقييم عصبي مركّز",
+    "lkw": "Last Known Well",
+    "lkwAr": "تأكيد آخر وقت كان فيه طبيعيًا: 8:30 مساءً",
+    "nihssRows": [
+      "LOC",
+      "Gaze",
+      "Visual",
+      "Face",
+      "Arm",
+      "Leg",
+      "Ataxia",
+      "Sensory",
+      "Language",
+      "Dysarthria",
+      "Neglect"
+    ],
+    "checked": "CHECKED"
+  },
+  "s08": {
+    "ct": "NON-CONTRAST CT BRAIN",
+    "caption": "التصوير العاجل يساعد على استبعاد النزيف وتوجيه القرار العلاجي.",
+    "cta": "CTA عند الاشتباه بانسداد وعاء دموي كبير، وفق التقييم الطبي.",
+    "illustration": "رسم توضيحي — ليست صورة مريض حقيقية"
+  },
+  "s09": {
+    "inputs": [
+      {
+        "en": "CLINICAL",
+        "ar": "الفحص السريري"
+      },
+      {
+        "en": "IMAGING",
+        "ar": "التصوير"
+      },
+      {
+        "en": "TIME",
+        "ar": "الوقت"
+      }
+    ],
+    "ischemicOnly": "في السكتة الإقفارية (الجلطة):",
+    "ivt": "IV Thrombolysis",
+    "ivtAr": "للمرضى المؤهلين",
+    "ivtNote": "بعد استبعاد النزيف",
+    "evt": "Mechanical Thrombectomy",
+    "evtAr": "لحالات مختارة",
+    "evtNote": "انسداد وعاء دموي كبير",
+    "safety": "يعتمد العلاج على نوع السكتة، والتصوير، والوقت، ومعايير الأهلية.",
+    "title": "اختيار العلاج المناسب"
+  },
+  "s10": {
+    "line1": "اليوم العالمي للسكتة الدماغية",
+    "line2": "STROKE CODE",
+    "messageA": "السكتة الدماغية لا تنتظر…",
+    "messageB": "فلا تنتظر أنت.",
+    "action": "تعرّف على العلامات، واتصل بالإسعاف فورًا.",
+    "number": "997",
+    "final": "TIME IS BRAIN"
+  }
+}
