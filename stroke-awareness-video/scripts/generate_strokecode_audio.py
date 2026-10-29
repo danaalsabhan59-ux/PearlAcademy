@@ -83,8 +83,9 @@ def tv_ambience() -> np.ndarray:
 
 
 def clock_tick() -> np.ndarray:
-    out = np.zeros(int(4.0 * SR))
-    for k in range(4):
+    # Long enough for the whole cue, so the film never relies on runtime looping.
+    out = np.zeros(int(40.0 * SR))
+    for k in range(40):
         click = band(rng.standard_normal(int(0.025 * SR)), 1800, 7000) * env_exp(int(0.025 * SR), 0.004)
         body = sine(2600 if k % 2 == 0 else 2100, 0.025) * env_exp(int(0.025 * SR), 0.006)
         place(out, click + 0.5 * body, k * 1.0, 1.0)
@@ -116,8 +117,8 @@ def code_alert() -> np.ndarray:
 
 
 def monitor_beep() -> np.ndarray:
-    out = np.zeros(int(4.0 * SR))
-    for k in range(5):
+    out = np.zeros(int(18.0 * SR))
+    for k in range(22):
         place(out, beep(1000, 0.07), k * 0.8, 0.35)
     return out
 
