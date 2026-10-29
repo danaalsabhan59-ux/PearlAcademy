@@ -62,8 +62,8 @@ const RoleTag: React.FC<{ x: number; y: number; label: string; color: string; op
       color: "#fff",
       fontFamily: AR_FONT,
       fontWeight: 800,
-      fontSize: 26,
-      padding: "2px 12px",
+      fontSize: 30,
+      padding: "2px 14px",
       whiteSpace: "nowrap",
       boxShadow: "3px 3px 0 rgba(0,0,0,0.5)",
       zIndex: 15,
@@ -209,7 +209,7 @@ const NihssCard: React.FC<{ t: number }> = ({ t }) => (
       position: "absolute",
       left: 24,
       top: 24,
-      width: 290,
+      width: 330,
       background: "rgba(6,10,26,0.92)",
       boxShadow: `0 0 0 4px ${C.ice}`,
       padding: "14px 16px",
@@ -220,7 +220,7 @@ const NihssCard: React.FC<{ t: number }> = ({ t }) => (
     {text.s07.nihssRows.map((row, i) => {
       const done = t > B.neuro + 0.4 + i * 0.6;
       return (
-        <div key={row} style={{ display: "flex", justifyContent: "space-between", fontFamily: PX_FONT, fontSize: 13, color: "#fff", lineHeight: "22px" }}>
+        <div key={row} style={{ display: "flex", justifyContent: "space-between", fontFamily: PX_FONT, fontSize: 15, color: "#fff", lineHeight: "25px" }}>
           <span>{row}</span>
           <span style={{ color: done ? C.green : C.grey }}>{done ? "■" : "□"}</span>
         </div>
@@ -388,7 +388,7 @@ export const S08CT: React.FC<{ t: number }> = ({ t }) => {
       {reading ? (
         <div
           dir="rtl"
-          style={{ position: "absolute", left: 0, right: 0, top: 1440, textAlign: "center", fontFamily: AR_FONT, fontWeight: 700, fontSize: 26, color: C.grey, opacity: prog(t, B.ctReading + 0.3, 0.4) }}
+          style={{ position: "absolute", left: 0, right: 0, top: 1440, textAlign: "center", fontFamily: AR_FONT, fontWeight: 800, fontSize: 30, color: "#d5dcec", opacity: prog(t, B.ctReading + 0.3, 0.4) }}
         >
           {text.s08.illustration}
         </div>
@@ -423,7 +423,7 @@ export const S09Decision: React.FC<{ t: number }> = ({ t }) => {
       <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 800, fontSize: 36, color: "#fff", marginTop: 8 }}>
         {ar}
       </div>
-      <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 700, fontSize: 26, color: C.grey, marginTop: 4 }}>
+      <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 800, fontSize: 30, color: "#d5dcec", marginTop: 4 }}>
         {note}
       </div>
     </div>

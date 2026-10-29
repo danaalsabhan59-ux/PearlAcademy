@@ -16,7 +16,7 @@ export const LAYOUT = {
 };
 
 export const LOGOS = [
-  { src: "logos/majmaah-university.jpg", alt: "جامعة المجمعة — كلية الطب" },
+  { src: "logos/majmaah-university.png", alt: "جامعة المجمعة — كلية الطب" },
   { src: "logos/emergency-medicine-club.jpg", alt: "Emergency Club — نادي طب الطوارئ" },
   { src: "logos/student-council.jpg", alt: "المجلس الطلابي — كلية الطب" },
 ];
@@ -115,7 +115,7 @@ export const Hud: React.FC<{ chapter: string; progress: number; t: number; alert
         </svg>
         <div style={{ fontFamily: PX_FONT, fontSize: 22, color: C.white, letterSpacing: 1 }}>STROKE CODE</div>
       </div>
-      <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 700, fontSize: 30, color: C.amberSoft }}>
+      <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 800, fontSize: 32, color: C.amberSoft }}>
         {chapter}
       </div>
       <div style={{ position: "absolute", left: 0, bottom: 0, height: 5, width: `${progress * 100}%`, background: C.red }} />
@@ -259,7 +259,19 @@ export const MedLabel: React.FC<{
         </div>
       ) : null}
       {note ? (
-        <div dir="rtl" style={{ fontFamily: AR_FONT, fontWeight: 700, fontSize: 30, color: C.grey, textAlign: "center" }}>
+        <div
+          dir="rtl"
+          style={{
+            fontFamily: AR_FONT,
+            fontWeight: 800,
+            fontSize: 34,
+            lineHeight: 1.4,
+            color: "#dfe5f2",
+            textAlign: "center",
+            background: "rgba(6,10,26,0.85)",
+            padding: "4px 18px",
+          }}
+        >
           {note}
         </div>
       ) : null}

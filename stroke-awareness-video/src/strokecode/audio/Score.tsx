@@ -19,7 +19,11 @@ export const Score: React.FC = () => (
           durationInFrames={Math.round((m.end - m.start) * FPS)}
           volume={(f) => {
             const t = (from + f) / FPS;
-            return LEVELS.master * LEVELS.music * m.volume * windowGain(t, m.start, m.end, m.fadeIn, m.fadeOut);
+            const duck = (m.duck ?? []).reduce(
+              (g, d) => Math.min(g, 1 - (1 - d.level) * windowGain(t, d.start, d.end, 0.08, 0.6)),
+              1,
+            );
+            return LEVELS.master * LEVELS.music * m.volume * duck * windowGain(t, m.start, m.end, m.fadeIn, m.fadeOut);
           }}
         />
       );

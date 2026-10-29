@@ -339,7 +339,7 @@ const PhoneCloseUp: React.FC<{ t: number }> = ({ t }) => {
           fontFamily: AR_FONT,
         }}
       >
-        <div style={{ fontSize: 30, fontWeight: 700, opacity: 0.85 }}>{connected ? "● متصل" : text.s05.dialing}</div>
+        <div style={{ fontSize: 34, fontWeight: 800 }}>{connected ? "● متصل" : text.s05.dialing}</div>
         <div dir="ltr" style={{ fontFamily: PX_FONT, fontSize: 64, letterSpacing: 4 }}>
           {digits}
         </div>
