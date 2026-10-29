@@ -44,8 +44,9 @@
     "sc:render": "remotion render StrokeCode out/stroke-code-world-stroke-day.mp4 --codec=h264 --image-format=png --crf=12 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k",
     "sc:render:muted": "remotion render StrokeCode out/stroke-code-world-stroke-day-muted.mp4 --codec=h264 --image-format=png --crf=12 --x264-preset=slow --pixel-format=yuv420p --muted",
     "sc:qc": "node scripts/qc_strokecode.mjs",
-    "sc:music": "python3 scripts/generate_strokecode_chiptune.py",
-    "sc:music:electronic": "python3 scripts/generate_strokecode_music.py"
+    "sc:music": "python3 scripts/generate_strokecode_tension.py",
+    "sc:music:electronic": "python3 scripts/generate_strokecode_music.py",
+    "sc:music:chiptune": "python3 scripts/generate_strokecode_chiptune.py"
   },
   "allowScripts": {
     "esbuild": false
