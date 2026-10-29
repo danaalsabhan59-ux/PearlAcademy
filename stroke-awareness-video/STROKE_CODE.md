@@ -29,7 +29,7 @@ set the `showSafeZones` prop to `true` in the Studio props panel.
 ## Export
 
 ```bash
-npm run sc:render           # out/stroke-code-world-stroke-day.mp4        (H.264 + AAC 320 kbps)
+npm run sc:render           # out/stroke-code-world-stroke-day.mp4        (H.264 CRF 12, x264 slow, lossless PNG frames, AAC 320 kbps)
 npm run sc:render:muted     # out/stroke-code-world-stroke-day-muted.mp4  (H.264, no audio track)
 npm run sc:qc               # verifies 120 s / 3600 frames / 1080×1920 / codecs / audio not silent
 ```
@@ -48,7 +48,8 @@ If a machine has fewer CPU cores, add `-- --concurrency=2`.
 | Characters | `src/strokecode/characters/` (`cast.tsx` = looks, `Person.tsx` = rig) |
 | Sets | `src/strokecode/environments/` |
 | Scenes | `src/strokecode/scenes/` |
-| Regenerate the synthesised audio (needs `pip install numpy`) | `npm run sc:audio` |
+| Regenerate the score stems (needs `pip install numpy`) | `npm run sc:music` |
+| Regenerate the sound effects (needs `pip install numpy`) | `npm run sc:audio` |
 
 Sounds and actions both read from `BEATS`, so moving a beat keeps picture and sound in sync.
 
