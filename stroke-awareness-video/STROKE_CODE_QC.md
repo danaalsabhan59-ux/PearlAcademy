@@ -1,5 +1,21 @@
 # STROKE CODE — Quality-Control Report
 
+## Update — new score, official university logo, export quality
+
+| Check | Result |
+| --- | --- |
+| Soundtrack | ✅ Original electronic score, 4 stems; measured tempo 127.7 BPM (target 127.2); no vocals |
+| Energy curve | ✅ music RMS rises from −18.6 dB (intro) to −13.7 (home), −13.1 (signs and call) and −12.2 (CODE STROKE peak), holding to the end |
+| CODE STROKE peak | ✅ strongest drum onset at 63.595 s (scene beat 63.6 s); level jumps +21 dB; the alert tone dominates its band (45 % of energy vs 7 % later) |
+| Cup impact | ✅ music cuts 150 ms before impact; crash peak −0.2 dBFS vs groove peak −4.6 dBFS just before |
+| Clock ticks / siren / alerts | ✅ ticks every second after the cup; siren band energy rises ×5 in the ambulance shots; all effects use their original `BEATS` timings |
+| Loudness | ✅ −14.9 LUFS integrated, true peak −0.6 dBFS, no clipped samples |
+| University logo | ✅ extracted from the official PDF (vector, not redrawn); every background pixel in the rendered PNG frames is exactly #FFFFFF; in the decoded H.264 file the mean is 254.98 (only a few pixels next to logo edges drop to 250–254 from H.264 colour compression) |
+| All three logos visible | ✅ checked on 14 frames from 0 s to 119.96 s |
+| Export | ✅ 1080×1920, 30 fps, 3600 frames, 120.000 s, H.264 High (CRF 12, x264 slow, lossless PNG frames instead of JPEG), AAC 320 kbps |
+| Small Arabic text | ✅ role tags, notes and disclaimers raised to 30–34 px with higher contrast; wording unchanged |
+| Timing / story / characters / medical text | ✅ unchanged (only audio, logo, font sizes and encoder settings were edited) |
+
 Final files (rendered and verified in this environment):
 
 - `out/stroke-code-world-stroke-day.mp4` (H.264 + AAC 320 kbps, ~25 MB)
