@@ -24,7 +24,7 @@ FILM = 120.0
 N = int(FILM * SR)
 BEAT = 60 / 127.2
 T0 = 7.0 - 14 * BEAT  # ≈ 0.397 s
-CUP = 21.8  # the cup hits the floor: hard musical cut
+CUP = 21.65  # hard musical cut 150 ms before the cup hits the floor (21.8 s), so the crash lands in silence
 
 # Section boundaries in beats (see module docstring for the anchors).
 INTRO, HOME, BREAK_END, SIGNS, CALL, BUILD, DROP, CT, DECIDE, FINAL, END = (
