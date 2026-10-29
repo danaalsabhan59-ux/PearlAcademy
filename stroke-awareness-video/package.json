@@ -1,0 +1,45 @@
+{
+  "name": "stroke-awareness-video",
+  "version": "1.0.0",
+  "description": "فيديو توعوي عن السكتة الدماغية بأسلوب Pixel Art — Remotion + Edge TTS",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@fontsource/cairo": "^5.3.0",
+    "@remotion/cli": "4.0.539",
+    "@remotion/fonts": "4.0.539",
+    "@remotion/media": "4.0.539",
+    "@remotion/media-utils": "4.0.539",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.539",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "preview": "remotion studio",
+    "voices": "python3 scripts/generate_voices.py",
+    "voices:force": "python3 scripts/generate_voices.py --force",
+    "voices:audition": "python3 scripts/audition_voices.py",
+    "sfx": "python3 scripts/generate_sfx.py",
+    "check:audio": "python3 scripts/check_audio.py",
+    "render": "npm run check:audio && remotion render StrokeAwareness out/stroke-awareness.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=320k --crf=16",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

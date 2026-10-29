@@ -1,0 +1,137 @@
+{
+  "title": "علامات السكتة الدماغية — كل دقيقة مهمة",
+  "fps": 30,
+  "characters": {
+    "father": {
+      "name": "الأب",
+      "color": "#f2c14e",
+      "voice": "ar-SA-HamedNeural",
+      "rate": "-8%",
+      "pitch": "-6Hz",
+      "volume": "+0%"
+    },
+    "son": {
+      "name": "الابن",
+      "color": "#5fd068",
+      "voice": "ar-SA-ZariyahNeural",
+      "rate": "+4%",
+      "pitch": "+0Hz",
+      "volume": "+0%"
+    },
+    "narrator": {
+      "name": "الراوي",
+      "color": "#8ecbff",
+      "voice": "ar-SA-HamedNeural",
+      "rate": "-10%",
+      "pitch": "-2Hz",
+      "volume": "+0%"
+    },
+    "paramedic": {
+      "name": "المسعف",
+      "color": "#ff6b6b",
+      "voice": "ar-SA-HamedNeural",
+      "rate": "+2%",
+      "pitch": "+10Hz",
+      "volume": "+0%"
+    }
+  },
+  "scenes": [
+    {
+      "id": "match",
+      "title": "مباراة في الصالة",
+      "padStart": 2.5,
+      "padEnd": 1.2,
+      "lines": [
+        { "id": "m1", "speaker": "son", "text": "يُبَه شوف! الهجمة خطيرة... بيسجّل!", "pauseBefore": 0, "rate": "+8%" },
+        { "id": "m2", "speaker": "father", "text": "إيه والله، هالمرّة بتدخل. صدّقني.", "pauseBefore": 0.4 },
+        { "id": "m3", "speaker": "son", "text": "هدف! يا سلام، يا سلام!", "pauseBefore": 1.6, "rate": "+12%", "pitch": "+4Hz" },
+        { "id": "m4", "speaker": "father", "text": "يا ولدي... يدي... ما أحسّ فيها...", "pauseBefore": 1.2, "rate": "-28%", "pitch": "-10Hz" },
+        { "id": "m5", "speaker": "son", "text": "يُبَه؟! وش فيك؟ يُبَه، ردّ عليّ!", "pauseBefore": 1.4, "rate": "+10%", "pitch": "+6Hz" }
+      ]
+    },
+    {
+      "id": "fast",
+      "title": "العلامات السريعة",
+      "padStart": 1.0,
+      "padEnd": 1.0,
+      "lines": [
+        { "id": "n1", "speaker": "narrator", "text": "توقّف لحظة. ما تراه الآن قد يكون سكتة دماغية، وكلّ دقيقة لها ثمن.", "pauseBefore": 0 },
+        { "id": "n2", "speaker": "narrator", "text": "الوجه: اطلب منه أن يبتسم. هل مال أحد جانبي الوجه؟", "display": "١. الوجه: اطلب منه أن يبتسم. هل مال أحد جانبي الوجه؟", "pauseBefore": 0.8 },
+        { "id": "s_face", "speaker": "son", "text": "يُبَه، ابتسم لي...", "pauseBefore": 0.4, "rate": "-4%" },
+        { "id": "n3", "speaker": "narrator", "text": "الذراعان: اطلب منه أن يرفع ذراعيه. هل تسقط إحداهما؟", "display": "٢. الذراعان: اطلب منه أن يرفع ذراعيه. هل تسقط إحداهما؟", "pauseBefore": 1.4 },
+        { "id": "s_arms", "speaker": "son", "text": "ارفع يدينك الثنتين يُبَه!", "pauseBefore": 0.4 },
+        { "id": "n4", "speaker": "narrator", "text": "الكلام: هل صار كلامه ثقيلًا أو غير مفهوم؟", "display": "٣. الكلام: هل صار كلامه ثقيلًا أو غير مفهوم؟", "pauseBefore": 1.4 },
+        { "id": "f_speech", "speaker": "father", "text": "أنا... بخير... بس...", "pauseBefore": 0.4, "rate": "-35%", "pitch": "-12Hz" },
+        { "id": "n5", "speaker": "narrator", "text": "الوقت: إذا ظهرت أيّ علامة منها، اتّصل بالإسعاف فورًا.", "display": "٤. الوقت: إذا ظهرت أيّ علامة منها، اتّصل بالإسعاف فورًا.", "pauseBefore": 1.0 }
+      ]
+    },
+    {
+      "id": "call",
+      "title": "الاتصال بالإسعاف",
+      "padStart": 0.6,
+      "padEnd": 1.0,
+      "lines": [
+        { "id": "c1", "speaker": "paramedic", "text": "الإسعاف، تفضّل. وش الحالة؟", "pauseBefore": 6.4 },
+        { "id": "c2", "speaker": "son", "text": "أبوي فجأة ما يقدر يحرّك يده، ووجهه مايل، وكلامه ثقيل!", "pauseBefore": 0.4, "rate": "+8%" },
+        { "id": "c3", "speaker": "paramedic", "text": "هذي ممكن تكون أعراض سكتة دماغية. متى بدأت الأعراض بالضبط؟", "pauseBefore": 0.4 },
+        { "id": "c4", "speaker": "son", "text": "قبل خمس دقايق تقريبًا.", "pauseBefore": 0.3 },
+        { "id": "c5", "speaker": "paramedic", "text": "ممتاز إنك اتّصلت بسرعة. لا تعطيه أكل ولا موية ولا أيّ دواء، وخلّك جنبه وراقب تنفّسه. الفريق في الطريق.", "pauseBefore": 0.4, "rate": "-2%" }
+      ]
+    },
+    {
+      "id": "ambulance",
+      "title": "وصول الإسعاف",
+      "padStart": 4.0,
+      "padEnd": 0.8,
+      "lines": [
+        { "id": "a1", "speaker": "paramedic", "text": "وصلنا. أحسنت يا بطل، سرعتك ممكن تفرق في حياة أبوك.", "pauseBefore": 0 },
+        { "id": "a2", "speaker": "narrator", "text": "في السكتة الدماغية، الوقت يساوي الدماغ. كلّ دقيقة تأخير يخسر فيها الدماغ ملايين الخلايا العصبية.", "pauseBefore": 1.2 }
+      ]
+    },
+    {
+      "id": "outro",
+      "title": "الخاتمة",
+      "padStart": 0.6,
+      "padEnd": 3.0,
+      "lines": [
+        { "id": "o1", "speaker": "narrator", "text": "عند ظهور أيّ علامة، اتّصل فورًا على تسعة تسعة سبعة.", "display": "عند ظهور أيّ علامة، اتّصل فورًا على 997", "pauseBefore": 0 },
+        { "id": "o2", "speaker": "narrator", "text": "اعرف العلامات... وأنقذ حياة.", "pauseBefore": 0.8, "rate": "-16%" }
+      ]
+    }
+  ],
+  "sfx": [
+    { "id": "crowd", "src": "audio/sfx/crowd-loop.mp3", "from": { "scene": "match" }, "to": { "line": "m4", "offset": 2.0 }, "loop": true, "volume": 0.45, "fadeIn": 1.5, "fadeOut": 1.5, "duck": true },
+    { "id": "goal", "src": "audio/sfx/goal-cheer.mp3", "from": { "line": "m3", "offset": -0.9 }, "volume": 0.6, "duck": false },
+    { "id": "cup", "src": "audio/sfx/cup-crash.mp3", "from": { "line": "m4", "edge": "end", "offset": 0.15 }, "volume": 0.95, "duck": false },
+    { "id": "heartbeat-1", "src": "audio/sfx/heartbeat-loop.mp3", "from": { "line": "m4", "edge": "end", "offset": 0.6 }, "to": { "scene": "fast", "offset": 2.0 }, "loop": true, "volume": 0.8, "fadeIn": 0.6, "fadeOut": 1.2, "duck": true },
+    { "id": "heartbeat-2", "src": "audio/sfx/heartbeat-loop.mp3", "from": { "line": "f_speech" }, "to": { "line": "n5", "edge": "end" }, "loop": true, "volume": 0.55, "fadeIn": 0.8, "fadeOut": 1.0, "duck": true },
+    { "id": "phone", "src": "audio/sfx/phone-call.mp3", "from": { "scene": "call", "offset": 0.4 }, "volume": 0.75, "duck": false },
+    { "id": "siren", "src": "audio/sfx/siren.mp3", "from": { "line": "c5", "edge": "end", "offset": -3.0 }, "to": { "line": "a1", "offset": 1.5 }, "volume": 0.6, "fadeIn": 0.5, "fadeOut": 2.0, "duck": true }
+  ],
+  "music": {
+    "calm": { "src": "audio/music/calm-pad.mp3", "volume": 0.32 },
+    "tension": { "src": "audio/music/tension.mp3", "volume": 0.5 },
+    "tensionSections": [
+      { "from": { "line": "m4" }, "to": { "scene": "fast", "offset": 2.5 } },
+      { "from": { "scene": "call" }, "to": { "line": "a1", "edge": "end" } }
+    ],
+    "fadeIn": 2.0,
+    "fadeOut": 3.0,
+    "crossfade": 1.5
+  },
+  "ducking": {
+    "level": 0.3,
+    "attack": 0.15,
+    "release": 0.5
+  },
+  "visualEvents": {
+    "goalScored": { "line": "m3", "offset": -1.0 },
+    "strokeStart": { "line": "m4" },
+    "cupDrop": { "line": "m4", "edge": "end", "offset": -0.2 },
+    "sonStands": { "line": "m5" },
+    "faceDroop": { "line": "s_face", "edge": "end", "offset": 0.2 },
+    "armDrop": { "line": "s_arms", "edge": "end", "offset": 0.3 },
+    "ambulanceArrives": { "scene": "ambulance", "offset": 0.2 },
+    "doorOpens": { "scene": "ambulance", "offset": 3.2 }
+  }
+}
