@@ -6,7 +6,7 @@ import { scene } from "../data/timeline";
 /**
  * Sound effects only — no music, no voices. Professional recorded effects from
  * Mixkit (Mixkit Sound Effects Free License; sources in public/basira/audio/mixkit/SOURCES.json),
- * softened in public/basira/audio/mixkit-soft/ (gentle low-pass, 10 ms fade-in, −4 dB). Each cue is placed so the sound's PEAK lands on its
+ * softened in public/basira/audio/mixkit-soft/ (gentle low-pass, 10 ms fade-in, −4 dB); final mix ≈ −28 LUFS. Each cue is placed so the sound's PEAK lands on its
  * visual event (`peak` = frames from file start to its loudest point).
  */
 type Sound = keyof typeof PEAK;

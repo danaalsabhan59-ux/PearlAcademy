@@ -47,7 +47,7 @@ npm run basira:mobile:sfx      # regenerate the soft sound effects (needs numpy)
 - **Source:** professional recorded effects from **Mixkit** (`public/basira/audio/mixkit/`), used under the *Mixkit Sound Effects Free License*: free for commercial and non-commercial projects, with no attribution required.
 - **Sources list:** `public/basira/audio/mixkit/SOURCES.json` gives each file's Mixkit ID, title and original URL.
 - **Preparation:** each file has its leading silence trimmed, a short fade-out and peak normalisation.
-- **Softened copies:** the video uses `public/basira/audio/mixkit-soft/`, with a gentle low-pass, a 10 ms fade-in and −4 dB. The cue list is sparse (27 quiet cues, with no repeats back-to-back), and no extra gain is added at the end.
+- **Softened copies:** the video uses `public/basira/audio/mixkit-soft/`, with a gentle low-pass, a 10 ms fade-in and −4 dB. The cue list is sparse (27 quiet cues, with no repeats back-to-back), and the final mix is about −28 LUFS (+7 dB in `scripts/finish_basira_mobile.sh`).
 - **Placement:** in `src/basira/mobile/MobileAudio.tsx`, each sound is placed so its peak lands on its visual event: whoosh/sweep on transitions, typing on typed text, paper on slides, page turn on the flashcard flip, a software sound when the PDF opens, a mouse click for the search pointer, a confirmation for correct answers, a check sound for steps, a UI zoom for the title, and a short intro-transition sweep for the closing logo.
 - The earlier synthesised effects (`m-*.mp3`) are kept but no longer used.
 
