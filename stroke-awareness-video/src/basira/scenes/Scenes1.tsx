@@ -2,7 +2,7 @@ import React from "react";
 import { cardRect } from "../data/layout";
 import text from "../data/text.json";
 import { scene } from "../data/timeline";
-import { Card, Kinetic } from "../components/Frame";
+import { Card, Kinetic, Typewriter } from "../components/Frame";
 import { Cards, Chat, Check, Code, Doc, HeartPulse, Notebook, Palette, Search, Stethoscope, User } from "../components/Icons";
 import { lerp, pop, ramp, T } from "../theme";
 
@@ -109,8 +109,6 @@ export const Intro: React.FC<{ f: number }> = ({ f }) => {
 export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) => {
   const t = text.chatgpt;
   const chatOut = ramp(lf, 112, 14);
-  const words = t.question.split(" ");
-  const typed = Math.min(words.length, Math.max(0, Math.floor((lf - 18) / 4)));
   const thinking = lf > 52 && lf < 68;
   const mcqIn = pop(f, scene("chatgpt").start + 116, 15, 150);
   const mcqOut = ramp(lf, 168, 12);
@@ -149,8 +147,7 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
             opacity: lf > 16 ? 1 : 0,
           }}
         >
-          {words.slice(0, Math.max(1, typed)).join(" ")}
-          {typed < words.length && Math.floor(lf / 6) % 2 === 0 ? <span style={{ color: T.cyan }}>|</span> : null}
+          <Typewriter text={t.question} frame={lf} start={18} perFrame={1.3} />
         </div>
         {thinking ? (
           <div style={{ position: "absolute", top: 300, left: 40, display: "flex", gap: 10 }}>
@@ -165,7 +162,7 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
             return (
               <div key={line} style={{ display: "flex", alignItems: "center", gap: 16, opacity: Math.min(1, a), transform: `translateX(${(1 - a) * -40}px)` }}>
                 <div style={{ width: 12, height: 12, borderRadius: 6, background: T.teal, flexShrink: 0 }} />
-                <span style={{ fontSize: 38, fontWeight: 500, color: T.text }}>{line}</span>
+                <Typewriter text={line} frame={lf} start={68 + i * 10} perFrame={2.6} caret={false} style={{ fontSize: 38, fontWeight: 500, color: T.text }} />
               </div>
             );
           })}

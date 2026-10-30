@@ -414,3 +414,33 @@ export const SideText: React.FC<{
     </div>
   );
 };
+
+// ---------------------------------------------------------- typewriter
+const segmenter = new Intl.Segmenter("ar", { granularity: "grapheme" });
+const graphemes = (s: string) => Array.from(segmenter.segment(s), (g) => g.segment);
+
+/**
+ * Letter-by-letter reveal for Arabic. Splits on grapheme clusters so diacritics
+ * (e.g. shadda) stay with their letter; the visible prefix is one text run, so the
+ * browser shapes and joins the letters exactly as typed text would look.
+ */
+export const Typewriter: React.FC<{
+  text: string;
+  frame: number;
+  start: number;
+  perFrame?: number;
+  caret?: boolean;
+  style?: React.CSSProperties;
+}> = ({ text, frame, start, perFrame = 1.5, caret = true, style }) => {
+  const g = graphemes(text);
+  const n = Math.max(0, Math.min(g.length, Math.floor((frame - start) * perFrame)));
+  const typing = n > 0 && n < g.length;
+  return (
+    <span dir="rtl" style={style}>
+      {g.slice(0, n).join("")}
+      {caret && typing && Math.floor(frame / 5) % 2 === 0 ? <span style={{ color: T.cyan }}>▍</span> : null}
+    </span>
+  );
+};
+
+export const typedDone = (text: string, start: number, perFrame = 1.5) => start + Math.ceil(graphemes(text).length / perFrame);

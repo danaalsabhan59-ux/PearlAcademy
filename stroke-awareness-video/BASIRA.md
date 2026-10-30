@@ -1,5 +1,48 @@
 # الذكاء الاصطناعي في الطب | أدوات تغيّر طريقة تعلّمك — نادي بصيرة
 
+## Vertical mobile version + poster (current deliverables)
+
+| File | What |
+| --- | --- |
+| `out/basirah/basirah-ai-mobile.mp4` | Composition `BasiraMobile`: 1080×1920, 30 fps, 1800 frames (60 s). Sound effects only, with no music and no voices |
+| `out/basirah/basirah-ai-poster.png` | Poster page 1 (the six tool sections), 1080×1920 (`BasiraPosterTools`) |
+| `out/basirah/basirah-ai-poster-2-prompts.png` | Poster page 2 (ready-made prompts + responsible use) (`BasiraPosterPrompts`) |
+| `out/basirah/*@2x.png` | Both pages at 2160×3840 |
+| `out/basirah/basirah-ai-poster.pdf` | Both pages, lossless, 2160×3840 at 300 dpi |
+| `out/basirah/basirah-ai-poster-source.zip` | Editable poster source (`src/basira/poster/`, shared theme, icons, logos, fonts) |
+
+```bash
+npm run basira:mobile:render   # vertical video (pass --browser-executable etc. after --)
+npm run basira:poster          # poster PNGs (see src/basira/poster/README.md for 2× + PDF)
+npm run basira:mobile:sfx      # regenerate the soft sound effects (needs numpy)
+```
+
+**Vertical layout** (`src/basira/mobile/`):
+- **Top:** a small logo bar (y 160–246), then the tool name and tagline.
+- **Middle:** the interactive panel (920×767).
+- **Bottom:** one short benefit at a time.
+- **Safe zones:** content stays inside x ≤ 990 and y ≤ 1560, clear of the Reels/TikTok caption area and icon rail.
+- Set the `showSafeZones` prop to see the guides.
+
+**Varied tool transitions:**
+- **Morph:** card → chat window, infographic → lecture page, answer line → search bar.
+- **3D flip:** NotebookLM, flashcards.
+- **Iris:** Canva + Gamma.
+- **Zoom-through:** clinical training.
+
+**Motion details:**
+- Letter-by-letter Arabic typing (grapheme-safe, letters stay joined) for the chat question and answers, the search query and the clinical dialogue.
+- An opening PDF with highlighted lines.
+- A search pointer that clicks a study.
+- Flashcard flip.
+- Lecture → slides → app.
+
+**Audio:** only soft, non-musical effects (`public/basira/audio/m-*.mp3`), cued in `src/basira/mobile/MobileAudio.tsx`, with silence between events.
+
+---
+
+## Original landscape version
+
 A 60-second Arabic motion-graphics video (1920×1080, 30 fps, 1800 frames) for Basira Club,
 built entirely in code with Remotion, React, TypeScript, SVG and CSS. The only external
 assets are the three official logos.

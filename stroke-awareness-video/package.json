@@ -50,7 +50,10 @@
     "sc:music:chiptune": "python3 scripts/generate_strokecode_chiptune.py",
     "basira:preview": "remotion studio",
     "basira:audio": "python3 scripts/generate_basira_audio.py",
-    "basira:render": "remotion render BasiraAI out/basira-ai-in-medicine.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k && bash scripts/master_audio.sh out/basira-ai-in-medicine.mp4"
+    "basira:render": "remotion render BasiraAI out/basira-ai-in-medicine.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k && bash scripts/master_audio.sh out/basira-ai-in-medicine.mp4",
+    "basira:mobile:sfx": "python3 scripts/generate_basira_mobile_sfx.py",
+    "basira:mobile:render": "remotion render BasiraMobile out/basirah/basirah-ai-mobile.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=256k",
+    "basira:poster": "remotion still BasiraPosterTools out/basirah/basirah-ai-poster.png --image-format=png && remotion still BasiraPosterPrompts out/basirah/basirah-ai-poster-2-prompts.png --image-format=png"
   },
   "allowScripts": {
     "esbuild": false

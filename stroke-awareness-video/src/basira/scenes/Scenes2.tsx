@@ -2,7 +2,7 @@ import React from "react";
 import { Img, staticFile } from "remotion";
 import text from "../data/text.json";
 import { scene } from "../data/timeline";
-import { Card, Kinetic } from "../components/Frame";
+import { Card, Kinetic, Typewriter } from "../components/Frame";
 import { Calendar, Check, Doc, HeartPulse, Notebook, Palette, Play, Search, Stethoscope, User } from "../components/Icons";
 import { lerp, pop, ramp, T } from "../theme";
 
@@ -33,6 +33,42 @@ export const NotebookContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
         <Notebook size={50} color={T.cyan} />
         <span style={{ fontSize: 30, fontWeight: 700, color: T.white }}>{t.workspace}</span>
       </Card>
+      {/* a PDF opens: the page unfolds and its key lines get highlighted */}
+      {lf < 40 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: 250,
+            top: 90,
+            width: 460,
+            height: 560,
+            borderRadius: 18,
+            background: "#f4f8fc",
+            boxShadow: "0 30px 80px rgba(0,0,0,0.5)",
+            transformOrigin: "top center",
+            transform: `perspective(1200px) rotateX(${(1 - ramp(lf, 2, 14)) * -75}deg) scale(${1 - 0.7 * ramp(lf, 28, 10)})`,
+            opacity: ramp(lf, 2, 6) * (1 - ramp(lf, 32, 8)),
+            padding: "26px 30px",
+            boxSizing: "border-box",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 22 }}>
+            <div dir="ltr" style={{ fontSize: 20, fontWeight: 700, color: "#fff", background: T.bad, borderRadius: 6, padding: "2px 8px" }}>
+              PDF
+            </div>
+            <span style={{ fontSize: 28, fontWeight: 700, color: T.bg }}>{t.files[0]}</span>
+          </div>
+          {Array.from({ length: 9 }, (_, k) => {
+            const hl = [1, 4, 6].includes(k) ? ramp(lf, 14 + k * 1.5, 8) : 0;
+            return (
+              <div key={k} style={{ position: "relative", height: 16, marginBottom: 22, width: `${92 - (k % 3) * 14}%` }}>
+                <div style={{ position: "absolute", inset: 0, borderRadius: 8, background: "#c9d6e3" }} />
+                <div style={{ position: "absolute", top: -6, bottom: -6, right: 0, width: `${hl * 100}%`, borderRadius: 6, background: "rgba(0,217,255,0.45)" }} />
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
       {/* PDFs fly into the workspace */}
       {t.files.map((name, i) => {
         const a = pop(f, s0 + 10 + i * 6, 15, 150);
@@ -126,8 +162,6 @@ export const NotebookContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
 export const ResearchContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) => {
   const t = text.research;
   const s0 = scene("research").start;
-  const words = t.query.split(" ");
-  const typed = Math.min(words.length, Math.max(0, Math.floor((lf - 10) / 4)));
   const barUp = ramp(lf, 44, 14);
   const toTable = ramp(lf, 112, 26);
   const card = (i: number) => ({ x: 640 - i * 310, y: 260, w: 290, h: 300 });
@@ -154,8 +188,7 @@ export const ResearchContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
       >
         <Search size={46} color={T.cyan} stroke={2.2} />
         <span style={{ fontSize: 36, fontWeight: 600, color: T.white }}>
-          {words.slice(0, Math.max(1, typed)).join(" ")}
-          {typed < words.length && Math.floor(lf / 6) % 2 === 0 ? <span style={{ color: T.cyan }}>|</span> : null}
+          <Typewriter text={t.query} frame={lf} start={10} perFrame={1.4} />
         </span>
       </div>
       {/* table header */}
@@ -172,9 +205,11 @@ export const ResearchContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
         const c = card(i);
         const r = row(i);
         const p = toTable;
+        const clicked = i === 1 ? ramp(lf, 92, 4) * (1 - ramp(lf, 108, 6)) : 0;
         return (
           <Card
             key={i}
+            glow={clicked}
             style={{
               left: lerp(c.x, r.x, p),
               top: lerp(c.y, r.y, p),
@@ -216,6 +251,17 @@ export const ResearchContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
           </Card>
         );
       })}
+      {/* search pointer: moves to study 2 and clicks */}
+      {lf > 70 && lf < 118 ? (
+        <div style={{ position: "absolute", left: lerp(820, 470, ramp(lf, 72, 18)), top: lerp(720, 420, ramp(lf, 72, 18)), opacity: Math.min(ramp(lf, 70, 4), 1 - ramp(lf, 112, 6)) }}>
+          <svg width={48} height={56} viewBox="0 0 24 28" style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.5))" }}>
+            <path d="M3 2 L3 22 L8.5 17 L12 25 L15.5 23.5 L12 15.8 L19 15.5 Z" fill="#fff" stroke={T.bg} strokeWidth={1.2} />
+          </svg>
+          {lf >= 92 ? (
+            <div style={{ position: "absolute", left: -26, top: -26, width: 56, height: 56, borderRadius: 28, border: `3px solid ${T.cyan}`, transform: `scale(${0.4 + ramp(lf, 92, 12) * 1.4})`, opacity: 1 - ramp(lf, 92, 12) }} />
+          ) : null}
+        </div>
+      ) : null}
       <div style={{ position: "absolute", bottom: 28, left: 0, right: 0, textAlign: "center", fontSize: 24, fontWeight: 600, color: T.warn, opacity: ramp(lf, 60, 10) }}>
         {t.illustrative}
       </div>
@@ -401,10 +447,9 @@ export const DesignContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =>
 export const ClinicalContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) => {
   const t = text.clinical;
   const s0 = scene("clinical").start;
-  const pipe = ramp(lf, 34, 16);
   return (
     <div style={{ position: "absolute", inset: 0, ...AR }}>
-      <Card style={{ left: 160, top: 50, width: 640, height: 320, padding: 30, transform: `translateY(${-pipe * 10}px)` }}>
+      <Card style={{ left: 160, top: 40, width: 640, height: 320, padding: 30 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
           <div style={{ width: 110, height: 110, borderRadius: 55, background: "rgba(0,217,255,0.14)", border: `2px solid ${T.cyan}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <User size={64} color={T.cyan} />
@@ -420,19 +465,26 @@ export const ClinicalContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
         </div>
         <div style={{ position: "absolute", left: 30, bottom: -26, padding: "8px 20px", borderRadius: 999, background: T.warn, color: T.bg, fontSize: 24, fontWeight: 700, boxShadow: "0 8px 20px rgba(0,0,0,0.35)" }}>{t.badge}</div>
       </Card>
+      {/* short exchange: the student asks, the virtual patient answers */}
+      <div style={{ position: "absolute", right: 60, top: 420, maxWidth: 560, padding: "14px 24px", borderRadius: "20px 20px 6px 20px", background: "rgba(0,217,255,0.16)", border: "1px solid rgba(0,217,255,0.45)", fontSize: 32, fontWeight: 600, color: T.white, opacity: ramp(lf, 18, 4) }}>
+        <Typewriter text={t.ask} frame={lf} start={20} perFrame={1.3} />
+      </div>
+      <div style={{ position: "absolute", left: 60, top: 500, maxWidth: 840, whiteSpace: "nowrap", padding: "14px 24px", borderRadius: "20px 20px 20px 6px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.2)", fontSize: 32, fontWeight: 600, color: T.text, opacity: ramp(lf, 38, 4) }}>
+        <Typewriter text={t.reply} frame={lf} start={40} perFrame={1.3} />
+      </div>
       {/* reasoning steps */}
       {t.steps.map((st, i) => {
-        const a = pop(f, s0 + 40 + i * 18, 14, 160);
-        const done = lf > 52 + i * 18;
+        const a = pop(f, s0 + 58 + i * 16, 14, 160);
+        const done = lf > 68 + i * 16;
         return (
           <React.Fragment key={st}>
-            <div style={{ position: "absolute", left: 640 - i * 300, top: 480, width: 260, height: 190, borderRadius: 20, border: `1.5px solid ${done ? T.good : T.border}`, background: done ? "rgba(59,227,154,0.10)" : "rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, opacity: Math.min(1, a), transform: `scale(${0.7 + 0.3 * Math.min(1, a)})` }}>
+            <div style={{ position: "absolute", left: 640 - i * 300, top: 618, width: 260, height: 170, borderRadius: 20, border: `1.5px solid ${done ? T.good : T.border}`, background: done ? "rgba(59,227,154,0.10)" : "rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, opacity: Math.min(1, a), transform: `scale(${0.7 + 0.3 * Math.min(1, a)})` }}>
               <div style={{ width: 56, height: 56, borderRadius: 28, background: done ? T.good : "rgba(0,217,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, color: T.bg }}>
                 {done ? <Check size={34} color={T.bg} stroke={3} /> : <span dir="ltr">{i + 1}</span>}
               </div>
               <span style={{ fontSize: 28, fontWeight: 700, color: T.white, textAlign: "center", padding: "0 12px" }}>{st}</span>
             </div>
-            {i < 2 ? <div style={{ position: "absolute", left: 610 - i * 300, top: 572, width: 30 * ramp(lf, 50 + i * 18, 8), height: 4, background: T.cyan }} /> : null}
+            {i < 2 ? <div style={{ position: "absolute", left: 610 - i * 300, top: 701, width: 30 * ramp(lf, 66 + i * 16, 8), height: 4, background: T.cyan }} /> : null}
           </React.Fragment>
         );
       })}

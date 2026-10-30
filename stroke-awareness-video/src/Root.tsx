@@ -1,5 +1,7 @@
-import { CalculateMetadataFunction, Composition } from "remotion";
+import { CalculateMetadataFunction, Composition, Still } from "remotion";
 import { BasiraAI } from "./basira/BasiraAI";
+import { BasiraMobile } from "./basira/mobile/BasiraMobile";
+import { PosterPrompts, PosterTools } from "./basira/poster/Poster";
 import * as BasiraTimeline from "./basira/data/timeline";
 import { StrokeCode } from "./strokecode/compositions/StrokeCode";
 import { FPS, HEIGHT, TOTAL_FRAMES, WIDTH } from "./strokecode/data/timeline";
@@ -26,6 +28,17 @@ const calculateMetadata: CalculateMetadataFunction<StrokeVideoProps> = ({
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Still id="BasiraPosterTools" component={PosterTools} width={1080} height={1920} />
+      <Still id="BasiraPosterPrompts" component={PosterPrompts} width={1080} height={1920} />
+      <Composition
+        id="BasiraMobile"
+        component={BasiraMobile}
+        durationInFrames={BasiraTimeline.TOTAL_FRAMES}
+        fps={BasiraTimeline.FPS}
+        width={1080}
+        height={1920}
+        defaultProps={{ showSafeZones: false }}
+      />
       <Composition
         id="BasiraAI"
         component={BasiraAI}
