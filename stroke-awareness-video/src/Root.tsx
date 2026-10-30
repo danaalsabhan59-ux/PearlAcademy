@@ -1,4 +1,6 @@
 import { CalculateMetadataFunction, Composition } from "remotion";
+import { BasiraAI } from "./basira/BasiraAI";
+import * as BasiraTimeline from "./basira/data/timeline";
 import { StrokeCode } from "./strokecode/compositions/StrokeCode";
 import { FPS, HEIGHT, TOTAL_FRAMES, WIDTH } from "./strokecode/data/timeline";
 import { StrokeVideo, StrokeVideoProps } from "./StrokeVideo";
@@ -24,6 +26,15 @@ const calculateMetadata: CalculateMetadataFunction<StrokeVideoProps> = ({
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="BasiraAI"
+        component={BasiraAI}
+        durationInFrames={BasiraTimeline.TOTAL_FRAMES}
+        fps={BasiraTimeline.FPS}
+        width={BasiraTimeline.WIDTH}
+        height={BasiraTimeline.HEIGHT}
+        defaultProps={{ muted: false }}
+      />
       <Composition
         id="StrokeCode"
         component={StrokeCode}
