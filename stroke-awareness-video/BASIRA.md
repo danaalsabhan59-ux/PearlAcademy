@@ -37,7 +37,12 @@ npm run basira:mobile:sfx      # regenerate the soft sound effects (needs numpy)
 - Flashcard flip.
 - Lecture → slides → app.
 
-**Audio:** only soft, non-musical effects (`public/basira/audio/m-*.mp3`), cued in `src/basira/mobile/MobileAudio.tsx`, with silence between events.
+**Audio:** sound effects only, with no music and no voices.
+- **Source:** professional recorded effects from **Mixkit** (`public/basira/audio/mixkit/`), used under the *Mixkit Sound Effects Free License*: free for commercial and non-commercial projects, with no attribution required.
+- **Sources list:** `public/basira/audio/mixkit/SOURCES.json` gives each file's Mixkit ID, title and original URL.
+- **Preparation:** each file has its leading silence trimmed, a short fade-out and peak normalisation.
+- **Placement:** in `src/basira/mobile/MobileAudio.tsx`, each sound is placed so its peak lands on its visual event: whoosh/sweep on transitions, typing on typed text, paper on slides, page turn on the flashcard flip, a software sound when the PDF opens, a mouse click for the search pointer, a confirmation for correct answers, a check sound for steps, a UI zoom for the title, and a short intro-transition sweep for the closing logo.
+- The earlier synthesised effects (`m-*.mp3`) are kept but no longer used.
 
 ---
 
