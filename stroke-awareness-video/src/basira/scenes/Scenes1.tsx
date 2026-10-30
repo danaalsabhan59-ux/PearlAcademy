@@ -136,14 +136,14 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
         <div
           style={{
             position: "absolute",
-            top: 110,
+            top: 120,
             right: 36,
-            maxWidth: 700,
-            padding: "18px 26px",
+            maxWidth: 760,
+            padding: "22px 30px",
             borderRadius: "22px 22px 6px 22px",
             background: "rgba(0,217,255,0.16)",
             border: "1px solid rgba(0,217,255,0.4)",
-            fontSize: 34,
+            fontSize: 40,
             fontWeight: 600,
             color: T.white,
             opacity: lf > 16 ? 1 : 0,
@@ -153,19 +153,19 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
           {typed < words.length && Math.floor(lf / 6) % 2 === 0 ? <span style={{ color: T.cyan }}>|</span> : null}
         </div>
         {thinking ? (
-          <div style={{ position: "absolute", top: 230, left: 40, display: "flex", gap: 10 }}>
+          <div style={{ position: "absolute", top: 300, left: 40, display: "flex", gap: 10 }}>
             {[0, 1, 2].map((i) => (
               <div key={i} style={{ width: 14, height: 14, borderRadius: 7, background: T.cyan, opacity: 0.3 + 0.7 * Math.abs(Math.sin((lf + i * 4) / 5)) }} />
             ))}
           </div>
         ) : null}
-        <div style={{ position: "absolute", top: 230, left: 36, right: 120, display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ position: "absolute", top: 290, left: 36, right: 90, display: "flex", flexDirection: "column", gap: 34 }}>
           {t.answer.map((line, i) => {
             const a = pop(f, scene("chatgpt").start + 68 + i * 9, 16, 160);
             return (
               <div key={line} style={{ display: "flex", alignItems: "center", gap: 16, opacity: Math.min(1, a), transform: `translateX(${(1 - a) * -40}px)` }}>
                 <div style={{ width: 12, height: 12, borderRadius: 6, background: T.teal, flexShrink: 0 }} />
-                <span style={{ fontSize: 32, fontWeight: 500, color: T.text }}>{line}</span>
+                <span style={{ fontSize: 38, fontWeight: 500, color: T.text }}>{line}</span>
               </div>
             );
           })}
@@ -175,7 +175,7 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
       {lf > 112 && lf < 182 ? (
         <div style={{ position: "absolute", top: 100, left: 40, right: 40, opacity: Math.min(1, mcqIn) * (1 - mcqOut), transform: `scale(${0.9 + 0.1 * mcqIn})` }}>
           <div style={{ fontSize: 26, fontWeight: 700, color: T.cyan, marginBottom: 10 }}>{t.mcqLabel}</div>
-          <div style={{ fontSize: 34, fontWeight: 700, color: T.white, marginBottom: 22 }}>{t.mcqQuestion}</div>
+          <div style={{ fontSize: 38, fontWeight: 700, color: T.white, marginBottom: 30 }}>{t.mcqQuestion}</div>
           {t.mcqOptions.map((o, i) => {
             const good = i === t.mcqCorrect;
             const a = pop(f, scene("chatgpt").start + 124 + i * 5, 16, 170);
@@ -186,13 +186,13 @@ export const ChatGPTContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =
                   display: "flex",
                   alignItems: "center",
                   gap: 16,
-                  padding: "14px 22px",
-                  marginBottom: 14,
+                  padding: "18px 24px",
+                  marginBottom: 20,
                   borderRadius: 16,
                   border: `1.5px solid ${correct && good ? T.good : "rgba(255,255,255,0.15)"}`,
                   background: correct && good ? "rgba(59,227,154,0.15)" : "rgba(255,255,255,0.04)",
                   opacity: Math.min(1, a) * (correct && !good ? 0.45 : 1),
-                  fontSize: 30,
+                  fontSize: 34,
                   fontWeight: 500,
                   color: T.text,
                 }}
@@ -250,10 +250,9 @@ export const ClaudeContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =>
   const t = text.claude;
   const toSlides = ramp(lf, 58, 40);
   const toApp = ramp(lf, 112, 34);
-  const scroll = Math.min(lf, 58) * 1.2;
   // document paragraph blocks → three slides (3 blocks each)
-  const docRect = (i: number) => ({ x: 270, y: 150 + i * 62 - scroll, w: 420 - (i % 3) * 60, h: 22 });
-  const slideOrigin = (k: number) => ({ x: 690 - k * 320, y: 260 });
+  const docRect = (i: number) => ({ x: 270, y: 170 + i * 62, w: 420 - (i % 3) * 60, h: 22 });
+  const slideOrigin = (k: number) => ({ x: 650 - k * 310, y: 260 });
   const blockInSlide = (i: number) => {
     const k = Math.floor(i / 3);
     const j = i % 3;

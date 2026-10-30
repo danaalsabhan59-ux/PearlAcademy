@@ -47,7 +47,10 @@
     "sc:qc": "node scripts/qc_strokecode.mjs",
     "sc:music": "python3 scripts/generate_strokecode_tension.py",
     "sc:music:electronic": "python3 scripts/generate_strokecode_music.py",
-    "sc:music:chiptune": "python3 scripts/generate_strokecode_chiptune.py"
+    "sc:music:chiptune": "python3 scripts/generate_strokecode_chiptune.py",
+    "basira:preview": "remotion studio",
+    "basira:audio": "python3 scripts/generate_basira_audio.py",
+    "basira:render": "remotion render BasiraAI out/basira-ai-in-medicine.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k && bash scripts/master_audio.sh out/basira-ai-in-medicine.mp4"
   },
   "allowScripts": {
     "esbuild": false

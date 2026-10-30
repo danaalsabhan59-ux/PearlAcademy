@@ -132,9 +132,9 @@ export const LogoBar: React.FC<{ frame: number; dim?: number }> = ({
         zIndex: 50,
       }}
     >
-      <Plate {...LOGOS.left} w={150} h={108} />
-      <Plate {...LOGOS.center} w={176} h={108} />
-      <Plate {...LOGOS.right} w={150} h={108} />
+      <Plate {...LOGOS.left} w={168} h={112} />
+      <Plate {...LOGOS.center} w={196} h={112} />
+      <Plate {...LOGOS.right} w={168} h={112} />
       <div
         style={{
           position: "absolute",

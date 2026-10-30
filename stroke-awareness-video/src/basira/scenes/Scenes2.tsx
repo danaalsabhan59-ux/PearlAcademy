@@ -12,6 +12,13 @@ const Skel: React.FC<{ w: number | string; h?: number; o?: number; c?: string; s
 );
 
 // ============================================================== NOTEBOOKLM
+const MAP_C = { x: 480, y: 640 };
+const MAP_NODES = [
+  { x: 800, y: 560 },
+  { x: 800, y: 730 },
+  { x: 160, y: 560 },
+  { x: 160, y: 730 },
+];
 export const NotebookContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) => {
   const t = text.notebooklm;
   const s0 = scene("notebooklm").start;
@@ -88,34 +95,27 @@ export const NotebookContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) 
           </Card>
         );
       })}
-      {/* simple knowledge map */}
-      {mapIn > 0 ? (
-        <svg width={960} height={300} style={{ position: "absolute", left: 0, top: 500, opacity: mapIn }}>
-          {[-300, -100, 100, 300].map((dx, k) => {
-            const draw = ramp(lf, 146 + k * 6, 16);
-            return <line key={k} x1={480} y1={150} x2={480 + dx * draw} y2={60 + (k % 2) * 180 * draw + (k % 2 ? 0 : 0)} stroke={T.cyan} strokeWidth={2.5} opacity={0.7} />;
-          })}
-        </svg>
-      ) : null}
+      {/* simple knowledge map: lines meet the node centres */}
       {mapIn > 0 ? (
         <>
-          <div style={{ position: "absolute", left: 360, top: 615, width: 240, height: 70, borderRadius: 35, background: T.cyan, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 700, color: T.bg, opacity: mapIn, transform: `scale(${0.7 + 0.3 * mapIn})` }}>
-            {t.mapCenter}
-          </div>
+          <svg width={960} height={800} style={{ position: "absolute", left: 0, top: 0, opacity: mapIn }}>
+            {MAP_NODES.map((p, k) => {
+              const d = ramp(lf, 146 + k * 6, 16);
+              return <line key={k} x1={MAP_C.x} y1={MAP_C.y} x2={lerp(MAP_C.x, p.x, d)} y2={lerp(MAP_C.y, p.y, d)} stroke={T.cyan} strokeWidth={3} opacity={0.75} />;
+            })}
+          </svg>
           {t.mapNodes.map((n, k) => {
-            const a = pop(f, s0 + 156 + k * 6, 14, 160);
-            const pos = [
-              { x: 660, y: 530 },
-              { x: 460, y: 720 },
-              { x: 240, y: 530 },
-              { x: 40, y: 720 },
-            ][k];
+            const a2 = pop(f, s0 + 156 + k * 6, 14, 160);
+            const p = MAP_NODES[k];
             return (
-              <div key={n} style={{ position: "absolute", left: pos.x + 40, top: pos.y + 8, width: 180, height: 56, borderRadius: 28, border: `1.5px solid ${T.teal}`, background: "rgba(25,214,197,0.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 600, color: T.white, opacity: Math.min(1, a), transform: `scale(${0.6 + 0.4 * Math.min(1, a)})` }}>
+              <div key={n} style={{ position: "absolute", left: p.x - 110, top: p.y - 30, width: 220, height: 60, borderRadius: 30, border: `1.5px solid ${T.teal}`, background: "#0b2236", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 600, color: T.white, opacity: Math.min(1, a2), transform: `scale(${0.6 + 0.4 * Math.min(1, a2)})` }}>
                 {n}
               </div>
             );
           })}
+          <div style={{ position: "absolute", left: MAP_C.x - 130, top: MAP_C.y - 36, width: 260, height: 72, borderRadius: 36, background: T.cyan, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 30, fontWeight: 700, color: T.bg, opacity: mapIn, transform: `scale(${0.7 + 0.3 * mapIn})` }}>
+            {t.mapCenter}
+          </div>
         </>
       ) : null}
     </div>
@@ -257,7 +257,7 @@ export const FlashcardsContent: React.FC<{ lf: number; f: number }> = ({ lf }) =
             <Calendar size={42} color={T.cyan} />
             <span style={{ fontSize: 32, fontWeight: 700, color: T.white }}>{t.calendar}</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 10, direction: "ltr" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 10, direction: "rtl" }}>
             {Array.from({ length: 35 }, (_, d) => {
               const review = [0, 2, 6, 13, 29].includes(d);
               const idx = [0, 2, 6, 13, 29].indexOf(d);
@@ -277,7 +277,7 @@ export const FlashcardsContent: React.FC<{ lf: number; f: number }> = ({ lf }) =
             })}
           </div>
           {/* memory strength: drops between reviews, resets higher each time */}
-          <svg width={480} height={190} style={{ marginTop: 22 }}>
+          <svg width={480} height={190} style={{ marginTop: 22, transform: "scaleX(-1)" }}>
             <path
               d="M0 20 C30 70 50 90 60 100 L60 20 C110 50 140 70 150 80 L150 20 C240 40 270 50 290 56 L290 20 C380 30 440 36 480 40"
               fill="none"
@@ -368,11 +368,11 @@ export const DesignContent: React.FC<{ lf: number; f: number }> = ({ lf, f }) =>
             const a = pop(f, s0 + 116 + i * 8, 14, 150);
             const float = Math.sin((lf + i * 10) / 12) * 6;
             const shapes = [
-              { w: 300, h: 190 },
+              { w: 260, h: 170 },
               { w: 200, h: 330 },
               { w: 230, h: 320 },
             ][i];
-            const x = [620, 360, 60][i];
+            const x = [650, 345, 40][i];
             return (
               <div key={name} style={{ position: "absolute", left: x, top: 180 + float, width: 280, display: "flex", flexDirection: "column", alignItems: "center", gap: 18, opacity: Math.min(1, a), transform: `translateY(${(1 - Math.min(1, a)) * 80}px)` }}>
                 <div style={{ width: shapes.w, height: shapes.h, borderRadius: 16, background: "linear-gradient(160deg, rgba(0,217,255,0.22), rgba(25,214,197,0.08))", border: `1.5px solid ${T.cyan}`, padding: 18, boxSizing: "border-box", display: "flex", flexDirection: "column", gap: 10 }}>
@@ -458,14 +458,14 @@ export const Outro: React.FC<{ f: number }> = ({ f }) => {
   const sweep = ramp(lf, 112, 18);
   const fadeOut = ramp(lf, 136, 14);
   const cx = 960;
-  const cy = 560;
+  const cy = 690;
   const n = 8;
   const nodes = Array.from({ length: n }, (_, i) => {
     const a = (i / n) * Math.PI * 2 - Math.PI / 2;
     const r = 330 * (1 - 0.15 * networkOut);
     const sx = [1700, 1500, 1200, 900, 600, 300, 200, 1800][i];
     const sy = [900, 950, 980, 960, 980, 940, 300, 400][i];
-    return { x: lerp(sx, cx + Math.cos(a) * r, gather), y: lerp(sy, cy + Math.sin(a) * r * 0.55, gather) };
+    return { x: lerp(sx, cx + Math.cos(a) * r, gather), y: lerp(sy, cy + Math.sin(a) * r * 0.5, gather) };
   });
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - fadeOut }}>
