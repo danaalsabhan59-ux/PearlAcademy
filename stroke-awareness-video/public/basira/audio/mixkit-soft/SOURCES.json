@@ -1,0 +1,86 @@
+{
+  "card": {
+    "mixkit_id": "2568",
+    "title": "Modern technology select",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2568/2568.wav",
+    "seconds": 0.2
+  },
+  "cards-burst": {
+    "mixkit_id": "2350",
+    "title": "Explainer video pops whoosh light pop",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2350/2350.wav",
+    "seconds": 1.3
+  },
+  "typing": {
+    "mixkit_id": "2843",
+    "title": "Chatting with a laptop",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2843/2843.wav",
+    "seconds": 1.6
+  },
+  "whoosh": {
+    "mixkit_id": "3115",
+    "title": "Short transition sweep",
+    "source": "https://assets.mixkit.co/active_storage/sfx/3115/3115.wav",
+    "seconds": 0.5
+  },
+  "whoosh-big": {
+    "mixkit_id": "2638",
+    "title": "Fast transitions swoosh",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2638/2638.wav",
+    "seconds": 1.3
+  },
+  "flip": {
+    "mixkit_id": "386",
+    "title": "Big paper page turn",
+    "source": "https://assets.mixkit.co/active_storage/sfx/386/386.wav",
+    "seconds": 0.5
+  },
+  "paper": {
+    "mixkit_id": "1104",
+    "title": "Paper slide",
+    "source": "https://assets.mixkit.co/active_storage/sfx/1104/1104.wav",
+    "seconds": 0.34
+  },
+  "file-open": {
+    "mixkit_id": "1108",
+    "title": "Opening software interface",
+    "source": "https://assets.mixkit.co/active_storage/sfx/1108/1108.wav",
+    "seconds": 0.6
+  },
+  "confirm": {
+    "mixkit_id": "2356",
+    "title": "Confirmation tone",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2356/2356.wav",
+    "seconds": 0.28
+  },
+  "pointer-click": {
+    "mixkit_id": "1120",
+    "title": "Clear mouse clicks",
+    "source": "https://assets.mixkit.co/active_storage/sfx/1120/1120.wav",
+    "seconds": 0.14
+  },
+  "title": {
+    "mixkit_id": "3117",
+    "title": "Ui zoom in, long sound",
+    "source": "https://assets.mixkit.co/active_storage/sfx/3117/3117.wav",
+    "seconds": 0.8
+  },
+  "check": {
+    "mixkit_id": "1119",
+    "title": "Modern click box check",
+    "source": "https://assets.mixkit.co/active_storage/sfx/1119/1119.wav",
+    "seconds": 0.21
+  },
+  "zoom": {
+    "mixkit_id": "2860",
+    "title": "User interface zoom in",
+    "source": "https://assets.mixkit.co/active_storage/sfx/2860/2860.wav",
+    "seconds": 0.6
+  },
+  "end": {
+    "mixkit_id": "1474",
+    "title": "Intro transition",
+    "source": "https://assets.mixkit.co/active_storage/sfx/1474/1474.wav",
+    "seconds": 2.0
+  }
+}

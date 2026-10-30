@@ -37,10 +37,17 @@ npm run basira:mobile:sfx      # regenerate the soft sound effects (needs numpy)
 - Flashcard flip.
 - Lecture → slides → app.
 
+**Tool logos:** the official logos supplied by the club are in `public/basira/tool-logos/`: ChatGPT, Claude, Perplexity, Elicit, Quizlet, Canva and Gamma.
+- **Handling:** the files keep their original colours and proportions; only the transparent margins are trimmed.
+- **Where they appear:** in the video's intro cards and tool header, and in the poster's section headings. They are rendered by `src/basira/components/ToolLogos.tsx`.
+- **Plates:** dark logos sit on a white plate and the white Canva logo on a navy plate.
+- **Missing logos:** NotebookLM and Anki keep their previous icon + name. The supplied `NotebookLM.png` contains only five white circles, not the NotebookLM logo, and no Anki logo was supplied. Add the correct files to `tool-logos/` and `logos.json`, then map them in `TOOL_MARKS`.
+
 **Audio:** sound effects only, with no music and no voices.
 - **Source:** professional recorded effects from **Mixkit** (`public/basira/audio/mixkit/`), used under the *Mixkit Sound Effects Free License*: free for commercial and non-commercial projects, with no attribution required.
 - **Sources list:** `public/basira/audio/mixkit/SOURCES.json` gives each file's Mixkit ID, title and original URL.
 - **Preparation:** each file has its leading silence trimmed, a short fade-out and peak normalisation.
+- **Softened copies:** the video uses `public/basira/audio/mixkit-soft/`, with a gentle low-pass, a 10 ms fade-in and −4 dB. The cue list is sparse (27 quiet cues, with no repeats back-to-back), and no extra gain is added at the end.
 - **Placement:** in `src/basira/mobile/MobileAudio.tsx`, each sound is placed so its peak lands on its visual event: whoosh/sweep on transitions, typing on typed text, paper on slides, page turn on the flashcard flip, a software sound when the PDF opens, a mouse click for the search pointer, a confirmation for correct answers, a check sound for steps, a UI zoom for the title, and a short intro-transition sweep for the closing logo.
 - The earlier synthesised effects (`m-*.mp3`) are kept but no longer used.
 

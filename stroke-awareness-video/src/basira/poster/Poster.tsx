@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, Img, staticFile } from "remotion";
 import { Background } from "../components/Frame";
 import { Brain, Cards, Chat, Check, Code, Notebook, Palette, Search, Stethoscope } from "../components/Icons";
+import { TOOL_MARKS, ToolMark } from "../components/ToolLogos";
 import { T } from "../theme";
 import content from "./poster.json";
 
@@ -90,14 +91,20 @@ export const PosterTools: React.FC = () => (
         const Icon = ICONS[sec.icon];
         return (
           <div key={sec.tool} style={{ ...glass, padding: "24px 26px 22px" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ width: 62, height: 62, borderRadius: 16, background: "rgba(0,217,255,0.12)", border: `1.5px solid ${T.cyan}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon size={38} color={T.cyan} stroke={2} />
+            {TOOL_MARKS[sec.tool] ? (
+              <div style={{ display: "flex", alignItems: "center", height: 62 }}>
+                <ToolMark parts={TOOL_MARKS[sec.tool]!} height={56} textSize={28} gap={10} />
               </div>
-              <span dir="ltr" style={{ fontSize: sec.tool.length > 14 ? 28 : 33, fontWeight: 700, color: T.white, whiteSpace: "nowrap" }}>
-                {sec.tool}
-              </span>
-            </div>
+            ) : (
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <div style={{ width: 62, height: 62, borderRadius: 16, background: "rgba(0,217,255,0.12)", border: `1.5px solid ${T.cyan}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Icon size={38} color={T.cyan} stroke={2} />
+                </div>
+                <span dir="ltr" style={{ fontSize: sec.tool.length > 14 ? 28 : 33, fontWeight: 700, color: T.white, whiteSpace: "nowrap" }}>
+                  {sec.tool}
+                </span>
+              </div>
+            )}
             <div style={{ marginTop: 12, fontSize: 36, fontWeight: 700, color: T.cyan }}>{sec.title}</div>
             <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 9 }}>
               {sec.uses.map((u) => (

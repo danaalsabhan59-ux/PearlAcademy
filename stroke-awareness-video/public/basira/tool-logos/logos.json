@@ -1,0 +1,44 @@
+{
+  "ChatGPT": {
+    "file": "basira/tool-logos/chatgpt.png",
+    "w": 815,
+    "h": 240,
+    "ratio": 3.396
+  },
+  "Claude": {
+    "file": "basira/tool-logos/claude.png",
+    "w": 1116,
+    "h": 240,
+    "ratio": 4.65
+  },
+  "Perplexity": {
+    "file": "basira/tool-logos/perplexity.png",
+    "w": 1000,
+    "h": 240,
+    "ratio": 4.167
+  },
+  "Elicit": {
+    "file": "basira/tool-logos/elicit.png",
+    "w": 881,
+    "h": 240,
+    "ratio": 3.671
+  },
+  "Quizlet": {
+    "file": "basira/tool-logos/quizlet.png",
+    "w": 731,
+    "h": 191,
+    "ratio": 3.827
+  },
+  "Canva": {
+    "file": "basira/tool-logos/canva.png",
+    "w": 426,
+    "h": 136,
+    "ratio": 3.132
+  },
+  "Gamma": {
+    "file": "basira/tool-logos/gamma.png",
+    "w": 240,
+    "h": 240,
+    "ratio": 1.0
+  }
+}

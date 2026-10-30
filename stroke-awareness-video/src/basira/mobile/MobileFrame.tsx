@@ -1,6 +1,7 @@
 import React from "react";
 import { Img, staticFile } from "remotion";
 import { GlassPanel, Kinetic } from "../components/Frame";
+import { MarkPart, ToolMark } from "../components/ToolLogos";
 import { CONTENT } from "../data/layout";
 import { pop, ramp, Rect, T } from "../theme";
 import { Entry, V } from "./layoutV";
@@ -54,7 +55,9 @@ export const ToolHeader: React.FC<{
   tool: string;
   tagline: string;
   icon: React.ReactNode;
-}> = ({ frame, start, end, tool, tagline, icon }) => {
+  /** Official logo(s) for the tool; when present they replace the icon + name text. */
+  mark?: MarkPart[] | null;
+}> = ({ frame, start, end, tool, tagline, icon, mark }) => {
   const out = ramp(frame, end - 10, 10);
   const chip = pop(frame, start + 2, 13, 170);
   const latin = /^[A-Za-z0-9 +.·]+$/.test(tool);
@@ -75,8 +78,12 @@ export const ToolHeader: React.FC<{
           opacity: Math.min(1, chip * 1.5),
         }}
       >
-        {icon}
-        {letters ? (
+        {mark ? (
+          <ToolMark parts={mark} height={mark.length === 1 ? 84 : 72} textSize={46} />
+        ) : (
+          icon
+        )}
+        {mark ? null : letters ? (
           <span dir="ltr" style={{ fontFamily: T.font, fontWeight: 700, fontSize: 58, color: T.white, whiteSpace: "nowrap" }}>
             {letters.map((ch, i) => {
               const p = ramp(frame, start + 4 + i * 1.2, 6);

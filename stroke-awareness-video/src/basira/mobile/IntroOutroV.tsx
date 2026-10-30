@@ -1,6 +1,7 @@
 import React from "react";
 import { Img, staticFile } from "remotion";
 import { Card, Kinetic } from "../components/Frame";
+import { TOOL_MARKS, ToolMark } from "../components/ToolLogos";
 import { Cards, Chat, Code, Doc, Notebook, Palette, Search } from "../components/Icons";
 import text from "../data/text.json";
 import { scene } from "../data/timeline";
@@ -77,10 +78,16 @@ export const IntroV: React.FC<{ f: number }> = ({ f }) => {
               transform: `translateY(${(1 - p) * 140}px) rotate(${(1 - p) * (i % 2 ? 8 : -8)}deg) scale(${0.6 + 0.4 * p + 0.06 * hl})`,
             }}
           >
-            <Icon size={50} color={i % 2 ? T.teal : T.cyan} />
-            <span dir="ltr" style={{ fontWeight: 700, fontSize: name.length > 11 ? 24 : 28, color: T.white }}>
-              {name}
-            </span>
+            {TOOL_MARKS[name] ? (
+              <ToolMark parts={TOOL_MARKS[name]!} height={name.includes("·") ? 70 : 100} maxLogoWidth={name.includes("·") ? 90 : 186} textSize={26} gap={6} />
+            ) : (
+              <>
+                <Icon size={50} color={i % 2 ? T.teal : T.cyan} />
+                <span dir="ltr" style={{ fontWeight: 700, fontSize: name.length > 11 ? 24 : 28, color: T.white }}>
+                  {name}
+                </span>
+              </>
+            )}
           </Card>
         );
       })}

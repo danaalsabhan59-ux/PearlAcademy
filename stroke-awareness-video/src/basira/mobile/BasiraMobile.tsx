@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Easing, useCurrentFrame } from "remotion";
 import { Background } from "../components/Frame";
+import { TOOL_MARKS } from "../components/ToolLogos";
 import { Cards, Chat, Code, Notebook, Palette, Search, Stethoscope } from "../components/Icons";
 import { contentAlpha } from "../data/layout";
 import text from "../data/text.json";
@@ -112,7 +113,7 @@ export const BasiraMobile: React.FC<BasiraMobileProps> = ({ showSafeZones }) => 
       ) : null}
       {copy ? (
         <>
-          <ToolHeader frame={f} start={cur.start} end={cur.end} tool={copy.tool} tagline={copy.tagline} icon={copy.icon} />
+          <ToolHeader frame={f} start={cur.start} end={cur.end} tool={copy.tool} tagline={copy.tagline} icon={copy.icon} mark={TOOL_MARKS[copy.tool]} />
           <Benefit frame={f} end={cur.end} phrases={copy.benefits.map(([t, at]) => ({ text: t, at: cur.start + at }))} />
         </>
       ) : null}
