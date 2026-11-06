@@ -1,4 +1,5 @@
 import React from "react";
+import { Img, staticFile } from "remotion";
 import { C, FONT, ramp } from "../theme";
 import { CARDS, SSCENES } from "./timeline";
 
@@ -77,13 +78,10 @@ export const Chapter: React.FC<{ f: number }> = ({ f }) => {
   );
 };
 
-/** Subtle animated film grain (deterministic per frame). */
+/** Subtle animated film grain: 8 pre-generated noise frames cycled (cheap to render). */
 export const Grain: React.FC<{ f: number }> = ({ f }) => (
-  <svg width={1080} height={1920} style={{ position: "absolute", inset: 0, zIndex: 870, opacity: 0.07, mixBlendMode: "overlay", pointerEvents: "none" }}>
-    <filter id="grainF">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={f % 24} stitchTiles="stitch" />
-      <feColorMatrix type="saturate" values="0" />
-    </filter>
-    <rect width="100%" height="100%" filter="url(#grainF)" />
-  </svg>
+  <Img
+    src={staticFile(`nuclear/grain/g${Math.floor(f / 2) % 8}.png`)}
+    style={{ position: "absolute", inset: 0, width: 1080, height: 1920, zIndex: 870, opacity: 0.06, mixBlendMode: "overlay", pointerEvents: "none" }}
+  />
 );
