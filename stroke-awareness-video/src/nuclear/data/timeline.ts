@@ -11,8 +11,8 @@ export const TOTAL = 3600; // exactly 120 s
  */
 const ids = ["s1", "s2", "s3", "s4", "s5", "s6", "s7"] as const;
 export type SceneId = (typeof ids)[number];
-const LEAD: Record<SceneId, number> = { s1: 1.1, s2: 0.4, s3: 0.4, s4: 0.4, s5: 0.4, s6: 0.4, s7: 0.4 };
-const TAIL = 0.3;
+const LEAD: Record<SceneId, number> = { s1: 1.2, s2: 0.7, s3: 0.7, s4: 0.7, s5: 0.7, s6: 0.7, s7: 0.7 };
+const TAIL = 0.6;
 
 type Sc = { id: SceneId; start: number; end: number; voiceAt: number; voiceLen: number };
 export const SCENES: Sc[] = [];

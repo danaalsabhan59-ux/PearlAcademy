@@ -8,7 +8,7 @@ const TW = 1024, TH = 512;
 let TEX: { col: Float32Array; cloud: Float32Array } | null = null;
 
 const mix = (a: number[], b: number[], t: number) => a.map((v, i) => v + (b[i] - v) * t);
-const getTex = () => {
+export const getTex = () => {
   if (TEX) return TEX;
   const col = new Float32Array(TW * TH * 3);
   const cloud = new Float32Array(TW * TH);
@@ -105,4 +105,21 @@ export const drawEarth = (ctx: CanvasRenderingContext2D, w: number, h: number, v
     }
   }
   ctx.putImageData(img, 0, 0);
+};
+
+/** Equirectangular colour + cloud-alpha canvases for the 3D globe (generated once). */
+let CAN: { color: HTMLCanvasElement; clouds: HTMLCanvasElement } | null = null;
+export const globeCanvases = () => {
+  if (CAN) return CAN;
+  const { col, cloud } = getTex();
+  const mk = () => { const c = document.createElement("canvas"); c.width = TW; c.height = TH; return c; };
+  const color = mk(), clouds = mk();
+  const ci = color.getContext("2d")!.createImageData(TW, TH), ki = clouds.getContext("2d")!.createImageData(TW, TH);
+  for (let i = 0; i < TW * TH; i++) {
+    ci.data[i * 4] = col[i * 3]; ci.data[i * 4 + 1] = col[i * 3 + 1]; ci.data[i * 4 + 2] = col[i * 3 + 2]; ci.data[i * 4 + 3] = 255;
+    const a = cloud[i] * 255; ki.data[i * 4] = a; ki.data[i * 4 + 1] = a; ki.data[i * 4 + 2] = a; ki.data[i * 4 + 3] = 255;
+  }
+  color.getContext("2d")!.putImageData(ci, 0, 0); clouds.getContext("2d")!.putImageData(ki, 0, 0);
+  CAN = { color, clouds };
+  return CAN;
 };

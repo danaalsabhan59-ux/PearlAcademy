@@ -11,7 +11,8 @@ import { S4Distance } from "./scenes/S4Distance";
 import { S5WaterFood } from "./scenes/S5WaterFood";
 import { S6Monitoring } from "./scenes/S6Monitoring";
 import { S7Finale } from "./scenes/S7Finale";
-import { C, ramp } from "./theme";
+import { C, FONT, ramp } from "./theme";
+import { sc } from "./data/timeline";
 
 const SCENE_COMPONENTS: Partial<Record<SceneId, React.FC<{ f: number }>>> = {
   s1: S1Question,
@@ -47,6 +48,12 @@ export const NuclearAwareness: React.FC<{ muted?: boolean; headerStyle?: HeaderS
       })}
       {/* subtle vignette + grain-free cinematic falloff */}
       <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 48%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.42) 100%)", pointerEvents: "none" }} />
+      {/* one quiet, persistent honesty badge instead of per-scene labels */}
+      <div dir="rtl" style={{ position: "absolute", top: 166, right: 34, zIndex: 950, opacity: (1 - ramp(f, sc("s7").start, 20)) * ramp(f, 20, 20) }}>
+        <span style={{ fontFamily: FONT, fontWeight: 500, fontSize: 24, color: C.cyan, padding: "4px 14px", borderRadius: 999, border: "1px solid rgba(86,199,217,0.55)", background: "rgba(8,24,39,0.6)" }}>
+          محاكاة توضيحية افتراضية
+        </span>
+      </div>
       <Subtitles f={f} />
       <PersistentInstitutionalHeader style={headerStyle} />
       {muted ? null : <NuclearAudio />}

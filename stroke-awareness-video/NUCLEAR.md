@@ -8,14 +8,48 @@ A scientific awareness documentary built in Remotion as code.
 ## Commands
 
 ```bash
-python3 scripts/generate_nuclear_voice.py      # Arabic narration (Edge TTS ar-SA-HamedNeural, +8%) + word timings
+python3 scripts/generate_nuclear_voice.py      # Arabic narration (Edge TTS ar-SA-HamedNeural, -5%, calm) + word timings
 cd scripts && python3 generate_nuclear_ambience.py   # ambience bed aligned to the scenes (needs numpy)
 npx remotion render NuclearAwareness out/nuclear/nuclear_radiation_awareness_EMC.mp4 \
-  --codec=h264 --crf=14 --x264-preset=slow --image-format=png --pixel-format=yuv420p --audio-codec=aac
+  --codec=h264 --crf=14 --x264-preset=slow --image-format=png --pixel-format=yuv420p --audio-codec=aac --gl=swangle
+bash scripts/master_audio.sh out/nuclear/nuclear_radiation_awareness_EMC.mp4   # -14 LUFS / -1 dBTP
 ```
+
+`--gl=swangle` is required: scenes 1, 2, 4 and 7 are real 3D (Three.js via `@remotion/three`).
+
+**Social cut-downs:**
+- **Clips:** `NuclearPart1`…`NuclearPart3` are cut at scene boundaries, with a «الجزء ١ من ٣» badge and a «يتبع» card.
+- **Carousel:** `NuclearCarousel1`…`6` (1080×1350).
+- **Cover:** `NuclearCover` (1080×1920).
+- All of them reuse the film's verified wording only.
 
 - **Studio:** open `NuclearAwareness` in Remotion Studio.
 - **Header comparison:** set the `headerStyle` prop to `"plates"` to compare the optional white-plate header.
+
+## Version 2 (current)
+
+**Narration:**
+- Shortened by about 15% so the voice runs at a calm, natural pace (−5%) with real pauses.
+- A **myth/fact** moment was added: «الإشعاع سحابة تحملها الرياح؟ ✕ — مواد مشعة ≠ الإشعاع نفسه ✓».
+- The film now ends on practical steps, matching CDC's «Get inside · Stay inside · Stay tuned» guidance:
+  1. ادخل
+  2. ابقَ في الداخل
+  3. تابع التعليمات
+
+**Real 3D:** built with Three.js through `@remotion/three` (`src/nuclear/three/`):
+- a procedural globe with a cloud layer and atmosphere;
+- a cutaway facility whose wedge opens toward the camera;
+- terrain relief carrying the dispersion plume.
+
+**A cleaner screen:**
+- one small persistent «محاكاة توضيحية افتراضية» badge replaces the per-scene labels;
+- one headline shows at a time.
+
+**Redrawn elements:**
+- a redrawn specialist (safety glasses, gloves, lab coat);
+- food and water now sit on a table.
+
+**Music:** very quiet (Mixkit #441, Stock Music Free License) at about −34 LUFS on its own, well under the voice.
 
 ## Structure
 

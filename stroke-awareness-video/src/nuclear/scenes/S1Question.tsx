@@ -1,5 +1,6 @@
 import React from "react";
-import { Earth, Stars } from "../components/Earth";
+import { Stars } from "../components/Earth";
+import { GlobeView } from "../three/GlobeView";
 import { CityIcon, FacilityIcon } from "../components/Icons";
 import { MapLayer } from "../components/MapLayer";
 import { KeyWord } from "../components/Text";
@@ -15,11 +16,11 @@ export const S1Question: React.FC<{ f: number }> = ({ f }) => {
   const a0 = ramp(lf, 8, 40);
   const push = ramp(lf, 0, 150);
   const zoom = ramp(lf, 112, 62);
-  const r = lerp(300, 420, push) * Math.pow(9, zoom);
+  const camZ = lerp(9.5, 7.2, push) * Math.pow(1.3 / 7.2, zoom);
   const lon = 1.3 + lf * 0.0032 * (1 - 0.7 * zoom);
   const earthA = a0 * (1 - ramp(lf, 128, 30));
   const mapIn = ramp(lf, 126, 34);
-  const mapScale = lerp(2.6, 1, ramp(lf, 140, 70));
+  const mapScale = lerp(1.6, 1, ramp(lf, 126, 80));
   const line = ramp(f, at("s1", "مئات") - 6, 46);
   const route = ramp(f, at("s1", "وكيف") - 4, 60);
   const exit = ramp(f, s.end - 46, 64); // push toward facility (continues into s2 overlap)
@@ -29,7 +30,7 @@ export const S1Question: React.FC<{ f: number }> = ({ f }) => {
     <div style={{ position: "absolute", inset: 0, background: "#04090f" }}>
       <Stars alpha={a0 * (1 - mapIn)} drift={lf * 0.08} />
       {earthA > 0.002 ? (
-        <Earth view={{ cx: 540, cy: 960, r, lon, tilt: 0.38, alpha: earthA }} style={{ filter: zoom > 0.15 ? `blur(${(zoom - 0.15) * 22}px)` : undefined }} />
+        <GlobeView z={camZ} rot={lon} opacity={earthA} blur={zoom > 0.25 ? (zoom - 0.25) * 20 : 0} />
       ) : null}
       {mapIn > 0 ? (
         <div style={{ position: "absolute", inset: 0, opacity: mapIn, transform: `translate(${ox}px, ${oy}px) scale(${camS})`, transformOrigin: `${FAC.x}px ${FAC.y}px` }}>

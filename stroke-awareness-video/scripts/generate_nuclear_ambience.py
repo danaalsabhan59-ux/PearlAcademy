@@ -19,13 +19,13 @@ ROOT = Path(__file__).resolve().parent.parent
 FPS, TOTAL = 30, 3600
 timing = json.loads((ROOT / "src/nuclear/data/voice-timing.json").read_text())
 narr = json.loads((ROOT / "src/nuclear/data/narration.json").read_text())
-LEAD = {"s1": 1.1}
+LEAD = {"s1": 1.2}
 ids = ["s1", "s2", "s3", "s4", "s5", "s6", "s7"]
 scenes, t = {}, 0.0
 for i, k in enumerate(ids):  # same arithmetic as src/nuclear/data/timeline.ts
     start = round(t * FPS)
-    voice_at = round((t + LEAD.get(k, 0.4)) * FPS)
-    t = t + LEAD.get(k, 0.4) + timing[k] + 0.3
+    voice_at = round((t + LEAD.get(k, 0.7)) * FPS)
+    t = t + LEAD.get(k, 0.7) + timing[k] + 0.6
     end = TOTAL if i == len(ids) - 1 else round(t * FPS)
     scenes[k] = (start / FPS, end / FPS, voice_at / FPS)
 
@@ -87,11 +87,11 @@ out += mono(hum) * gate(s1[0] + 5.5, s2[1] + 0.4, 1.4)[:, None] * 0.035
 wind = stereo_noise(180, 2200)
 wind = wind / np.abs(wind).max()
 gust = lfo(0.11, 0.6) * lfo(0.043, 0.4, 1.3)
-wstart = word("s3", "تحمل", 1) - 1.0
+wstart = word("s3", "تحملها", 1) - 1.0
 out += wind * (gust * (gate(s3[0] - 0.5, s4[1] + 0.4, 1.2) * 0.45 + gate(wstart, s3[1], 1.5) * 0.55))[:, None] * 0.11
 
 # rain (rain-out → raindrop scene)
-rstart = word("s3", "للأمطار") - 0.6
+rstart = word("s3", "الأمطار") - 0.6
 rain = stereo_noise(1500, 9000)
 rain = rain / np.abs(rain).max()
 drops = np.zeros(N)
@@ -107,7 +107,7 @@ out += water / np.abs(water).max() * gate(s5[0] + 1.6, s5[1] + 0.3, 1.0)[:, None
 # lab room tone (s6) + gentle UI blips on the meter and the analysis screen
 room = stereo_noise(90, 700)
 out += room / np.abs(room).max() * gate(s6[0], s6[1] + 0.3, 0.8)[:, None] * 0.035
-for at, f0 in [(word("s6", "بأجهزة"), 1320), (word("s6", "بأجهزة") + 0.25, 1760), (word("s6", "والقياسات"), 1175), (word("s6", "الرسمية"), 1568)]:
+for at, f0 in [(word("s6", "أجهزة"), 1320), (word("s6", "أجهزة") + 0.25, 1760), (word("s6", "والقياسات"), 1175), (word("s6", "الرسمية"), 1568)]:
     n = int(0.35 * SR)
     b = np.sin(2 * np.pi * f0 * t_axis(0.35)) * env_exp(n, 0.06) * np.clip(np.arange(n) / (0.004 * SR), 0, 1)
     b = stereo_reverb(b, 0.8, 0.3)

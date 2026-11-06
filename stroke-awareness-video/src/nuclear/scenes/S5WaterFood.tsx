@@ -5,7 +5,7 @@ import { at } from "../data/words";
 import { C, FONT, lerp, ramp } from "../theme";
 
 const SURF = 940; // ground surface
-const IMPACT = { x: 540, y: SURF };
+const IMPACT = { x: 380, y: SURF };
 
 const Drop: React.FC<{ x: number; y: number; s: number; particle?: boolean }> = ({ x, y, s, particle }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
@@ -53,13 +53,14 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
   const fSoil = at("s5", "التربة");
   const fWater = at("s5", "والمياه");
   const fCrops = at("s5", "والمحاصيل");
-  const fChain = at("s5", "الغذائية");
+  const fChain = at("s5", "الزراعية");
   const fBut = at("s5", "لكن");
   const safe = ramp(f, fBut + 10, 30);
   const exit = ramp(lf, len - 30, 30 + XF);
   const camS = lerp(1.9, 1, reveal) * lerp(1, 2.6, exit);
   const dropY = lerp(640, IMPACT.y - 70, fall);
-  const glass = { x: 860, y: 760 };
+  const glass = { x: 930, y: 742 };
+  const plate = { x: 790, y: 776 };
   return (
     <div style={{ position: "absolute", inset: 0, background: `linear-gradient(180deg, #091b2b 0%, ${C.blue} 46%, #0b1824 100%)` }}>
       <svg width={1080} height={1920} style={{ position: "absolute", inset: 0 }}>
@@ -95,7 +96,11 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
             ))}
             <rect x={-200} y={SURF + 250} width={1480} height={80} fill="url(#gw)" opacity={0.95} />
             {/* river on the surface (right) */}
-            <path d={`M 640 ${SURF} Q 760 ${SURF + 46} 900 ${SURF + 40} T 1280 ${SURF} Z`} fill="#1d5f7c" stroke={C.cyan} strokeOpacity={0.5} strokeWidth={2} />
+            <path d={`M 430 ${SURF} Q 480 ${SURF + 44} 560 ${SURF + 44} T 680 ${SURF} Z`} fill="#1d5f7c" stroke={C.cyan} strokeOpacity={0.5} strokeWidth={2} />
+            {/* table */}
+            <rect x={700} y={SURF - 122} width={320} height={14} rx={4} fill="#6b4f3a" />
+            <rect x={716} y={SURF - 108} width={12} height={108} fill="#4e3a2b" />
+            <rect x={992} y={SURF - 108} width={12} height={108} fill="#4e3a2b" />
             {/* crops (left) with roots */}
             {Array.from({ length: 7 }, (_, k) => {
               const x = 70 + k * 48;
@@ -115,7 +120,7 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
               <path d="M -40 -70 L 40 -70 L 30 70 L -30 70 Z" fill="rgba(170,220,240,0.12)" stroke="#bfe6f2" strokeWidth={3} />
               <path d="M -36 -30 L 36 -30 L 30 70 L -30 70 Z" fill="#56C7D9" opacity={0.45} />
             </g>
-            <g transform="translate(250 700)">
+            <g transform={`translate(${plate.x} ${plate.y})`}>
               <ellipse cx={0} cy={40} rx={90} ry={22} fill="#e9eef3" opacity={0.85} />
               <ellipse cx={0} cy={34} rx={62} ry={14} fill="#c6ced6" />
               <circle cx={-22} cy={20} r={18} fill="#d8b45a" />
@@ -124,10 +129,10 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
             </g>
             {/* pathways */}
             <Path f={f} a={fSoil - 4} dim={safe} lf={lf} d={`M ${IMPACT.x} ${SURF + 10} L ${IMPACT.x} ${SURF + 150}`} />
-            <Path f={f} a={fWater - 2} dim={safe} lf={lf} d={`M ${IMPACT.x} ${SURF + 150} Q ${IMPACT.x + 60} ${SURF + 230} ${IMPACT.x + 140} ${SURF + 270}`} />
-            <Path f={f} a={fWater + 8} dim={safe} lf={lf} d={`M ${IMPACT.x + 20} ${SURF - 4} Q 620 ${SURF - 20} 720 ${SURF + 20}`} />
-            <Path f={f} a={fCrops - 2} dim={safe} lf={lf} d={`M ${IMPACT.x - 10} ${SURF + 120} Q 400 ${SURF + 110} 300 ${SURF + 50}`} />
-            <Path f={f} a={fChain - 2} dim={safe} lf={lf} d={`M 230 ${SURF - 150} Q 220 ${SURF - 190} 250 760`} />
+            <Path f={f} a={fWater - 2} dim={safe} lf={lf} d={`M ${IMPACT.x} ${SURF + 150} Q ${IMPACT.x + 60} ${SURF + 230} ${IMPACT.x + 160} ${SURF + 270}`} />
+            <Path f={f} a={fWater + 8} dim={safe} lf={lf} d={`M ${IMPACT.x + 20} ${SURF - 4} Q 450 ${SURF - 16} 520 ${SURF + 22}`} />
+            <Path f={f} a={fCrops - 2} dim={safe} lf={lf} d={`M ${IMPACT.x - 10} ${SURF + 120} Q 300 ${SURF + 110} 230 ${SURF + 50}`} />
+            <Path f={f} a={fChain + 4} dim={safe} lf={lf} d={`M 220 ${SURF - 160} Q 500 ${SURF - 360} ${plate.x - 30} ${plate.y + 10}`} />
           </g>
           {/* impact splash */}
           {splash > 0 && splash < 1 ? (
@@ -139,7 +144,7 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
           {lf < 66 ? <Drop x={IMPACT.x} y={dropY} s={lerp(1.2, 0.7, fall)} particle /> : null}
           {/* "not inevitable": calm cyan rings around drinking water and food */}
           {safe > 0
-            ? [glass, { x: 250, y: 730 }].map((p, k) => (
+            ? [glass, { x: plate.x, y: plate.y + 24 }].map((p, k) => (
                 <g key={k} opacity={safe}>
                   <circle cx={p.x} cy={p.y} r={120} fill="none" stroke={C.cyan} strokeWidth={4} />
                   <path d={`M ${p.x - 22} ${p.y + 96} l 14 14 l 28 -30`} stroke={C.cyan} strokeWidth={6} fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -150,9 +155,9 @@ export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
       </svg>
       {exit < 0.5 ? (
         <>
-          <Label f={f} a={fSoil} text="التربة" x={540} y={SURF + 160} />
-          <Label f={f} a={fWater} text="المياه" x={860} y={SURF + 190} color={C.cyan} />
-          <Label f={f} a={fChain} text="الغذاء" x={250} y={560} color={C.amber} />
+          <Label f={f} a={fSoil} text="التربة" x={300} y={SURF + 170} />
+          <Label f={f} a={fWater} text="المياه" x={600} y={SURF + 190} color={C.cyan} />
+          <Label f={f} a={fChain + 4} text="الغذاء" x={850} y={560} color={C.amber} />
         </>
       ) : null}
       <KeyWord f={f} at={at("s5", "ترسبت")} out={fBut - 2} text="هل تتلوث المياه والغذاء؟" size={60} top={250} />

@@ -1,5 +1,6 @@
 import React from "react";
-import { KeyWord, Tag } from "../components/Text";
+import { KeyWord } from "../components/Text";
+import { MythFact } from "../components/MythFact";
 import { sc, XF } from "../data/timeline";
 import { at } from "../data/words";
 import { C, FONT, ramp, rnd } from "../theme";
@@ -12,11 +13,12 @@ export const S3Transport: React.FC<{ f: number }> = ({ f }) => {
   const s = sc("s3");
   const lf = f - s.start;
   const tw = at("s3", "تحمل", 1) - s.start; // wind picks up
-  const tr = at("s3", "للأمطار") - s.start; // rain
+  const tr = at("s3", "الأمطار") - s.start; // rain
   const wind = ramp(lf, tw - 10, 40);
   const rain = ramp(lf, tr - 16, 30);
   const rise = 1 - ramp(lf, 0, 50); // continuing the tilt-up from the facility
-  const inset = Math.min(ramp(lf, 14, 22), 1 - ramp(lf, tw - 26, 22));
+  const fFact = at("s3", "ينتقل");
+  const inset = Math.min(ramp(f, fFact - 8, 22), 1 - ramp(lf, tw - 26, 22));
   const exit = ramp(lf, s.end - s.start - 30, 30 + XF);
   // cumulative wind displacement (px) since frame 0
   const G = (t: number) => 0.35 * t + 2.3 * Math.max(0, t - tw) - 1.15 * Math.min(Math.max(0, t - tw), 40) * (1 - Math.min(Math.max(0, t - tw), 40) / 40);
@@ -123,10 +125,9 @@ export const S3Transport: React.FC<{ f: number }> = ({ f }) => {
           <div dir="rtl" style={{ position: "absolute", top: 92, left: 0, right: 0, textAlign: "center", fontFamily: FONT, fontWeight: 600, fontSize: 30, color: C.cyan }}>تُطلق إشعاعاً</div>
         </div>
       ) : null}
-      <Tag f={f} a={s.start + 6} b={s.end + XF} text="الجسيمات الملوّنة تمثيل بصري فقط — الإشعاع لا يُرى" top={376} />
-      <KeyWord f={f} at={at("s3", "مواد")} out={tw + s.start - 4} text="مواد مشعة ≠ الإشعاع نفسه" size={60} color={C.amber} top={250} chip />
-      <KeyWord f={f} at={at("s3", "الرياح", 1)} out={at("s3", "مسافات") - 2} text="الرياح" size={76} top={250} />
-      <KeyWord f={f} at={at("s3", "مسافات")} out={tr + s.start - 2} text="الانتشار" size={76} color={C.cyan} top={250} />
+      <MythFact f={f} q={at("s3", "هل")} no={at("s3", "ليس")} yes={fFact} out={tw + s.start - 4} />
+      <KeyWord f={f} at={at("s3", "الرياح", 1)} out={at("s3", "لمسافات") - 2} text="الرياح" size={76} top={250} />
+      <KeyWord f={f} at={at("s3", "لمسافات")} out={tr + s.start - 2} text="الانتشار" size={76} color={C.cyan} top={250} />
       <KeyWord f={f} at={at("s3", "تُرسّب")} out={s.end + 6} text="الترسّب" size={76} color={C.amber} top={250} />
       {/* labels near ground */}
       <div dir="rtl" style={{ position: "absolute", top: GROUND + 104 + yShift, left: 640, width: 340, textAlign: "center", fontFamily: FONT, fontWeight: 600, fontSize: 28, color: C.cyan, opacity: rain }}>مسطّح مائي</div>

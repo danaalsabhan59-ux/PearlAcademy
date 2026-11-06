@@ -21,5 +21,12 @@
  "ambience": {
   "source": "scripts/generate_nuclear_ambience.py",
   "note": "original, synthesised in code"
+ },
+ "music": {
+  "file": "public/nuclear/music/mixkit-441.mp3",
+  "mixkit_id": "441",
+  "source": "https://assets.mixkit.co/music/441/441.mp3",
+  "licence": "Mixkit Stock Music Free License",
+  "use": "very quiet bed under the narration"
  }
 }

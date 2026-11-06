@@ -36,3 +36,18 @@ export const mapImage = (ctx: CanvasRenderingContext2D) => {
   CACHE = img;
   return img;
 };
+
+/** Height (0..1) of the fictional terrain at map uv — same field as the map image. */
+export const mapHeight = (u: number, v: number) => {
+  const e = fbm3(u * 3.2 + 5, v * 3.2 + 1, 0.37, 6);
+  return Math.max(0, e - 0.42);
+};
+let MC: HTMLCanvasElement | null = null;
+export const mapCanvas = () => {
+  if (MC) return MC;
+  MC = document.createElement("canvas");
+  MC.width = MAP; MC.height = MAP;
+  const ctx = MC.getContext("2d")!;
+  ctx.putImageData(mapImage(ctx), 0, 0);
+  return MC;
+};
