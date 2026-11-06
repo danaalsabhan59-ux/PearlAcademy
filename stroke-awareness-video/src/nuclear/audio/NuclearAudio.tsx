@@ -19,7 +19,7 @@ const SWEEPS: { src: string; at: number; peak: number; volume: number }[] = [
 
 export const NuclearAudio: React.FC = () => (
   <>
-    <Audio name="ambience" src={staticFile("nuclear/sfx/ambience.mp3")} volume={0.42} />
+    <Audio name="ambience" src={staticFile("nuclear/sfx/ambience.mp3")} volume={0.21} />
     {SWEEPS.map((w, i) => (
       <Audio key={i} name={`sweep ${w.src}`} src={staticFile(`nuclear/sfx/${w.src}.mp3`)} from={Math.max(0, w.at - w.peak)} volume={w.volume} />
     ))}
