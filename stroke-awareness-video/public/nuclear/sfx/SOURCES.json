@@ -1,0 +1,32 @@
+{
+ "whoosh": {
+  "mixkit_id": "3115",
+  "title": "Short transition sweep",
+  "source": "https://assets.mixkit.co/active_storage/sfx/3115/3115.wav",
+  "seconds": 0.5
+ },
+ "whoosh-big": {
+  "mixkit_id": "2638",
+  "title": "Fast transitions swoosh",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2638/2638.wav",
+  "seconds": 1.3
+ },
+ "zoom": {
+  "mixkit_id": "2860",
+  "title": "User interface zoom in",
+  "source": "https://assets.mixkit.co/active_storage/sfx/2860/2860.wav",
+  "seconds": 0.6
+ },
+ "_licence": "Mixkit Sound Effects Free License (free for commercial use, no attribution required). Softened copies: gentle low-pass, 10 ms fade-in, -4 dB.",
+ "ambience": {
+  "source": "scripts/generate_nuclear_ambience.py",
+  "note": "original, synthesised in code"
+ },
+ "music": {
+  "file": "public/nuclear/music/mixkit-441.mp3",
+  "mixkit_id": "441",
+  "source": "https://assets.mixkit.co/music/441/441.mp3",
+  "licence": "Mixkit Stock Music Free License",
+  "use": "very quiet bed under the narration"
+ }
+}

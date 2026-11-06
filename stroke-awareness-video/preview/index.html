@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>STROKE CODE — معاينة</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #0b1126;
+        color: #f7f4ec;
+        font-family: system-ui, "Segoe UI", Tahoma, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+      video {
+        height: min(86vh, calc((100vw - 32px) * 16 / 9));
+        aspect-ratio: 9 / 16;
+        background: #000;
+        box-shadow: 0 0 0 4px #253466;
+      }
+      .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+      button { font: inherit; padding: 8px 16px; background: #1a2650; color: #fff; border: 2px solid #253466; cursor: pointer; }
+      small { color: #9aa3b8; }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin: 0; font-size: 20px">اليوم العالمي للسكتة الدماغية — STROKE CODE</h1>
+    <!-- Autoplays muted (browser policy); the film is designed to be understood without sound. -->
+    <video id="film" src="../out/stroke-code-world-stroke-day.mp4" autoplay muted playsinline loop controls></video>
+    <div class="row">
+      <button id="sound">تشغيل الصوت</button>
+    </div>
+    <small>شغّل <code>npm run sc:render</code> أولًا لإنشاء الفيديو في مجلد out/</small>
+    <script>
+      const film = document.getElementById("film");
+      document.getElementById("sound").addEventListener("click", () => {
+        film.muted = !film.muted;
+        film.play();
+      });
+    </script>
+  </body>
+</html>
