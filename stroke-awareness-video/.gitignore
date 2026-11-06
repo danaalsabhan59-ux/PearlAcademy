@@ -9,3 +9,4 @@ out
 # Voice auditions are scratch listening files
 public/audio/auditions/*.mp3
 __pycache__
+.stills.mjs
