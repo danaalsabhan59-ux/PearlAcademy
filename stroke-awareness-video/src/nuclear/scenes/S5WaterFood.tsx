@@ -1,7 +1,7 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { KeyWord } from "../components/Text";
-import { sc, XF } from "../data/timeline";
-import { at } from "../data/words";
+import { XF } from "../data/timeline";
 import { C, FONT, lerp, ramp } from "../theme";
 
 const SURF = 940; // ground surface
@@ -44,6 +44,7 @@ const Label: React.FC<{ f: number; a: number; text: string; x: number; y: number
 
 /** Raindrop → soil → water → crops → food chain; then: deposition does not mean water or food are unsafe. */
 export const S5WaterFood: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s5");
   const lf = f - s.start;
   const len = s.end - s.start;

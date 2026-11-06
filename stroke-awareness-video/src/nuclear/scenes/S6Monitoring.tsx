@@ -1,7 +1,7 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { KeyWord } from "../components/Text";
-import { sc, XF } from "../data/timeline";
-import { at } from "../data/words";
+import { XF } from "../data/timeline";
 import { C, FONT, lerp, ramp, rnd } from "../theme";
 
 const VIAL = { x: 420, y: 1010 };
@@ -47,6 +47,7 @@ const Specialist: React.FC<{ a: number; lf: number }> = ({ a, lf }) => {
 };
 
 export const S6Monitoring: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s6");
   const lf = f - s.start;
   const len = s.end - s.start;

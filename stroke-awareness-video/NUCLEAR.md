@@ -26,7 +26,26 @@ bash scripts/master_audio.sh out/nuclear/nuclear_radiation_awareness_EMC.mp4   #
 - **Studio:** open `NuclearAwareness` in Remotion Studio.
 - **Header comparison:** set the `headerStyle` prop to `"plates"` to compare the optional white-plate header.
 
-## Version 2 (current)
+## Silent cinematic version — `NuclearSilent` (90 s, no voice)
+
+- **Output:** `out/nuclear/nuclear_radiation_awareness_EMC_silent.mp4`, 1080×1920, 30 fps, 2700 frames.
+- **No narration:** the text carries the story. It is laid out as 22 reading cards in 7 chapters (`src/nuclear/silent/script.ts`).
+  - Each card is timed for reading, scaled so the film is exactly 90 s (`silent/timeline.ts`).
+  - Highlighted words are marked `*like this*`.
+- **Typography:** large cinematic type, one statement at a time, revealed word by word (Arabic letters stay joined).
+  - Amber highlights and a soft scrim keep the text readable over the 3D.
+  - A chapter marker «٠٣ — الانتقال» and subtle film grain are added.
+- **Reused scenes:** the 3D scenes are shared with the narrated film. Each scene reads its timing from `data/cues.tsx` (`useCues`): the narrated film uses voice word timings, and the silent film uses card timings.
+- **Audio:** calm music carries the film, with the ambience (`ambience-silent.mp3`) and soft sweeps underneath. Mastered to −14 LUFS.
+
+```bash
+npx tsx scripts/export_silent_plan.ts public/nuclear/silent-plan.json
+cd scripts && python3 generate_nuclear_ambience.py --plan ../public/nuclear/silent-plan.json
+npx remotion render NuclearSilent out/nuclear/nuclear_radiation_awareness_EMC_silent.mp4 --codec=h264 --crf=14 --x264-preset=slow --image-format=png --gl=swangle
+bash scripts/master_audio.sh out/nuclear/nuclear_radiation_awareness_EMC_silent.mp4
+```
+
+## Version 2 (narrated)
 
 **Narration:**
 - Shortened by about 15% so the voice runs at a calm, natural pace (−5%) with real pauses.

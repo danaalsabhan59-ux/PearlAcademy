@@ -15,8 +15,13 @@ import numpy as np
 
 from generate_sfx import SR, band, env_exp, pink, rng, stereo_reverb, t_axis, write
 
+import sys
+
 ROOT = Path(__file__).resolve().parent.parent
-FPS, TOTAL = 30, 3600
+# --plan FILE: timing exported from the silent film (scripts/export_silent_plan.ts); default = narrated film
+PLAN = json.loads(Path(sys.argv[sys.argv.index("--plan") + 1]).read_text()) if "--plan" in sys.argv else None
+OUT_NAME = "../nuclear/sfx/ambience-silent.mp3" if PLAN else "../nuclear/sfx/ambience.mp3"
+FPS, TOTAL = 30, (PLAN["total"] if PLAN else 3600)
 timing = json.loads((ROOT / "src/nuclear/data/voice-timing.json").read_text())
 narr = json.loads((ROOT / "src/nuclear/data/narration.json").read_text())
 LEAD = {"s1": 1.2}
@@ -30,7 +35,14 @@ for i, k in enumerate(ids):  # same arithmetic as src/nuclear/data/timeline.ts
     scenes[k] = (start / FPS, end / FPS, voice_at / FPS)
 
 
+if PLAN:
+    scenes = {k: (v[0] / FPS, v[1] / FPS, v[0] / FPS) for k, v in PLAN["scenes"].items()}
+
+
 def word(sid: str, prefix: str, n: int = 0) -> float:
+    if PLAN:
+        key = f"{sid}:{prefix}" + (f"#{n}" if n else "")
+        return PLAN["cues"][key] / FPS
     words = json.loads((ROOT / f"public/nuclear/voice/{sid}.words.json").read_text())
     toks = next(s["text"] for s in narr["scenes"] if s["id"] == sid).split()
     hits = [w for w, tok in zip(words, toks) if tok.strip("،؛.؟,").startswith(prefix)]
@@ -116,5 +128,5 @@ for at, f0 in [(word("s6", "أجهزة"), 1320), (word("s6", "أجهزة") + 0.2
 
 # global fade-in/out
 out *= gate(0, TOTAL / FPS, 1.0)[:, None]
-write("../nuclear/sfx/ambience.mp3", out, peak=0.5, kbps=256)
+write(OUT_NAME, out, peak=0.5, kbps=256)
 print("scenes:", {k: tuple(round(v, 2) for v in s) for k, s in scenes.items()})

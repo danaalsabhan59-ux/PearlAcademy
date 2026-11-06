@@ -1,6 +1,7 @@
 import React from "react";
 import { C, FONT, ramp } from "../theme";
 import { CUES } from "../data/words";
+import { useCues } from "../data/cues";
 
 /** Synchronised Arabic subtitles (whole words, RTL, ≤ 2 lines), fixed above the platform caption zone. */
 export const Subtitles: React.FC<{ f: number }> = ({ f }) => {
@@ -48,7 +49,8 @@ export const KeyWord: React.FC<{
   align?: "center" | "right" | "left";
   chip?: boolean;
 }> = ({ f, at, out, text, size = 64, color = C.white, top, left = 60, right = 60, weight = 700, align = "center", chip }) => {
-  if (f < at - 1) return null;
+  const { hideKeyWords } = useCues();
+  if (hideKeyWords || f < at - 1) return null;
   const o = out === undefined ? 0 : ramp(f, out - 10, 10);
   if (o >= 1) return null;
   const words = text.split(" ");

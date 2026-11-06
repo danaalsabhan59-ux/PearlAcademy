@@ -1,10 +1,10 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { ThreeCanvas } from "@remotion/three";
 import { CameraRig } from "../three/common";
 import { mw, Plume, Rings, SourceMarker, Terrain3D, WindArrow } from "../three/Terrain3D";
 import { KeyWord } from "../components/Text";
-import { sc, XF } from "../data/timeline";
-import { at } from "../data/words";
+import { XF } from "../data/timeline";
 import { C, FONT, lerp, ramp } from "../theme";
 
 /** Map coordinates (0..1080). */
@@ -45,6 +45,8 @@ const I = {
 
 /** 3D dispersion map over fictional terrain: illustrative plume shaped by wind direction/speed, amount and weather. No numbers. */
 export const S4Distance: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc, silent } = useCues();
+  const cy = silent ? 1000 : 0; // silent film: chips sit low (no subtitles there)
   const s = sc("s4");
   const lf = f - s.start;
   const len = s.end - s.start;
@@ -95,10 +97,10 @@ export const S4Distance: React.FC<{ f: number }> = ({ f }) => {
           <path transform={`translate(540 ${dropY}) scale(${0.6 + exit * 0.9})`} d="M 0 -120 C 30 -70 70 -20 70 25 C 70 70 38 100 0 100 C -38 100 -70 70 -70 25 C -70 -20 -30 -70 0 -120 Z" fill="url(#dropG4)" stroke="#bfe6f2" strokeOpacity={0.7} strokeWidth={3} />
         </svg>
       ) : null}
-      <Chip f={f} at={fDist} text="المسافة" x={300} y={392} icon={I.dist} active={act(fDist, fBut + 30)} />
-      <Chip f={f} at={fWind} text="اتجاه الرياح" x={780} y={392} icon={I.wind} active={act(fWind, fAmt)} />
-      <Chip f={f} at={fAmt} text="كمية التسرب" x={300} y={478} icon={I.amount} active={act(fAmt, fWx)} />
-      <Chip f={f} at={fWx} text="الظروف الجوية" x={780} y={478} icon={I.weather} active={act(fWx, fAll)} />
+      <Chip f={f} at={fDist} text="المسافة" x={300} y={cy + 392} icon={I.dist} active={act(fDist, fBut + 30)} />
+      <Chip f={f} at={fWind} text="اتجاه الرياح" x={780} y={cy + 392} icon={I.wind} active={act(fWind, fAmt)} />
+      <Chip f={f} at={fAmt} text="كمية التسرب" x={300} y={cy + 478} icon={I.amount} active={act(fAmt, fWx)} />
+      <Chip f={f} at={fWx} text="الظروف الجوية" x={780} y={cy + 478} icon={I.weather} active={act(fWx, fAll)} />
       <KeyWord f={f} at={fDist} out={fBut - 2} text="هل المسافة كافية؟" size={66} top={250} />
       <KeyWord f={f} at={fBut} out={s.end + 6} text="المسافة ليست العامل الوحيد" size={60} color={C.amber} top={250} chip />
     </div>

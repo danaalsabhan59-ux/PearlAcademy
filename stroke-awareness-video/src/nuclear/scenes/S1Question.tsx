@@ -1,16 +1,16 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { Stars } from "../components/Earth";
 import { GlobeView } from "../three/GlobeView";
 import { CityIcon, FacilityIcon } from "../components/Icons";
 import { MapLayer } from "../components/MapLayer";
 import { KeyWord } from "../components/Text";
-import { sc } from "../data/timeline";
-import { at } from "../data/words";
 import { C, lerp, ramp } from "../theme";
 
 /** 00:00 — Earth from space → push-in → fictional map: facility far away, "us" near. */
 export const FAC = { x: 560, y: 600 }; // facility on screen (map phase)
 export const S1Question: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s1");
   const lf = f - s.start;
   const a0 = ramp(lf, 8, 40);

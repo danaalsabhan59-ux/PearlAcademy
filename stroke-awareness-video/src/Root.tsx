@@ -4,6 +4,8 @@ import { BasiraMobile } from "./basira/mobile/BasiraMobile";
 import { PosterPrompts, PosterTools } from "./basira/poster/Poster";
 import * as BasiraTimeline from "./basira/data/timeline";
 import { NuclearAwareness } from "./nuclear/NuclearAwareness";
+import { NuclearSilent } from "./nuclear/silent/NuclearSilent";
+import { SILENT_TOTAL } from "./nuclear/silent/timeline";
 import * as NuclearTimeline from "./nuclear/data/timeline";
 import { NuclearPart, PartOverlay, PARTS } from "./nuclear/social/Parts";
 import { CarouselSlide, NuclearCover } from "./nuclear/social/Carousel";
@@ -40,6 +42,7 @@ export const RemotionRoot: React.FC = () => {
       ))}
       <Still id="NuclearPartOverlay" component={PartOverlay} width={1080} height={1920} defaultProps={{ part: 0, mode: "badge" as "badge" | "next" }} />
       <Still id="NuclearCover" component={NuclearCover} width={1080} height={1920} />
+      <Composition id="NuclearSilent" component={NuclearSilent} durationInFrames={SILENT_TOTAL} fps={30} width={1080} height={1920} defaultProps={{ muted: false }} />
       <Composition
         id="NuclearAwareness"
         component={NuclearAwareness}

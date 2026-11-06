@@ -1,8 +1,8 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { KeyWord } from "../components/Text";
 import { MythFact } from "../components/MythFact";
-import { sc, XF } from "../data/timeline";
-import { at } from "../data/words";
+import { XF } from "../data/timeline";
 import { C, FONT, ramp, rnd } from "../theme";
 
 const SRC = { x: 120, y: 1205 };
@@ -10,6 +10,7 @@ const GROUND = 1262;
 
 /** Sky → wind transport → dispersion → rain-out deposition. Coloured dots are a visual symbol only. */
 export const S3Transport: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s3");
   const lf = f - s.start;
   const tw = at("s3", "تحمل", 1) - s.start; // wind picks up

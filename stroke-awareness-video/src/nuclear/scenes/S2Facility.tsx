@@ -1,9 +1,9 @@
 import { ThreeCanvas } from "@remotion/three";
+import { useCues } from "../data/cues";
 import React from "react";
 import { Callout } from "../components/Callout";
 import { KeyWord } from "../components/Text";
-import { sc, XF } from "../data/timeline";
-import { at } from "../data/words";
+import { XF } from "../data/timeline";
 import { CameraRig, project } from "../three/common";
 import { Facility3D, POINTS } from "../three/Facility3D";
 import { camAt } from "../three/keys";
@@ -11,6 +11,7 @@ import { C, ramp } from "../theme";
 
 /** 3D cutaway of a fictional facility: aerial arrival → wedge opens → labels → loss of containment (no explosion) → tilt up with the rising material. */
 export const S2Facility: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s2");
   const lf = f - s.start;
   const len = s.end - s.start;

@@ -1,8 +1,7 @@
+import { useCues } from "../data/cues";
 import React from "react";
 import { Stars } from "../components/Earth";
 import { KeyWord } from "../components/Text";
-import { sc } from "../data/timeline";
-import { at } from "../data/words";
 import { GlobeView } from "../three/GlobeView";
 import { C, FONT, lerp, ramp } from "../theme";
 
@@ -31,6 +30,7 @@ const StepIcon: React.FC<{ k: number }> = ({ k }) => (
 
 /** Calm Earth → practical steps for an official alert → key message, official bodies (text only), disclaimer. */
 export const S7Finale: React.FC<{ f: number }> = ({ f }) => {
+  const { at, sc } = useCues();
   const s = sc("s7");
   const lf = f - s.start;
   const fAlert = at("s7", "تنبيه");
