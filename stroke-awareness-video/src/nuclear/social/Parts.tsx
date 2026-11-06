@@ -38,3 +38,18 @@ export const NuclearPart: React.FC<{ part: number }> = ({ part }) => {
     </AbsoluteFill>
   );
 };
+
+/** Transparent overlay stills (badge / «يتبع» card) for fast ffmpeg compositing onto the final film's cut-downs. */
+export const PartOverlay: React.FC<{ part: number; mode: "badge" | "next" }> = ({ part, mode }) => (
+  <AbsoluteFill>
+    {mode === "badge" ? (
+      <div dir="rtl" style={{ position: "absolute", top: 166, left: 34 }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 26, color: C.navy, background: C.amber, borderRadius: 999, padding: "5px 16px" }}>الجزء {NUM[part]} من ٣</span>
+      </div>
+    ) : (
+      <div dir="rtl" style={{ position: "absolute", left: 0, right: 0, top: 1250, textAlign: "center" }}>
+        <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 40, color: C.white, background: "rgba(8,24,39,0.9)", border: `2px solid ${C.cyan}`, borderRadius: 18, padding: "10px 28px" }}>يتبع في الجزء {NUM[part + 1]} ←</span>
+      </div>
+    )}
+  </AbsoluteFill>
+);

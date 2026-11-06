@@ -5,7 +5,7 @@ import { PosterPrompts, PosterTools } from "./basira/poster/Poster";
 import * as BasiraTimeline from "./basira/data/timeline";
 import { NuclearAwareness } from "./nuclear/NuclearAwareness";
 import * as NuclearTimeline from "./nuclear/data/timeline";
-import { NuclearPart, PARTS } from "./nuclear/social/Parts";
+import { NuclearPart, PartOverlay, PARTS } from "./nuclear/social/Parts";
 import { CarouselSlide, NuclearCover } from "./nuclear/social/Carousel";
 import { StrokeCode } from "./strokecode/compositions/StrokeCode";
 import { FPS, HEIGHT, TOTAL_FRAMES, WIDTH } from "./strokecode/data/timeline";
@@ -38,6 +38,7 @@ export const RemotionRoot: React.FC = () => {
       {[0, 1, 2, 3, 4, 5].map((n) => (
         <Still key={n} id={`NuclearCarousel${n + 1}`} component={CarouselSlide} width={1080} height={1350} defaultProps={{ n }} />
       ))}
+      <Still id="NuclearPartOverlay" component={PartOverlay} width={1080} height={1920} defaultProps={{ part: 0, mode: "badge" as "badge" | "next" }} />
       <Still id="NuclearCover" component={NuclearCover} width={1080} height={1920} />
       <Composition
         id="NuclearAwareness"

@@ -6,7 +6,7 @@ import { C, FONT } from "../theme";
 
 /** Instagram carousel (1080×1350) + cover (1080×1920) built from the film's verified content. */
 const Header: React.FC<{ h?: number }> = ({ h = 130 }) => (
-  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: h, display: "flex", flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between", padding: "0 56px", boxSizing: "border-box", background: "linear-gradient(180deg, rgba(8,24,39,0.96), rgba(16,43,64,0.86))", borderBottom: "1px solid rgba(86,199,217,0.22)", zIndex: 10 }}>
+  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: h, direction: "ltr", display: "flex", flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between", padding: "0 56px", boxSizing: "border-box", background: "linear-gradient(180deg, rgba(8,24,39,0.96), rgba(16,43,64,0.86))", borderBottom: "1px solid rgba(86,199,217,0.22)", zIndex: 10 }}>
     {(["majmaah-university", "emergency-medicine-club", "student-council"] as const).map((n) => {
       const hh = n === "majmaah-university" ? h * 0.7 : h * 0.78;
       return <Img key={n} src={staticFile(`nuclear/logos/${n}.png`)} style={{ height: hh, width: hh * meta[n].ratio }} />;
@@ -38,16 +38,22 @@ const Pill: React.FC<{ children: React.ReactNode; color?: string; tag?: string; 
 
 export const SLIDES: React.FC[] = [
   () => (
-    <Frame n={0}>
-      <div style={{ position: "relative", height: 560 }}>
-        <div style={{ position: "absolute", left: -80, right: -80, top: -330, height: 1920, transform: "scale(0.62)", transformOrigin: "50% 37%" }}>
-          <GlobeView z={6.2} rot={1.6} opacity={1} />
-        </div>
+    <AbsoluteFill style={{ background: "#04090f", fontFamily: FONT, direction: "rtl", overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: 0, top: -360, width: 1080, height: 1920 }}>
+        <GlobeView z={7.4} rot={1.6} opacity={1} cy={0.1} />
       </div>
-      <H size={92}>الإشعاع النووي</H>
-      <H size={60} color={C.amber}>هل يمكن أن يصل إلينا؟</H>
-      <P>اسحب لتعرف كيف ينتقل، وما الذي يحدد خطره ←</P>
-    </Frame>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(8,24,39,0) 40%, rgba(8,24,39,0.96) 74%)" }} />
+      <Header />
+      <div style={{ position: "absolute", top: 900, left: 60, right: 60, textAlign: "center" }}>
+        <div style={{ fontWeight: 700, fontSize: 96, color: C.white, lineHeight: 1.2 }}>الإشعاع النووي</div>
+        <div style={{ fontWeight: 700, fontSize: 60, color: C.amber, marginTop: 10 }}>هل يمكن أن يصل إلينا؟</div>
+        <div style={{ fontWeight: 500, fontSize: 34, color: C.muted, marginTop: 22 }}>اسحب لتعرف كيف ينتقل، وما الذي يحدد خطره ←</div>
+      </div>
+      <div style={{ position: "absolute", bottom: 40, left: 80, right: 80, display: "flex", justifyContent: "space-between", fontSize: 24, color: C.muted }}>
+        <span>محتوى توعوي افتراضي لا يشير إلى وجود خطر إشعاعي حالي.</span>
+        <span style={{ color: C.cyan, fontWeight: 700 }}>١ / ٦</span>
+      </div>
+    </AbsoluteFill>
   ),
   () => (
     <Frame n={1}>
