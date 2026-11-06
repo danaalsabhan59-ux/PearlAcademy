@@ -3,6 +3,8 @@ import { BasiraAI } from "./basira/BasiraAI";
 import { BasiraMobile } from "./basira/mobile/BasiraMobile";
 import { PosterPrompts, PosterTools } from "./basira/poster/Poster";
 import * as BasiraTimeline from "./basira/data/timeline";
+import { NuclearAwareness } from "./nuclear/NuclearAwareness";
+import * as NuclearTimeline from "./nuclear/data/timeline";
 import { StrokeCode } from "./strokecode/compositions/StrokeCode";
 import { FPS, HEIGHT, TOTAL_FRAMES, WIDTH } from "./strokecode/data/timeline";
 import { StrokeVideo, StrokeVideoProps } from "./StrokeVideo";
@@ -28,6 +30,15 @@ const calculateMetadata: CalculateMetadataFunction<StrokeVideoProps> = ({
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="NuclearAwareness"
+        component={NuclearAwareness}
+        durationInFrames={NuclearTimeline.TOTAL}
+        fps={NuclearTimeline.FPS}
+        width={NuclearTimeline.W}
+        height={NuclearTimeline.H}
+        defaultProps={{ muted: false, headerStyle: "transparent" as const }}
+      />
       <Still id="BasiraPosterTools" component={PosterTools} width={1080} height={1920} />
       <Still id="BasiraPosterPrompts" component={PosterPrompts} width={1080} height={1920} />
       <Composition
