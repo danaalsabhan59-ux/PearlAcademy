@@ -59,8 +59,14 @@
     this.el.className = 'px-game';
     var draftBanner = (c.status !== 'published' && c.status !== 'archived' && c.status !== 'scheduled')
       ? '<div class="px-ribbon">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet approved by faculty</div>' : '';
+    var modeBanner = ({
+      official: '<div class="px-ribbon official">🏆 OFFICIAL ATTEMPT — your first completed shift counts for the leaderboard</div>',
+      practice: '<div class="px-ribbon practice">Practice mode — your official score for this case is already recorded</div>',
+      guest: '<div class="px-ribbon practice">Practice mode — sign in with your club email on the home page to compete</div>',
+      preview: '<div class="px-ribbon">PREVIEW — nothing is saved</div>'
+    })[this.opts.mode] || '';
     this.el.innerHTML =
-      draftBanner +
+      modeBanner + draftBanner +
       '<header class="px-hud">' +
         '<div class="px-hud-l"><button class="px-ico" data-act="exit" aria-label="Exit to case list">✕</button>' +
         '<div class="px-hud-title"><b>' + esc(c.title) + '</b><span>' + esc(c.category || '') + '</span></div></div>' +
@@ -517,6 +523,7 @@
           '<div><div class="px-xp">+' + s.xp + ' XP <small>of ' + s.maxXP + '</small></div>' +
           (best && !this.opts.preview ? '<div class="muted">Your best on this device: ' + Math.max(best.total, s.total) + '/100</div>' : '') +
           '<div class="muted">Finished at T+' + sim.S.t + ' min</div></div></div>' +
+        '<div class="px-submit" aria-live="polite" hidden></div>' +
         '<div class="px-bars">' + s.breakdown.map(function (b) {
           if (b.fraction === null) return '';
           return '<div class="px-bar"><span>' + esc(b.label) + '</span><div><i style="width:' + Math.round(b.fraction * 100) + '%"></i></div><b>' + b.points + '/' + b.of + '</b></div>';
@@ -534,7 +541,7 @@
     this.el.appendChild(ov);
     ov.querySelector('[data-e="replay"]').onclick = function () { if (self.opts.onReplay) self.opts.onReplay(); };
     ov.querySelector('[data-e="home"]').onclick = function () { if (self.opts.onExit) self.opts.onExit(); };
-    if (this.opts.onFinish) this.opts.onFinish({ caseId: c.id, score: s, history: sim.S.history.slice(), ending: e.id });
+    if (this.opts.onFinish) this.opts.onFinish({ caseId: c.id, score: s, history: sim.S.history.slice(), ending: e.id }, ov.querySelector('.px-submit'));
   };
 
   root.PXGame = { Game: Game, Sound: Sound, esc: esc, store: store };

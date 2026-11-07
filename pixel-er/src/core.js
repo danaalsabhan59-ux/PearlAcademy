@@ -529,4 +529,4 @@
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PXCore = api;
-})(typeof window !== 'undefined' ? window : this);
+})(typeof globalThis !== 'undefined' ? globalThis : this);

@@ -277,6 +277,58 @@ a { color: #1d63b8; }
 .bd-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .bd-json { font: 12px/1.45 var(--mono); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- accounts, leaderboard, results ---------- */
+.linkbtn { background: none; border: 0; padding: 0; color: #8fc3ff; text-decoration: underline; font-size: 13px; }
+.err { color: #ff8a8a; }
+.acct { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); border-radius: var(--radius); padding: 12px 14px; margin: 0 0 14px; font-size: 14px; color: #dbe7f3; }
+.acct p { margin: 0 0 4px; }
+.acct-form label { display: block; margin-bottom: 6px; }
+.acct-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.acct-row input { flex: 1 1 220px; min-width: 0; font: 15px var(--sans); padding: 8px 10px; border-radius: 4px; border: 2px solid #3a5a85; background: #0b1a2e; color: #fff; }
+.acct small { color: #8ea6bf; display: block; margin-top: 6px; }
+.acct-in { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+.acct-links { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.acct-links a { color: #ffd23f; font-weight: 700; text-decoration: none; }
+.warnbox { background: #fff4d6; color: #6b4b00; border-radius: 4px; padding: 6px 10px; margin-top: 8px !important; }
+.official-done { margin: 0 0 10px; color: var(--green); font-weight: 600; }
+.official-open { margin: 0 0 10px; color: var(--red-d); font-weight: 700; }
+.px-ribbon.official { background: var(--red); color: #fff; }
+.px-ribbon.practice { background: #dfe7ef; color: #33506e; }
+.px-submit { margin: 14px 0 0; padding: 10px 12px; border-radius: 5px; font-size: 14px; border-left: 4px solid var(--muted); background: #fff; }
+.px-submit.ok { border-color: var(--green); background: #e6f4f0; }
+.px-submit.bad { border-color: var(--red); background: #fcebea; }
+.px-submit.wait { border-color: var(--amber); }
+.px-submit.info { border-color: #4fb3ff; background: #eef6ff; }
+#app.page { color: #fff; }
+#app.page.wide { max-width: 1100px; }
+.back { color: #a9bdd3; text-decoration: none; font-size: 14px; }
+.page-h { font: 900 28px var(--mono); margin: 10px 0; text-shadow: 2px 2px 0 var(--red); }
+.case-pick { font: 14px var(--sans); padding: 7px 10px; border-radius: 4px; border: 2px solid #3a5a85; background: #0b1a2e; color: #fff; max-width: 100%; }
+.me-card { background: var(--paper); color: var(--ink); border: var(--px-border); border-radius: var(--radius); padding: 12px 14px; margin: 14px 0; box-shadow: 4px 4px 0 rgba(0,0,0,.35); }
+.me-card.muted { color: var(--muted); }
+.board { width: 100%; border-collapse: collapse; background: var(--paper); color: var(--ink); border-radius: var(--radius); overflow: hidden; font-size: 14px; box-shadow: 4px 4px 0 rgba(0,0,0,.35); }
+.board th { background: var(--ink); color: #fff; font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; text-align: left; padding: 8px 10px; }
+.board td { padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.board tr.podium td { background: #fffaf0; }
+.board tr.me td { background: #fff1c2; font-weight: 700; }
+.board tr.gap td { text-align: center; color: var(--muted); }
+.board td.rk { font: 700 15px var(--mono); white-space: nowrap; }
+.board.res tr.practice td { color: var(--muted); }
+.board tr.tl td { background: #f7f9fb; font-size: 13px; }
+.tbl-wrap { overflow-x: auto; }
+.fine { font-size: 12px; color: #8ea6bf; }
+.years { display: grid; gap: 6px; }
+.yr { display: grid; grid-template-columns: minmax(110px, 200px) 1fr 44px; gap: 10px; align-items: center; font-size: 14px; }
+.yr div { height: 14px; background: rgba(255,255,255,.12); border-radius: 2px; overflow: hidden; }
+.yr i { display: block; height: 100%; background: linear-gradient(90deg, var(--red), #ff7b7b); }
+.yr b { font-family: var(--mono); text-align: right; }
+.stats { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+.stats div { background: var(--paper); color: var(--ink); border-radius: var(--radius); padding: 10px 16px; display: flex; flex-direction: column; min-width: 130px; }
+.stats b { font: 900 26px var(--mono); } .stats span { font-size: 12px; color: var(--muted); }
+.endings { margin: 0; padding-left: 20px; }
+.bd-online { font-size: 12px; color: #a9bdd3; } .bd-online.on { color: #3dffa0; }
+.bd-dbmsg.ok { color: var(--green); font-weight: 700; } .bd-dbmsg.err { color: var(--red); font-weight: 700; }
 </style>
 </head>
 <body>
@@ -284,7 +336,7 @@ a { color: #1d63b8; }
 <noscript><p style="color:#fff;padding:24px">PIXEL ER needs JavaScript.</p></noscript>
 <!-- Case data: replaced by the Case Builder's “Download game file”. -->
 <script type="application/json" id="px-cases">[{"schemaVersion":1,"id":"acs-inferior-stemi","title":"The Heavy Chest","category":"Cardiovascular","difficulty":"Intermediate","durationMin":15,"tagline":"A 58-year-old with crushing chest pain. Every minute is myocardium.","objectives":["Obtain and interpret a 12-lead ECG within 10 minutes of arrival.","Recognise inferior STEMI and look for right ventricular involvement.","Start early antiplatelet therapy and activate primary PCI without waiting for troponin.","Avoid treatments that harm a preload-dependent right ventricle.","Consider aortic dissection before giving antithrombotic therapy."],"status":"faculty_review","review":{"lastReviewed":"2026-11-07","aiReviewed":true,"facultyReviewer":"","notes":"AI-drafted teaching case built from current ESC 2023 and ACC/AHA guidance. Not yet reviewed by faculty. The uploaded textbooks were not available when this was drafted."},"schedule":{"publishAt":"","closeAt":""},"maxXP":150,"setting":{"timeLimitMin":60,"scene":"resus"},"patient":{"name":"Mr. Khalid","age":58,"sex":"M","sprite":"adult_m","chiefComplaint":"Central chest pain for 40 minutes","background":"Brought in by ambulance after collapsing onto a bench while walking."},"handover":{"by":"paramedic","lines":["This is Mr. Khalid, 58. Central heavy chest pain that started about 40 minutes ago while he was walking.","He's sweaty and nauseated. Vomited once in the ambulance.","On scene: HR 98, BP 150 over 90, RR 20, sats 96% on air. GCS 15.","We didn't get a 12-lead in the vehicle — the machine was down. No drugs given. He's all yours, doc."]},"initial":{"vitals":{"hr":98,"sbp":150,"dbp":90,"rr":20,"spo2":96,"temp":36.8,"gcs":15,"glucose":9.2},"state":"unchanged","flags":[],"monitorAttached":false},"stateText":{"stable":"He looks settled and comfortable.","improving":"He looks better — less pale, and says the dizziness has gone.","unchanged":"He is still pale, sweaty and clutching his chest. Pain 8/10.","deteriorating":"He is grey, clammy and says he feels faint.","critical":"He is barely responding to voice, peripherally shut down."},"actions":[{"id":"hx_onset","category":"history","label":"When did the pain start, and what were you doing?","time":1,"response":"About forty minutes ago. I was walking to the mosque and it hit me — like a heavy weight. It hasn't eased since."},{"id":"hx_character","category":"history","label":"Describe the pain. Does it spread anywhere?","time":1,"response":"Heavy, crushing… like someone is sitting on my chest. It goes up into my jaw and down my left arm. Eight out of ten."},{"id":"hx_back","category":"history","label":"Is it tearing? Does it go through to your back?","time":1,"response":"No, not tearing, and not in my back. It's a pressure, right here in the middle."},{"id":"hx_associated","category":"history","label":"Any sweating, nausea or breathlessness?","time":1,"response":"I'm soaked in sweat. I felt sick and vomited once. A little short of breath."},{"id":"hx_pmh","category":"history","label":"Do you have any medical conditions?","time":1,"response":"Diabetes for about ten years, and high blood pressure. I've never had heart problems."},{"id":"hx_meds","category":"history","label":"Which medicines do you take?","time":1,"response":"Metformin and amlodipine. That's all."},{"id":"hx_pde5","category":"history","label":"Have you taken sildenafil or tadalafil in the last 48 hours?","time":1,"response":"No… never."},{"id":"hx_allergy","category":"history","label":"Are you allergic to any medicines?","time":1,"response":"No allergies that I know of."},{"id":"hx_risk","category":"history","label":"Do you smoke? Any heart disease in the family?","time":1,"response":"Twenty cigarettes a day for thirty years. My brother had a heart attack at fifty."},{"id":"hx_bleed","category":"history","label":"Any recent bleeding, surgery, stroke or stomach ulcer?","time":1,"response":"No, nothing like that."},{"id":"ex_general","category":"exam","label":"General inspection","time":1,"response":"Pale, diaphoretic and anxious, holding his hand over his sternum (Levine sign). Speaking in full sentences."},{"id":"ex_ab","category":"exam","label":"Airway & breathing (A, B)","time":2,"response":"Airway patent. RR 20, trachea central, equal air entry, chest clear with no crackles. SpO₂ 96% on room air."},{"id":"ex_c","category":"exam","label":"Circulation (C)","time":2,"response":"HR 98 regular. Cool peripheries, capillary refill 3 s. JVP raised at about 6 cm, yet the lung fields are clear."},{"id":"ex_bp_arms","category":"exam","label":"Blood pressure in both arms and radial pulses","time":2,"response":"Right arm 150/90, left arm 146/88. Radial pulses equal. No pulse deficit."},{"id":"ex_heart","category":"exam","label":"Heart sounds","time":1,"response":"S1 and S2 normal. No murmur (no new mitral regurgitation, no aortic regurgitation). No pericardial rub."},{"id":"ex_d","category":"exam","label":"Disability (D): GCS, pupils, glucose","time":1,"response":"GCS 15. Pupils equal and reactive. Capillary glucose 9.2 mmol/L."},{"id":"ex_e","category":"exam","label":"Exposure (E): abdomen and legs","time":2,"response":"Abdomen soft and non-tender, no pulsatile mass. Calves soft, no oedema. Temperature 36.8 °C."},{"id":"reassess","category":"reassess","label":"Reassess the patient (ABCDE + vitals)","time":2,"response":""},{"id":"tx_monitor","category":"treatment","label":"Attach cardiac monitor and defibrillator pads","time":1,"response":"Monitor on, pads applied. Sinus rhythm on the screen.","effects":{"flags":["monitor"]}},{"id":"tx_iv","category":"procedure","label":"IV cannula (18G) and draw bloods","time":3,"response":"18G cannula in the right antecubital fossa. Bloods drawn and labelled.","effects":{"flags":["iv"]}},{"id":"tx_aspirin","category":"treatment","label":"Aspirin 300 mg, chewed","time":1,"response":"Aspirin 300 mg given to chew."},{"id":"tx_oxygen","category":"treatment","label":"Oxygen 15 L/min via non-rebreather mask","time":1,"response":"Mask on. SpO₂ rises from 96% to 100%.","effects":{"vitals":{"spo2":100}}},{"id":"tx_gtn","category":"treatment","label":"GTN 400 mcg sublingual","time":1,"response":"GTN spray given under the tongue.","effects":{"flags":["gtn_given"]}},{"id":"tx_fluids","category":"treatment","label":"0.9% saline 250 mL IV bolus","time":5,"requires":{"done":"tx_iv"},"requiresText":"You need IV access first.","response":"250 mL bolus running in.","repeatable":true},{"id":"tx_morphine","category":"treatment","label":"Morphine 2.5 mg IV","time":1,"requires":{"done":"tx_iv"},"requiresText":"You need IV access first.","response":"Morphine 2.5 mg IV given."},{"id":"tx_p2y12","category":"treatment","label":"P2Y12 inhibitor load (per local primary PCI protocol)","time":1,"response":"Given as per the cath lab's protocol. Note: pre-treatment practice differs between centres — follow your local protocol."},{"id":"tx_heparin","category":"treatment","label":"Unfractionated heparin IV bolus (per protocol)","time":1,"requires":{"done":"tx_iv"},"requiresText":"You need IV access first.","response":"Heparin bolus given according to the weight-based protocol."},{"id":"tx_lysis","category":"treatment","label":"Give fibrinolysis (tenecteplase)","time":3,"requires":{"done":"tx_iv"},"requiresText":"You need IV access first.","response":"Nurse: “Tenecteplase given… though the cath lab here is open 24/7.”","effects":{"flags":["lysis_given"]}},{"id":"tx_senior","category":"procedure","label":"Call the ED senior to the bedside","time":1,"speaker":"Nurse","response":"Dr. Sara, the ED registrar, is on her way: “Good call. Get an ECG now if you haven't.”"},{"id":"inv_ecg","category":"investigation","label":"12-lead ECG","time":3,"response":"ECG recorded.","result":{"type":"ecg","delay":0,"ecg":{"rate":98,"layout":"standard12","st":{"I":-0.5,"aVL":-1.5,"II":2.5,"III":3.5,"aVF":3,"V1":0.5,"V2":-1,"V3":-0.5}},"text":"Sinus rhythm, 98/min. ST elevation in II, III and aVF (greatest in III), with reciprocal ST depression in aVL and I. ST elevation in III greater than in II suggests a right coronary artery occlusion."},"effects":{"flags":["ecg_done"]}},{"id":"inv_right_ecg","category":"investigation","label":"Right-sided ECG (V4R)","time":3,"requires":{"done":"inv_ecg"},"requiresText":"Record a standard 12-lead first.","response":"Right-sided leads recorded.","result":{"type":"ecg","delay":0,"ecg":{"rate":98,"layout":"right","st":{"V1R":1,"V2R":1,"V3R":1.5,"V4R":1.5,"V5R":1,"V6R":0.5}},"text":"ST elevation of 1.5 mm in V4R: right ventricular involvement. This patient is preload-dependent — avoid nitrates, and use opioids and diuretics with great caution."},"effects":{"flags":["rv_known"]}},{"id":"inv_trop","category":"investigation","label":"High-sensitivity troponin T","time":1,"requires":{"done":"tx_iv"},"requiresText":"Bloods need IV access first.","result":{"type":"labs","delay":60,"labs":[{"name":"hs-cTnT","value":"186","unit":"ng/L","ref":"\u003c 14","flag":"H"}],"text":"Raised. In STEMI, troponin confirms the diagnosis later — it must never delay reperfusion."}},{"id":"inv_bloods","category":"investigation","label":"FBC, U&E, coagulation, glucose","time":1,"requires":{"done":"tx_iv"},"requiresText":"Bloods need IV access first.","result":{"type":"labs","delay":30,"labs":[{"name":"Haemoglobin","value":"14.2","unit":"g/dL","ref":"13–17","flag":""},{"name":"WBC","value":"9.8","unit":"×10⁹/L","ref":"4–11","flag":""},{"name":"Platelets","value":"260","unit":"×10⁹/L","ref":"150–400","flag":""},{"name":"Sodium","value":"138","unit":"mmol/L","ref":"135–145","flag":""},{"name":"Potassium","value":"4.1","unit":"mmol/L","ref":"3.5–5.0","flag":""},{"name":"Creatinine","value":"92","unit":"µmol/L","ref":"60–110","flag":""},{"name":"INR","value":"1.0","unit":"","ref":"0.8–1.2","flag":""},{"name":"Glucose","value":"9.4","unit":"mmol/L","ref":"3.9–7.8","flag":"H"}]}},{"id":"inv_vbg","category":"investigation","label":"Venous blood gas","time":1,"requires":{"done":"tx_iv"},"requiresText":"Needs IV access / a blood sample first.","result":{"type":"labs","delay":5,"labs":[{"name":"pH","value":"7.38","unit":"","ref":"7.31–7.41","flag":""},{"name":"Lactate","value":"1.8","unit":"mmol/L","ref":"\u003c 2.0","flag":""},{"name":"K⁺","value":"4.0","unit":"mmol/L","ref":"3.5–5.0","flag":""}]}},{"id":"inv_cxr","category":"investigation","label":"Portable chest X-ray","time":3,"result":{"type":"text","delay":15,"text":"Normal heart size. Lung fields clear. Mediastinum not widened. No pneumothorax. (Report only — no image is attached to this case.)"}},{"id":"inv_cta","category":"investigation","label":"CT aortogram","time":20,"result":{"type":"text","delay":20,"text":"No aortic dissection. Incidental note: the scan delayed the patient by about 40 minutes."}},{"id":"inv_ddimer","category":"investigation","label":"D-dimer","time":1,"requires":{"done":"tx_iv"},"requiresText":"Bloods need IV access first.","result":{"type":"labs","delay":30,"labs":[{"name":"D-dimer","value":"0.9","unit":"mg/L FEU","ref":"\u003c 0.5","flag":"H"}],"text":"Mildly raised — non-specific, and not helpful here."}},{"id":"dx_inf_rv","category":"diagnosis","group":"dx","label":"Inferior STEMI with right ventricular involvement","time":0,"response":"Working diagnosis recorded: inferior STEMI with RV involvement."},{"id":"dx_inf","category":"diagnosis","group":"dx","label":"Inferior STEMI","time":0,"response":"Working diagnosis recorded: inferior STEMI."},{"id":"dx_ant","category":"diagnosis","group":"dx","label":"Anterior STEMI","time":0,"response":"Working diagnosis recorded: anterior STEMI."},{"id":"dx_nstemi","category":"diagnosis","group":"dx","label":"NSTEMI","time":0,"response":"Working diagnosis recorded: NSTEMI."},{"id":"dx_dissection","category":"diagnosis","group":"dx","label":"Acute aortic dissection","time":0,"response":"Working diagnosis recorded: aortic dissection."},{"id":"dx_pericarditis","category":"diagnosis","group":"dx","label":"Acute pericarditis","time":0,"response":"Working diagnosis recorded: pericarditis."},{"id":"disp_cathlab","category":"disposition","label":"Activate the cath lab for primary PCI","time":2,"requires":{"done":"inv_ecg"},"requiresText":"You need an ECG diagnosis before activating the cath lab.","response":"Cardiology on-call accepts: “Bring him straight up. Team will be ready in about 20 minutes.”","effects":{"flags":["cathlab"]}},{"id":"disp_transfer","category":"disposition","label":"Hand over and transfer to the cath lab","time":2,"requires":{"flag":"team_ready"},"requiresText":"The cath lab team isn't here yet.","response":"You give a structured SBAR handover and the team wheels him to the lab.","endCase":true},{"id":"disp_ccu","category":"disposition","label":"Admit to CCU for observation (no reperfusion)","time":2,"response":"Bed requested on the CCU.","endCase":true}],"events":[{"id":"ev_monitor_nudge","when":{"all":[{"time":[">=",6]},{"notDone":"tx_monitor"}]},"speaker":"Nurse","message":"Doctor, shall I put him on the monitor and pads? He looks grey."},{"id":"ev_gtn_drop","when":{"last":"tx_gtn"},"delay":2,"speaker":"Nurse","message":"Doctor! His BP has dropped to 82/50 since the GTN. He says he feels faint.","effects":{"vitals":{"sbp":82,"dbp":50,"hr":112},"state":"deteriorating","flags":["hypotension","hypotension_seen"]}},{"id":"ev_morphine_hypo","when":{"all":[{"last":"tx_morphine"},{"flag":"hypotension"}]},"speaker":"Nurse","message":"BP is now 74/44 after the morphine — he's barely responding!","effects":{"vitals":{"sbp":74,"dbp":44,"hr":122,"gcs":13},"state":"critical","flags":["morphine_in_shock"]}},{"id":"ev_fluid_response","when":{"all":[{"last":"tx_fluids"},{"flag":"hypotension"}]},"speaker":"Nurse","message":"BP is coming up with the fluid bolus — 104/66 now, and he says the dizziness is better.","effects":{"vitals":{"sbp":104,"dbp":66,"hr":100,"gcs":15},"state":"improving","flags":["hypotension_treated"],"unflags":["hypotension"]}},{"id":"ev_aspirin_ok","when":{"last":"tx_aspirin"},"speaker":"Nurse","message":"Aspirin's in. He's tolerated it fine."},{"id":"ev_team","when":{"done":"disp_cathlab"},"delay":20,"speaker":"Cath lab nurse","message":"The cath lab team is here to collect Mr. Khalid.","effects":{"flags":["team_ready"]}},{"id":"ev_waiting_long","when":{"all":[{"time":[">=",30]},{"done":"inv_ecg"},{"notDone":"disp_cathlab"}]},"speaker":"Senior","message":"It's been a while since that ECG. What's the plan for reperfusion?"}],"endings":[{"id":"end_excellent","title":"Fast and safe reperfusion","outcome":"good","when":{"all":[{"done":"disp_transfer"},{"done":"tx_aspirin"},{"within":["inv_ecg",10]},{"notDone":"tx_gtn"},{"notDone":"tx_lysis"}]},"text":"The angiogram shows a proximal right coronary artery occlusion, which is stented. He was pain-free by the end of the procedure, with good right ventricular function."},{"id":"end_shock","title":"He reached the lab — in shock","outcome":"poor","when":{"all":[{"done":"disp_transfer"},{"state":"critical"}]},"text":"The RCA was opened, but he needed vasopressors and a longer ICU stay. Hypotension in RV infarction is often iatrogenic — and avoidable."},{"id":"end_good","title":"Reperfused","outcome":"fair","when":{"done":"disp_transfer"},"text":"He received primary PCI to the right coronary artery. Look at the feedback to see where time or safety could have been better."},{"id":"end_ccu","title":"No reperfusion","outcome":"poor","when":{"done":"disp_ccu"},"text":"On the CCU his pain continued. A repeat ECG an hour later prompted a delayed cath lab activation. Time is muscle: STEMI needs immediate reperfusion."},{"id":"end_timeout","title":"The shift ended without a reperfusion decision","outcome":"poor","text":"An hour after arrival he still had no reperfusion plan. The incoming team activated the cath lab."}],"scoring":{"weights":{"assessment":20,"reasoning":20,"investigations":15,"management":25,"safety":15,"reassessment":5},"rubric":[{"id":"a_monitor","domain":"assessment","points":3,"when":{"within":["tx_monitor",5]},"good":"Monitor and defibrillator pads attached early.","missed":"Attach a monitor and defibrillator pads in the first minutes — STEMI patients can develop VF without warning."},{"id":"a_abcde","domain":"assessment","points":4,"when":{"all":[{"done":"ex_ab"},{"done":"ex_c"},{"done":"ex_d"}]},"good":"Structured ABCDE assessment.","missed":"Complete a structured A–B–C–D assessment."},{"id":"a_pain","domain":"assessment","points":3,"when":{"all":[{"done":"hx_onset"},{"done":"hx_character"}]},"good":"Characterised the pain (onset, nature, radiation).","missed":"Characterise the pain: onset, nature and radiation."},{"id":"a_assoc","domain":"assessment","points":2,"when":{"done":"hx_associated"},"good":"Asked about associated autonomic symptoms.","missed":"Ask about sweating, nausea and breathlessness."},{"id":"a_risk","domain":"assessment","points":2,"when":{"any":[{"done":"hx_pmh"},{"done":"hx_risk"}]},"good":"Established cardiovascular risk factors.","missed":"Establish cardiovascular risk factors and past history."},{"id":"a_allergy","domain":"assessment","points":2,"when":{"done":"hx_allergy"},"good":"Checked allergies.","missed":"Always check allergies before giving drugs."},{"id":"a_iv","domain":"assessment","points":2,"when":{"done":"tx_iv"},"good":"Secured IV access and sent bloods.","missed":"Secure IV access early."},{"id":"a_heart","domain":"assessment","points":2,"when":{"done":"ex_heart"},"good":"Auscultated for murmurs and rub.","missed":"Listen to the heart — a new murmur may point to a mechanical complication."},{"id":"r_dx","domain":"reasoning","points":10,"when":{"done":"dx_inf_rv"},"good":"Correct working diagnosis: inferior STEMI with RV involvement.","missed":"The working diagnosis was inferior STEMI with right ventricular involvement (ST↑ II, III, aVF; ST↑ in V4R)."},{"id":"r_dx_partial","domain":"reasoning","points":5,"countInMax":false,"when":{"done":"dx_inf"},"good":"Recognised inferior STEMI (but not the RV involvement)."},{"id":"r_dissection","domain":"reasoning","points":5,"when":{"any":[{"done":"hx_back"},{"done":"ex_bp_arms"}]},"good":"Considered aortic dissection before antithrombotics.","missed":"Before antithrombotics, screen for aortic dissection: tearing pain or pain into the back, a pulse or BP difference between arms, a widened mediastinum."},{"id":"r_rv","domain":"reasoning","points":5,"when":{"done":"inv_right_ecg"},"good":"Recorded right-sided leads in an inferior STEMI.","missed":"In every inferior STEMI, record right-sided leads (V4R). ST↑ ≥ 1 mm means RV involvement."},{"id":"i_ecg10","domain":"investigations","points":10,"when":{"within":["inv_ecg",10]},"good":"12-lead ECG within 10 minutes of arrival.","missed":"The 12-lead ECG should be done within 10 minutes of arrival for any chest pain."},{"id":"i_ecg_late","domain":"investigations","points":3,"countInMax":false,"when":{"all":[{"done":"inv_ecg"},{"not":{"within":["inv_ecg",10]}}]},"good":"Recorded a 12-lead ECG (but later than 10 minutes)."},{"id":"i_trop","domain":"investigations","points":2,"when":{"done":"inv_trop"},"good":"Sent a troponin (without waiting for it).","missed":"Send a troponin — but never wait for it before activating reperfusion in STEMI."},{"id":"i_bloods","domain":"investigations","points":2,"when":{"done":"inv_bloods"},"good":"Sent baseline bloods including coagulation.","missed":"Send baseline bloods, including renal function and coagulation, before PCI."},{"id":"i_cxr","domain":"investigations","points":1,"when":{"done":"inv_cxr"},"good":"Portable CXR — reasonable, and it didn't delay reperfusion."},{"id":"i_cta","domain":"investigations","points":-5,"when":{"done":"inv_cta"},"missed":"The CT aortogram wasn't indicated without features of dissection, and it delayed reperfusion."},{"id":"i_ddimer","domain":"investigations","points":-3,"when":{"done":"inv_ddimer"},"missed":"D-dimer has no role in a clear STEMI. It is non-specific and can mislead."},{"id":"m_aspirin","domain":"management","points":6,"when":{"done":"tx_aspirin"},"good":"Gave aspirin.","missed":"Give aspirin (e.g. 150–300 mg orally) as soon as ACS is suspected, unless contraindicated."},{"id":"m_aspirin_early","domain":"management","points":2,"when":{"within":["tx_aspirin",15]},"good":"Aspirin within 15 minutes.","missed":"Give aspirin early — within the first few minutes."},{"id":"m_cathlab","domain":"management","points":10,"when":{"done":"disp_cathlab"},"good":"Activated primary PCI.","missed":"Primary PCI is the preferred reperfusion strategy when it can be delivered promptly."},{"id":"m_cathlab_fast","domain":"management","points":4,"when":{"withinAfter":["inv_ecg","disp_cathlab",15]},"good":"Activated the cath lab within 15 minutes of the diagnostic ECG.","missed":"Activate the cath lab immediately after the diagnostic ECG. Every 10 minutes of delay costs myocardium."},{"id":"m_senior","domain":"management","points":3,"when":{"done":"tx_senior"},"good":"Escalated to a senior early.","missed":"Call for senior help early in a time-critical diagnosis."},{"id":"m_lysis","domain":"management","points":-8,"when":{"done":"tx_lysis"},"missed":"Fibrinolysis is for when primary PCI can't be delivered in time. With an on-site cath lab it adds bleeding risk without benefit."},{"id":"m_ccu","domain":"management","points":-10,"when":{"done":"disp_ccu"},"missed":"Admitting a STEMI without reperfusion is a major error."},{"id":"s_no_gtn","domain":"safety","points":6,"when":{"notDone":"tx_gtn"},"good":"Avoided nitrates in RV infarction.","missed":"Nitrates in RV infarction cause profound hypotension — the right ventricle is preload-dependent. Check V4R before giving nitrates in any inferior STEMI."},{"id":"s_allergy_first","domain":"safety","points":3,"when":{"before":["hx_allergy","tx_aspirin"]},"good":"Checked allergies before the first drug.","missed":"Check allergies before giving the first drug."},{"id":"s_no_lysis","domain":"safety","points":3,"when":{"notDone":"tx_lysis"},"good":"Avoided unnecessary fibrinolysis."},{"id":"s_no_o2","domain":"safety","points":3,"when":{"notDone":"tx_oxygen"},"good":"Withheld oxygen while SpO₂ was ≥ 90%.","missed":"Routine oxygen isn't indicated in ACS when SpO₂ is ≥ 90%."},{"id":"s_morphine_shock","domain":"safety","points":-5,"when":{"flag":"morphine_in_shock"},"missed":"Morphine in a hypotensive patient worsened the shock."},{"id":"s_hypo_untreated","domain":"safety","points":-4,"when":{"flag":"hypotension"},"missed":"The hypotension was never treated — in RV infarction, give cautious IV fluid boluses and reassess."},{"id":"re_after_tx","domain":"reassessment","points":3,"when":{"any":[{"after":["reassess","tx_aspirin"]},{"after":["reassess","tx_gtn"]},{"after":["reassess","tx_fluids"]},{"after":["reassess","tx_morphine"]}]},"good":"Reassessed after treatment.","missed":"Reassess after every intervention."},{"id":"re_after_fluids","domain":"reassessment","points":2,"appliesIf":{"flag":"hypotension_seen"},"when":{"after":["reassess","tx_fluids"]},"good":"Reassessed after the fluid bolus.","missed":"After a fluid bolus, reassess the response."},{"id":"re_twice","domain":"reassessment","points":2,"appliesIf":{"noFlag":"hypotension_seen"},"when":{"count":["reassess",">=",2]},"good":"Reassessed repeatedly while waiting for the cath lab.","missed":"Keep reassessing a STEMI patient while you wait for transfer."}]},"teaching":{"keyPoints":["Record a 12-lead ECG within 10 minutes of arrival for chest pain.","Inferior STEMI = ST elevation in II, III and aVF. ST elevation in III greater than II, with reciprocal change in aVL, points to the right coronary artery.","In every inferior STEMI, record V4R. ST elevation ≥ 1 mm means RV involvement.","RV infarction is preload-dependent: avoid nitrates, be careful with opioids and diuretics, and treat hypotension with cautious IV fluid.","Don't wait for troponin — STEMI is an ECG diagnosis, and reperfusion is time-critical.","Primary PCI is preferred when it can be delivered promptly. Fibrinolysis is for when it can't.","Oxygen only if SpO₂ \u003c 90%."],"pearls":["Raised JVP with clear lungs and hypotension in an inferior MI = think RV infarct.","Before antithrombotics, take 30 seconds to screen for aortic dissection."]},"references":[{"text":"Byrne RA, Rossello X, Coughlan JJ, et al. 2023 ESC Guidelines for the management of acute coronary syndromes. Eur Heart J. 2023;44(38):3720–3826.","url":"https://doi.org/10.1093/eurheartj/ehad191","date":"2023"},{"text":"Rao SV, O'Donoghue ML, Ruel M, et al. 2025 ACC/AHA/ACEP/NAEMSP/SCAI Guideline for the Management of Patients With Acute Coronary Syndromes. Circulation. 2025.","url":"","date":"2025"},{"text":"Hofmann R, James SK, Jernberg T, et al. Oxygen therapy in suspected acute myocardial infarction (DETO2X-AMI). N Engl J Med. 2017;377:1240–1249.","url":"https://doi.org/10.1056/NEJMoa1706222","date":"2017"}]}]</script>
-<script type="application/json" id="px-config">{"showUnreviewed":true}</script>
+<script type="application/json" id="px-config">{"showUnreviewed":true,"supabaseUrl":"https://cbswqehpufnlnczhznti.supabase.co","supabaseKey":"sb_publishable_ZZCyodaZrGNXyvUMBKf11g_Nb-FS9jF","submitFunction":"pixel-er-submit"}</script>
 <script>/* =====================================================================
    PIXEL ER — Clinical engine (pure logic, no DOM)
    ---------------------------------------------------------------------
@@ -816,7 +868,7 @@ a { color: #1d63b8; }
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PXCore = api;
-})(typeof window !== 'undefined' ? window : this);
+})(typeof globalThis !== 'undefined' ? globalThis : this);
 
 ;
 /* =====================================================================
@@ -1235,6 +1287,180 @@ a { color: #1d63b8; }
 
 ;
 /* =====================================================================
+   PIXEL ER — Online layer (club accounts, cases from the database,
+   score submission, leaderboard, results). Uses the club's Supabase
+   project with the public key only. Without a connection, the game
+   still works fully in practice mode.
+   ===================================================================== */
+(function (root) {
+  'use strict';
+  var PENDING_KEY = 'pxer.pending';
+
+  function store(k, v) { try { if (v === undefined) { var x = localStorage.getItem(k); return x ? JSON.parse(x) : null; } if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
+
+  var Online = {
+    cfg: null, sb: null, session: null, me: null,
+    status: 'offline',      /* offline | signed-out | signed-in | not-member */
+    setupMissing: false,    /* signed in, but the PIXEL ER tables/functions are not installed yet */
+    cases: null,            /* rows from pixel_cases (null = not loaded / unavailable) */
+    mine: {},               /* caseId → { official: attempt|null, count } */
+    listeners: [],
+
+    onChange: function (fn) { this.listeners.push(fn); },
+    emit: function () { var self = this; this.listeners.forEach(function (fn) { try { fn(self); } catch (e) { console.error(e); } }); },
+
+    /* Load supabase-js (same library and major version as the club platform). Never blocks the game. */
+    loadLib: function () {
+      if (root.supabase && root.supabase.createClient) return Promise.resolve(true);
+      return new Promise(function (resolve) {
+        var s = document.createElement('script'), done = false;
+        function fin(ok) { if (!done) { done = true; resolve(ok && !!(root.supabase && root.supabase.createClient)); } }
+        s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js';
+        s.onload = function () { fin(true); }; s.onerror = function () { fin(false); };
+        setTimeout(function () { fin(false); }, 8000);
+        document.head.appendChild(s);
+      });
+    },
+
+    init: function (cfg) {
+      var self = this; this.cfg = cfg || {};
+      if (!this.cfg.supabaseUrl || !this.cfg.supabaseKey) { this.status = 'offline'; return Promise.resolve(this); }
+      return this.loadLib().then(function (ok) { if (!ok) { self.status = 'offline'; return self; } return self.connect(); });
+    },
+
+    connect: function () {
+      var self = this;
+      try {
+        this.sb = root.supabase.createClient(this.cfg.supabaseUrl, this.cfg.supabaseKey, {
+          auth: { detectSessionInUrl: true, persistSession: true, storageKey: 'pxer-auth' }
+        });
+      } catch (e) { this.status = 'offline'; return Promise.resolve(this); }
+      return this.sb.auth.getSession().then(function (r) {
+        self.session = r && r.data ? r.data.session : null;
+        if (root.history && root.history.replaceState && /access_token|error_description/.test(location.hash)) root.history.replaceState(null, '', location.pathname + location.search);
+        return self.refresh();
+      }).then(function () {
+        self.sb.auth.onAuthStateChange(function (evt, session) {
+          if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') {
+            var was = !!self.session; self.session = session || null;
+            if (was !== !!self.session) self.refresh().then(function () { self.emit(); });
+          }
+        });
+        return self;
+      }, function () { self.status = 'offline'; return self; });
+    },
+
+    refresh: function () {
+      var self = this;
+      this.me = null; this.cases = null; this.mine = {}; this.setupMissing = false;
+      if (!this.session) { this.status = 'signed-out'; return Promise.resolve(); }
+      return this.sb.rpc('pixel_whoami').then(function (r) {
+        if (r.error) { self.setupMissing = /pixel_whoami|function|schema cache/i.test(r.error.message || ''); self.status = 'signed-in'; return; }
+        var row = Array.isArray(r.data) ? r.data[0] : r.data;
+        self.me = row || null;
+        self.status = row && (row.member_id || row.is_supervisor) ? 'signed-in' : 'not-member';
+        if (self.status !== 'signed-in') return;
+        return self.loadCases().then(function () { return self.loadMine(); }).then(function () { return self.flushPending(); });
+      }, function () { self.status = 'signed-in'; self.setupMissing = true; });
+    },
+
+    email: function () { return this.session && this.session.user ? this.session.user.email : ''; },
+    canManage: function () { return !!(this.me && (this.me.is_admin || this.me.is_supervisor)); },
+    isSupervisor: function () { return !!(this.me && this.me.is_supervisor); },
+    displayName: function () { return this.me ? (this.me.supervisor_name || this.me.full_name || '') : ''; },
+
+    signIn: function (email) {
+      if (!this.sb) return Promise.resolve({ error: { message: 'No connection to the club server.' } });
+      return this.sb.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.href.split('#')[0] } });
+    },
+    signOut: function () { var self = this; return this.sb ? this.sb.auth.signOut().then(function () { self.session = null; return self.refresh(); }).then(function () { self.emit(); }) : Promise.resolve(); },
+
+    /* Cases from the database, shaped like local cases (schedule taken from the DB columns). */
+    loadCases: function () {
+      var self = this;
+      return this.sb.from('pixel_cases').select('id,status,publish_at,close_at,data,updated_at').then(function (r) {
+        if (r.error) { self.setupMissing = true; self.cases = null; return; }
+        self.cases = (r.data || []).map(function (row) {
+          var c = JSON.parse(JSON.stringify(row.data));
+          c.status = row.status;
+          c.schedule = { publishAt: row.publish_at || '', closeAt: row.close_at || '' };
+          c._db = { publish_at: row.publish_at, close_at: row.close_at, updated_at: row.updated_at };
+          return c;
+        });
+      });
+    },
+    loadMine: function () {
+      var self = this;
+      return this.sb.from('pixel_attempts').select('case_id,official,score,xp,sim_minutes,created_at').eq('member_id', this.me && this.me.member_id || '00000000-0000-0000-0000-000000000000').then(function (r) {
+        self.mine = {};
+        (r.data || []).forEach(function (a) {
+          var m = self.mine[a.case_id] || (self.mine[a.case_id] = { official: null, count: 0, best: 0 });
+          m.count++; m.best = Math.max(m.best, a.score);
+          if (a.official) m.official = a;
+        });
+      });
+    },
+
+    /* Send a finished attempt. The server recomputes the score. */
+    submit: function (caseId, history) {
+      var self = this;
+      if (!this.sb || !this.session) return Promise.resolve({ error: 'not_signed_in' });
+      return this.sb.functions.invoke(this.cfg.submitFunction || 'pixel-er-submit', { body: { caseId: caseId, history: history } }).then(function (r) {
+        if (r.error) {
+          var ctx = r.error.context;
+          var p = ctx && typeof ctx.json === 'function' ? ctx.json().catch(function () { return null; }) : Promise.resolve(null);
+          return p.then(function (body) {
+            var code = (body && body.error) || 'network';
+            if (code === 'network' || code === 'server_error' || code === 'save_failed') self.queuePending(caseId, history);
+            return { error: code, detail: body && body.detail };
+          });
+        }
+        return self.loadMine().then(function () { return r.data; });
+      }, function () { self.queuePending(caseId, history); return { error: 'network' }; });
+    },
+    queuePending: function (caseId, history) {
+      var list = store(PENDING_KEY) || [];
+      if (!list.some(function (p) { return p.caseId === caseId && JSON.stringify(p.history) === JSON.stringify(history); })) list.push({ caseId: caseId, history: history, at: Date.now() });
+      store(PENDING_KEY, list.slice(-10));
+    },
+    flushPending: function () {
+      var self = this, list = store(PENDING_KEY) || [];
+      if (!list.length) return Promise.resolve();
+      store(PENDING_KEY, null);
+      return list.reduce(function (p, item) { return p.then(function () { return self.submit(item.caseId, item.history); }); }, Promise.resolve());
+    },
+
+    rpc: function (fn, args) {
+      if (!this.sb) return Promise.resolve([]);
+      return this.sb.rpc(fn, args || {}).then(function (r) { if (r.error) throw r.error; return r.data || []; });
+    },
+    leaderboard: function (caseId) { return this.rpc('pixel_leaderboard', { p_case: caseId }); },
+    overall: function () { return this.rpc('pixel_leaderboard_overall'); },
+    participation: function (caseId) { return this.rpc('pixel_participation', { p_case: caseId || null }); },
+    results: function (caseId) { return this.rpc('pixel_results', { p_case: caseId }); },
+
+    /* Case Builder → database. Schedule strings (local time) are sent as exact instants. */
+    saveCase: function (c) {
+      function iso(v) { if (!v) return null; var d = new Date(v); return isNaN(d) ? null : d.toISOString(); }
+      var clean = JSON.parse(JSON.stringify(c)); delete clean._db;
+      return this.sb.from('pixel_cases').upsert({
+        id: clean.id, data: clean, title: clean.title || '', status: clean.status || 'draft',
+        publish_at: iso(clean.schedule && clean.schedule.publishAt), close_at: iso(clean.schedule && clean.schedule.closeAt)
+      }).select('id,status,data').single().then(function (r) {
+        if (r.error) throw r.error;
+        return r.data;
+      });
+    },
+    loadAllCasesForBuilder: function () {
+      return this.sb.from('pixel_cases').select('id,data').then(function (r) { if (r.error) throw r.error; return (r.data || []).map(function (x) { return x.data; }); });
+    }
+  };
+
+  root.PXOnline = Online;
+})(window);
+
+;
+/* =====================================================================
    PIXEL ER — Game layer (world, movement, dialogue, panels, end screen)
    Knows nothing about any specific case: everything comes from case data.
    ===================================================================== */
@@ -1295,8 +1521,14 @@ a { color: #1d63b8; }
     this.el.className = 'px-game';
     var draftBanner = (c.status !== 'published' && c.status !== 'archived' && c.status !== 'scheduled')
       ? '<div class="px-ribbon">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet approved by faculty</div>' : '';
+    var modeBanner = ({
+      official: '<div class="px-ribbon official">🏆 OFFICIAL ATTEMPT — your first completed shift counts for the leaderboard</div>',
+      practice: '<div class="px-ribbon practice">Practice mode — your official score for this case is already recorded</div>',
+      guest: '<div class="px-ribbon practice">Practice mode — sign in with your club email on the home page to compete</div>',
+      preview: '<div class="px-ribbon">PREVIEW — nothing is saved</div>'
+    })[this.opts.mode] || '';
     this.el.innerHTML =
-      draftBanner +
+      modeBanner + draftBanner +
       '<header class="px-hud">' +
         '<div class="px-hud-l"><button class="px-ico" data-act="exit" aria-label="Exit to case list">✕</button>' +
         '<div class="px-hud-title"><b>' + esc(c.title) + '</b><span>' + esc(c.category || '') + '</span></div></div>' +
@@ -1753,6 +1985,7 @@ a { color: #1d63b8; }
           '<div><div class="px-xp">+' + s.xp + ' XP <small>of ' + s.maxXP + '</small></div>' +
           (best && !this.opts.preview ? '<div class="muted">Your best on this device: ' + Math.max(best.total, s.total) + '/100</div>' : '') +
           '<div class="muted">Finished at T+' + sim.S.t + ' min</div></div></div>' +
+        '<div class="px-submit" aria-live="polite" hidden></div>' +
         '<div class="px-bars">' + s.breakdown.map(function (b) {
           if (b.fraction === null) return '';
           return '<div class="px-bar"><span>' + esc(b.label) + '</span><div><i style="width:' + Math.round(b.fraction * 100) + '%"></i></div><b>' + b.points + '/' + b.of + '</b></div>';
@@ -1770,7 +2003,7 @@ a { color: #1d63b8; }
     this.el.appendChild(ov);
     ov.querySelector('[data-e="replay"]').onclick = function () { if (self.opts.onReplay) self.opts.onReplay(); };
     ov.querySelector('[data-e="home"]').onclick = function () { if (self.opts.onExit) self.opts.onExit(); };
-    if (this.opts.onFinish) this.opts.onFinish({ caseId: c.id, score: s, history: sim.S.history.slice(), ending: e.id });
+    if (this.opts.onFinish) this.opts.onFinish({ caseId: c.id, score: s, history: sim.S.history.slice(), ending: e.id }, ov.querySelector('.px-submit'));
   };
 
   root.PXGame = { Game: Game, Sound: Sound, esc: esc, store: store };
@@ -1859,7 +2092,22 @@ a { color: #1d63b8; }
     this.section = (ws && ws.section) || 'basics';
     this.actFilter = 'all';
     this.config = Core.clone(opts.config || { showUnreviewed: true });
+    this.online = opts.online || null;
   }
+
+  Builder.prototype.onlineState = function () {
+    var o = this.online;
+    if (!o || o.status === 'offline') return { can: false, text: 'Offline — file export only' };
+    if (o.status !== 'signed-in' || !o.me) return { can: false, text: 'Not signed in — sign in on the home page to publish to the club database' };
+    if (o.setupMissing) return { can: false, text: 'Club database not set up for PIXEL ER yet' };
+    if (!o.canManage()) return { can: false, text: 'Signed in as ' + o.displayName() + ' — only club admins and faculty supervisors can publish' };
+    return { can: true, text: (o.isSupervisor() ? 'Faculty supervisor: ' : 'Club admin: ') + o.displayName() };
+  };
+  Builder.prototype.refreshOnline = function () {
+    var el = this.el.querySelector('.bd-online'); if (!el) return;
+    var st = this.onlineState(); el.textContent = '● ' + st.text; el.className = 'bd-online ' + (st.can ? 'on' : '');
+    if (this.section === 'publish') this.render();
+  };
 
   Builder.prototype.cur = function () { var s = this.sel; return this.cases.filter(function (c) { return c.id === s; })[0]; };
   Builder.prototype.persist = function () {
@@ -1872,11 +2120,11 @@ a { color: #1d63b8; }
     var self = this;
     this.el.className = 'bd';
     this.el.innerHTML =
-      '<header class="bd-top"><div><b>PIXEL ER</b> · Case Builder <span class="bd-saved"></span></div>' +
+      '<header class="bd-top"><div><b>PIXEL ER</b> · Case Builder <span class="bd-saved"></span><br><span class="bd-online"></span></div>' +
       '<div class="bd-top-r"><button class="px-btn sm" data-b="new">＋ New case</button><button class="px-btn sm" data-b="dup">⧉ Duplicate</button>' +
       '<label class="px-btn sm ghost">⇪ Import .json<input type="file" accept=".json,application/json" hidden data-b="import"></label>' +
       '<button class="px-btn sm" data-b="play">▶ Preview</button><button class="px-btn sm ghost" data-b="exit">← Back to game</button></div></header>' +
-      '<div class="bd-note">Changes are saved on <b>this device only</b>. Members only see a case after you download the game file and upload it to Netlify (see <b>Check &amp; publish</b>).</div>' +
+      '<div class="bd-note">Edits are saved on <b>this device</b> as you type. Members see a case only after you <b>save it to the club database</b> (or export the game file) from <b>Check &amp; publish</b>.</div>' +
       '<div class="bd-body"><aside class="bd-list"></aside><main class="bd-main"><nav class="bd-secs"></nav><div class="bd-form"></div></main></div>';
     this.el.addEventListener('click', function (e) {
       var b = e.target.closest('[data-b]'); if (!b) return;
@@ -1889,6 +2137,7 @@ a { color: #1d63b8; }
     this.el.querySelector('[data-b="import"]').addEventListener('change', function (e) { self.importFile(e.target.files[0]); e.target.value = ''; });
     this.bind(this.el.querySelector('.bd-form'));
     this.render();
+    this.refreshOnline();
   };
 
   Builder.prototype.importFile = function (file) {
@@ -2323,12 +2572,14 @@ a { color: #1d63b8; }
       '<h2>Review workflow</h2><ol class="bd-flow">' + Core.STATUSES.map(function (s) { return '<li class="' + (s === c.status ? 'on' : '') + '">' + Core.STATUS_LABELS[s] + '</li>'; }).join('') + '</ol>' +
       '<p class="bd-help">AI review is never faculty approval. Only set <b>Faculty approved</b> once a named faculty member has played the case and checked the findings, results, decision logic, patient responses, scoring and feedback. Change the status in <b>Basics</b>.</p>' +
       '<p>Right now members would see this case as: <b>' + (vis.visible ? ({ live: 'This week’s case (live)', archive: 'Archive — practice', preview: 'Preview (marked “not yet approved by faculty”)' })[vis.mode] : 'Hidden (' + vis.mode + ')') + '</b></p>' +
-      '<h2>Publish to members</h2><ol class="bd-steps"><li>Choose which cases go into the game file.</li><li>Click <b>Download game file</b>. You get an <code>index.html</code> with the game and these cases inside.</li><li>Upload it to the PIXEL ER site on Netlify (drag and drop on the Deploys page). Members see the update immediately.</li></ol>' +
+      this.dbBox(c, v) +
+      '<h2>Or: publish as a file</h2><ol class="bd-steps"><li>Choose which cases go into the game file.</li><li>Click <b>Download game file</b>. You get an <code>index.html</code> with the game and these cases inside.</li><li>Upload it to the PIXEL ER site on Netlify (drag and drop on the Deploys page). Members see the update immediately.</li></ol>' +
       '<div class="bd-pick">' + this.cases.map(function (x) { var vv = Core.validateCase(x); return '<label class="bd-chk"><input type="checkbox" data-pick="' + esc(x.id) + '"' + (x.status === 'draft' && x.id !== c.id && self.embeddedIds.indexOf(x.id) === -1 ? '' : ' checked') + (vv.errors.length ? ' disabled' : '') + '> ' + esc(x.title) + ' <span class="st st-' + esc(x.status) + '">' + esc(Core.STATUS_LABELS[x.status]) + '</span>' + (vv.errors.length ? ' <span class="err">has errors</span>' : '') + '</label>'; }).join('') + '</div>' +
       '<label class="bd-chk"><input type="checkbox" data-cfg="showUnreviewed"' + (this.config.showUnreviewed ? ' checked' : '') + '> Let members play cases that are not yet faculty-approved (they are clearly marked as such)</label>' +
       '<p class="bd-actions"><button class="px-btn" data-x="game">⬇ Download game file (index.html)</button> <button class="px-btn ghost" data-x="json">⬇ Download this case (.json)</button> <button class="px-btn ghost" data-x="all">⬇ Download all cases (.json backup)</button></p>' +
       '<p class="bd-help">Keep the downloaded .json files as backups. You can re-import them at any time with <b>⇪ Import .json</b>.</p>';
     f.querySelector('[data-cfg]').onchange = function (e) { self.config.showUnreviewed = e.target.checked; };
+    this.bindDb(f, c);
     f.querySelector('[data-x="json"]').onclick = function () { if (v.errors.length && !root.confirm('This case has errors. Download anyway?')) return; download(c.id + '.json', JSON.stringify(c, null, 2), 'application/json'); };
     f.querySelector('[data-x="all"]').onclick = function () { download('pixel-er-cases-' + new Date().toISOString().slice(0, 10) + '.json', JSON.stringify(self.cases, null, 2), 'application/json'); };
     f.querySelector('[data-x="game"]').onclick = function () {
@@ -2336,6 +2587,49 @@ a { color: #1d63b8; }
       var chosen = self.cases.filter(function (x) { return ids.indexOf(x.id) !== -1; });
       if (!chosen.length) { root.alert('Choose at least one case.'); return; }
       self.exportGame(chosen);
+    };
+  };
+
+  /* ---------- club database ---------- */
+  Builder.prototype.dbBox = function (c, v) {
+    var st = this.onlineState(), APPROVED = ['faculty_approved', 'scheduled', 'published', 'archived'];
+    var h = '<h2>Publish to the club database <small>recommended</small></h2>';
+    if (!st.can) return h + '<div class="bd-box warn">' + esc(st.text) + '.</div>';
+    h += '<div class="bd-box ok"><b>' + esc(st.text) + '</b></div>' +
+      '<ul class="bd-help"><li>Members see the case when its status is <b>Published</b> or <b>Scheduled</b> and the <b>Publish at</b> time has passed. Official attempts close at <b>Competition closes</b>.</li>' +
+      '<li>Only a <b>faculty supervisor</b> can move a case to Faculty approved / Scheduled / Published. The server records their name and the date automatically.</li>' +
+      '<li>Once approved, the medical content is locked. To change it, set the status back to <b>Faculty review required</b> and ask for approval again. The schedule can still be changed.</li></ul>' +
+      (APPROVED.indexOf(c.status) !== -1 && !this.online.isSupervisor() && !(c.review && c.review.facultyReviewer) ? '<div class="bd-box warn">Only a faculty supervisor can save a case with this status.</div>' : '') +
+      '<p class="bd-actions"><button class="px-btn" data-db="save"' + (v.errors.length ? ' disabled title="Fix the errors first"' : '') + '>⬆ Save this case to the club database</button> <button class="px-btn ghost" data-db="load">⬇ Load cases from the database</button></p><p class="bd-dbmsg" aria-live="polite"></p>';
+    return h;
+  };
+  Builder.prototype.bindDb = function (f, c) {
+    var self = this, msg = f.querySelector('.bd-dbmsg');
+    var save = f.querySelector('[data-db="save"]'), load = f.querySelector('[data-db="load"]');
+    if (save) save.onclick = function () {
+      var APPROVED = ['faculty_approved', 'scheduled', 'published', 'archived'];
+      if (self.online.isSupervisor() && APPROVED.indexOf(c.status) !== -1) { c.review = c.review || {}; if (!c.review.facultyReviewer) c.review.facultyReviewer = self.online.displayName(); }
+      var v = Core.validateCase(c); if (v.errors.length) { msg.className = 'bd-dbmsg err'; msg.textContent = 'Fix the errors above first.'; return; }
+      save.disabled = true; msg.className = 'bd-dbmsg'; msg.textContent = 'Saving…';
+      self.online.saveCase(c).then(function (row) {
+        var i = self.cases.indexOf(c); if (i !== -1) self.cases[i] = row.data;
+        self.persist(); self.render();
+        var m = self.el.querySelector('.bd-dbmsg'); if (m) { m.className = 'bd-dbmsg ok'; m.textContent = '✓ Saved to the club database — status: ' + (Core.STATUS_LABELS[row.status] || row.status) + (row.data.review && row.data.review.facultyReviewer ? ' · reviewer: ' + row.data.review.facultyReviewer : '') + '.'; }
+        if (self.opts.onPublished) self.opts.onPublished();
+      }, function (e) { save.disabled = false; msg.className = 'bd-dbmsg err'; msg.textContent = 'Not saved: ' + (e && e.message || e); });
+    };
+    if (load) load.onclick = function () {
+      msg.className = 'bd-dbmsg'; msg.textContent = 'Loading…';
+      self.online.loadAllCasesForBuilder().then(function (list) {
+        var n = 0;
+        list.forEach(function (dc) {
+          var i = self.cases.findIndex(function (x) { return x.id === dc.id; });
+          if (i === -1) { self.cases.push(dc); n++; }
+          else if (JSON.stringify(self.cases[i]) !== JSON.stringify(dc) && root.confirm('Replace your local copy of “' + dc.title + '” with the database version?')) { self.cases[i] = dc; n++; }
+        });
+        self.persist(); self.render();
+        var m = self.el.querySelector('.bd-dbmsg'); if (m) { m.className = 'bd-dbmsg ok'; m.textContent = '✓ ' + list.length + ' case(s) in the database · ' + n + ' updated here.'; }
+      }, function (e) { msg.className = 'bd-dbmsg err'; msg.textContent = 'Could not load: ' + (e && e.message || e); });
     };
   };
 
@@ -2380,7 +2674,8 @@ a { color: #1d63b8; }
 
 ;
 /* =====================================================================
-   PIXEL ER — App shell: home screen, routing, preview, builder.
+   PIXEL ER — App shell: home, sign-in, routing, leaderboard, results,
+   preview and builder.
    ===================================================================== */
 (function (root) {
   'use strict';
@@ -2388,36 +2683,78 @@ a { color: #1d63b8; }
      index.html with different cases inside. Must run before anything renders. */
   root.PX_PRISTINE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-  var Core = root.PXCore, G = root.PXGame, esc = G.esc, store = G.store;
+  var Core = root.PXCore, G = root.PXGame, Online = root.PXOnline, esc = G.esc, store = G.store;
   var app = document.getElementById('app');
-  var CASES = [], CONFIG = { showUnreviewed: true };
-  try { CASES = JSON.parse(document.getElementById('px-cases').textContent) || []; } catch (e) { CASES = []; }
+  var LOCAL = [], CONFIG = { showUnreviewed: true };
+  try { LOCAL = JSON.parse(document.getElementById('px-cases').textContent) || []; } catch (e) { LOCAL = []; }
   try { CONFIG = Object.assign(CONFIG, JSON.parse(document.getElementById('px-config').textContent || '{}')); } catch (e) { /* keep defaults */ }
-  var current = null;
+  var current = null, sentTo = '', connecting = !!(CONFIG.supabaseUrl && CONFIG.supabaseKey);
 
   function stop() { if (current && current.destroy) current.destroy(); current = null; app.className = ''; }
 
-  function caseById(id) { return CASES.filter(function (c) { return c.id === id; })[0]; }
+  /* Members who are signed in play the cases from the club database; everyone else plays the built-in cases for practice. */
+  function onlineMember() { return Online.status === 'signed-in' && !Online.setupMissing && Array.isArray(Online.cases); }
+  function allCases() { return onlineMember() ? Online.cases : LOCAL; }
+  function caseById(id) { return allCases().filter(function (c) { return c.id === id; })[0]; }
+  function visibility(c) { return Core.caseVisibility(c, new Date(), { preview: onlineMember() ? Online.canManage() : CONFIG.showUnreviewed }); }
+  function attemptMode(c, vis) {
+    if (!onlineMember() || !Online.me || !Online.me.member_id) return 'guest';
+    var mine = Online.mine[c.id];
+    return vis.mode === 'live' && !(mine && mine.official) ? 'official' : 'practice';
+  }
+  function fmtDate(v) { var d = new Date(v); return isNaN(d) ? '' : d.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
+
+  /* ---------------- home ---------------- */
+  function accountBar() {
+    if (!CONFIG.supabaseUrl) return '';
+    var h = '<section class="acct" aria-live="polite">';
+    if (connecting) h += '<p class="muted">Connecting to the club server…</p>';
+    else if (Online.status === 'offline') h += '<p>📴 <b>Offline</b> — you can play in practice mode. Scores are not saved to the leaderboard.</p>';
+    else if (Online.status === 'signed-out') {
+      h += sentTo
+        ? '<p>✉️ We sent a sign-in link to <b>' + esc(sentTo) + '</b>. Open it <b>on this device</b> to come back signed in.</p><button class="linkbtn" data-acct="again">Use a different email</button>'
+        : '<form class="acct-form"><label for="acct-mail"><b>Sign in to compete</b> — use the email you use on the club platform</label>' +
+          '<div class="acct-row"><input id="acct-mail" type="email" required autocomplete="email" placeholder="name@s.mu.edu.sa"><button class="px-btn sm" type="submit">Send sign-in link</button></div>' +
+          '<small>No password. Without signing in you can still play for practice.</small></form>';
+    } else if (Online.status === 'not-member') {
+      h += '<p>Signed in as <b>' + esc(Online.email()) + '</b>, but this email isn\'t registered as a club member, so your scores won\'t go on the leaderboard. You can still play for practice.</p><button class="linkbtn" data-acct="out">Sign out</button>';
+    } else {
+      var me = Online.me || {};
+      h += '<div class="acct-in"><div>👋 <b>' + esc(Online.displayName() || Online.email()) + '</b>' + (me.study_level ? ' · ' + esc(me.study_level) : '') +
+        (me.is_supervisor ? ' · <span class="chip">Faculty supervisor</span>' : me.is_admin ? ' · <span class="chip">Club admin</span>' : '') + '</div>' +
+        '<div class="acct-links"><a href="#board">🏆 Leaderboards</a>' + (Online.canManage() ? ' <a href="#results">📊 Results</a> <a href="#admin">🛠 Case Builder</a>' : '') +
+        ' <button class="linkbtn" data-acct="out">Sign out</button></div></div>';
+      if (Online.setupMissing) h += '<p class="warnbox">Connected, but PIXEL ER isn\'t set up on the club database yet (see <code>pixel-er/README.md</code>). Playing in practice mode for now.</p>';
+    }
+    return h + '</section>';
+  }
 
   function card(c, mode) {
-    var best = store('pxer.best.' + c.id), p = c.patient || {};
+    var p = c.patient || {}, best = store('pxer.best.' + c.id), mine = Online.mine[c.id];
     var chip = mode === 'live' ? '<span class="chip live">THIS WEEK</span>' : mode === 'archive' ? '<span class="chip">ARCHIVE · practice</span>' : '<span class="chip warn">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet faculty-approved</span>';
-    var closes = mode === 'live' && c.schedule && c.schedule.closeAt ? '<span class="muted">Closes ' + esc(new Date(c.schedule.closeAt).toLocaleString()) + '</span>' : '';
+    var closes = mode === 'live' && c.schedule && c.schedule.closeAt ? '<span class="muted">Closes ' + esc(fmtDate(c.schedule.closeAt)) + '</span>' : '';
+    var status = '';
+    if (onlineMember() && Online.me && Online.me.member_id) {
+      if (mine && mine.official) status = '<p class="official-done">✅ Your official score: <b>' + mine.official.score + '/100</b> · replays are practice</p>';
+      else if (mode === 'live') status = '<p class="official-open">🏆 Official attempt available — your first completed shift counts</p>';
+    }
+    var boardBtn = onlineMember() && mode !== 'preview' ? '<a class="px-btn ghost" href="#board/' + encodeURIComponent(c.id) + '">🏆 Leaderboard</a>' : '';
+    var localBest = !onlineMember() && best ? '<span class="best">Best on this device: ' + best.total + '/100</span>' : '';
     return '<article class="home-card ' + mode + '">' + chip +
       '<h3>' + esc(c.title) + '</h3><p class="tag">' + esc(c.tagline || '') + '</p>' +
       '<p class="meta">' + esc([c.category, c.difficulty, c.durationMin ? '~' + c.durationMin + ' min' : ''].filter(Boolean).join(' · ')) + '</p>' +
       '<p class="cc"><b>' + esc((p.age ? p.age + ' y ' : '') + (p.sex === 'F' ? 'female' : p.sex === 'M' ? 'male' : '')) + '</b> — ' + esc(p.chiefComplaint || '') + '</p>' +
       ((c.objectives || []).length ? '<details><summary>Learning objectives</summary><ul>' + c.objectives.map(function (o) { return '<li>' + esc(o) + '</li>'; }).join('') + '</ul></details>' : '') +
-      '<div class="row"><a class="px-btn" href="#play/' + encodeURIComponent(c.id) + '">▶ Start shift</a>' + (best ? '<span class="best">Best: ' + best.total + '/100 · ' + best.xp + ' XP</span>' : '') + closes + '</div></article>';
+      status +
+      '<div class="row"><a class="px-btn" href="#play/' + encodeURIComponent(c.id) + '">▶ Start shift</a>' + boardBtn + localBest + closes + '</div></article>';
   }
 
   function home() {
     stop();
     app.className = 'home';
-    var now = new Date(), live = [], prev = [], arch = [];
-    CASES.forEach(function (c) {
-      var v = Core.caseVisibility(c, now, { preview: CONFIG.showUnreviewed });
-      if (!v.visible) return;
+    var live = [], prev = [], arch = [];
+    allCases().forEach(function (c) {
+      var v = visibility(c); if (!v.visible) return;
       (v.mode === 'live' ? live : v.mode === 'archive' ? arch : prev).push(c);
     });
     var avatar = store('pxer.avatar') || 'doctor_m';
@@ -2426,12 +2763,12 @@ a { color: #1d63b8; }
         '<img class="logo" src="data:image/png;base64,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" alt="Emergency Medicine Club — Majmaah University">' +
         '<div><h1 class="pixel-title">PIXEL&nbsp;ER</h1><p class="tagline">Your Shift. Your Decisions.</p>' +
         '<p class="sub">Case of the Week · Emergency Medicine Club · Majmaah University</p></div>' +
-      '</header>' +
+      '</header>' + accountBar() +
       '<section class="avatar-pick" aria-label="Choose your doctor"><span>Your doctor:</span>' +
-        ['doctor_m', 'doctor_f'].map(function (k) { return '<button data-av="' + k + '" aria-pressed="' + (avatar === k) + '"><canvas width="48" height="48"></canvas></button>'; }).join('') +
+        ['doctor_m', 'doctor_f'].map(function (k) { return '<button data-av="' + k + '" aria-pressed="' + (avatar === k) + '" aria-label="' + (k === 'doctor_f' ? 'Female doctor' : 'Male doctor') + '"><canvas width="48" height="48"></canvas></button>'; }).join('') +
       '</section>' +
       (live.length ? '<h2 class="home-h">This week’s case</h2>' + live.map(function (c) { return card(c, 'live'); }).join('') : '') +
-      (prev.length ? '<h2 class="home-h">' + (live.length ? 'Preview cases' : 'Cases') + '</h2>' + prev.map(function (c) { return card(c, 'preview'); }).join('') : '') +
+      (prev.length ? '<h2 class="home-h">' + (onlineMember() ? 'Not yet published (visible to admins only)' : live.length ? 'Preview cases' : 'Cases') + '</h2>' + prev.map(function (c) { return card(c, 'preview'); }).join('') : '') +
       (!live.length && !prev.length ? '<p class="empty">No case is live right now. Check back soon.</p>' : '') +
       (arch.length ? '<h2 class="home-h">Archive</h2>' + arch.map(function (c) { return card(c, 'archive'); }).join('') : '') +
       '<details class="howto"><summary>How to play</summary><ol>' +
@@ -2439,44 +2776,187 @@ a { color: #1d63b8; }
         '<li>Stand next to someone or something and press <b>E</b> (or tap the prompt): the <b>patient</b> for history and examination, the <b>nurse</b> for treatments, the <b>workstation</b> for tests, your diagnosis and the plan, and the <b>monitor</b> for vital signs.</li>' +
         '<li>Every action takes simulated minutes, and the patient responds to your decisions. Results come back after a realistic delay. Use <b>⏱ Wait</b> when you need time to pass.</li>' +
         '<li>No time to walk? <b>☰ Stations</b> opens any station directly.</li>' +
-        '<li>Your score rewards safe, structured care, not speed. You can replay any case for practice.</li></ol></details>' +
+        '<li>Your score rewards safe, structured care, not speed. <b>Your first completed shift each week is your official score</b>; replays are practice.</li></ol></details>' +
       '<footer class="home-foot"><p>Educational simulation for medical students. It is not clinical decision support. Cases follow the club\'s faculty review workflow.</p>' +
         '<a href="#admin" class="admin-link">Case Builder (club admins)</a></footer>';
     Array.prototype.forEach.call(app.querySelectorAll('[data-av]'), function (b) {
       root.PXArt.drawPortrait(b.querySelector('canvas'), b.getAttribute('data-av'));
       b.onclick = function () { store('pxer.avatar', b.getAttribute('data-av')); Array.prototype.forEach.call(app.querySelectorAll('[data-av]'), function (x) { x.setAttribute('aria-pressed', x === b); }); };
     });
+    var form = app.querySelector('.acct-form');
+    if (form) form.onsubmit = function (e) {
+      e.preventDefault();
+      var mail = form.querySelector('input').value.trim(), btn = form.querySelector('button');
+      btn.disabled = true; btn.textContent = 'Sending…';
+      Online.signIn(mail).then(function (r) {
+        if (r && r.error) { btn.disabled = false; btn.textContent = 'Send sign-in link'; alertMsg(form, r.error.message); return; }
+        sentTo = mail; home();
+      });
+    };
+    Array.prototype.forEach.call(app.querySelectorAll('[data-acct]'), function (b) {
+      b.onclick = function () { if (b.getAttribute('data-acct') === 'out') Online.signOut().then(home); else { sentTo = ''; home(); } };
+    });
   }
+  function alertMsg(el, msg) { var p = el.querySelector('.err') || el.appendChild(document.createElement('p')); p.className = 'err'; p.textContent = msg; }
+
+  /* ---------------- play ---------------- */
+  var SUBMIT_MSG = {
+    not_signed_in: 'Your session expired — sign in again on the home page, then replay to submit.',
+    not_a_member: 'This email isn\'t registered as a club member, so the score wasn\'t recorded.',
+    case_not_available: 'This case isn\'t open for submissions.',
+    not_finished: 'The case wasn\'t finished.',
+    invalid_history: 'The server couldn\'t verify this attempt, so it wasn\'t recorded.',
+    too_many_attempts: 'You\'ve reached the attempt limit for this case.',
+    network: 'Couldn\'t reach the club server. Your attempt is saved on this device and will be sent automatically next time you open PIXEL ER.'
+  };
 
   function play(c, opts) {
     stop();
+    opts = opts || {};
+    var vis = visibility(c), mode = opts.preview ? 'preview' : attemptMode(c, vis);
     var el = document.createElement('div'); app.innerHTML = ''; app.appendChild(el); app.className = 'playing';
     var g = new G.Game(el, c, Object.assign({
       avatar: store('pxer.avatar') || 'doctor_m',
-      onExit: function () { location.hash = opts && opts.preview ? '#admin' : ''; if (!opts || !opts.preview) home(); },
-      onReplay: function () { play(c, Object.assign({}, opts, { fresh: true })); }
-    }, opts || {}));
+      mode: mode,
+      onExit: function () { location.hash = opts.preview ? '#admin' : ''; if (!opts.preview) home(); },
+      onReplay: function () { play(c, Object.assign({}, opts, { fresh: true })); },
+      onFinish: function (res, slot) {
+        if (!slot) return;
+        if (mode === 'preview') return;
+        slot.hidden = false;
+        if (mode === 'guest') { slot.className = 'px-submit info'; slot.innerHTML = 'Practice score — <a href="#">sign in with your club email</a> to compete on the leaderboard.'; return; }
+        slot.className = 'px-submit wait'; slot.textContent = mode === 'official' ? 'Saving your official attempt…' : 'Saving your practice attempt…';
+        Online.submit(c.id, res.history).then(function (r) {
+          if (!r || r.error) { slot.className = 'px-submit bad'; slot.textContent = SUBMIT_MSG[r && r.error] || ('Not recorded: ' + (r && r.error)); return; }
+          var board = '<a href="#board/' + encodeURIComponent(c.id) + '">🏆 View leaderboard</a>';
+          if (r.official) { slot.className = 'px-submit ok'; slot.innerHTML = '✅ <b>Official score recorded: ' + r.score + '/100</b> (+' + r.xp + ' XP) · Rank <b>#' + r.rank + '</b> of ' + r.of + ' · ' + board; }
+          else { slot.className = 'px-submit info'; slot.innerHTML = 'Practice attempt saved (' + r.score + '/100).' + (r.officialScore != null ? ' Your official score for this case is <b>' + r.officialScore + '/100</b>.' : ' Official attempts are closed for this case.') + ' ' + board; }
+        });
+      }
+    }, opts));
     g.mount(); current = g;
   }
 
+  /* ---------------- leaderboard ---------------- */
+  function needMember(title) {
+    app.className = 'home page';
+    app.innerHTML = '<a class="back" href="#">← PIXEL ER</a><h1 class="page-h">' + title + '</h1>' +
+      (connecting ? '<p class="muted">Connecting…</p>' : '<p>Leaderboards are for club members. <a href="#">Sign in on the home page</a> with your club email.</p>');
+  }
+  function bars(rows) {
+    var max = Math.max.apply(null, rows.map(function (r) { return Number(r.participants); }).concat([1]));
+    return rows.length ? '<div class="years">' + rows.map(function (r) {
+      return '<div class="yr"><span>' + esc(r.study_level) + '</span><div><i style="width:' + Math.round(Number(r.participants) / max * 100) + '%"></i></div><b>' + r.participants + '</b></div>';
+    }).join('') + '</div>' : '<p class="muted">No official attempts yet.</p>';
+  }
+  function caseOptions(sel, allowAll) {
+    var list = allCases().filter(function (c) { var v = visibility(c); return v.visible && v.mode !== 'preview'; });
+    return '<select class="case-pick">' + (allowAll ? '<option value=""' + (!sel ? ' selected' : '') + '>All cases — total XP</option>' : '') +
+      list.map(function (c) { return '<option value="' + esc(c.id) + '"' + (c.id === sel ? ' selected' : '') + '>' + esc(c.title) + '</option>'; }).join('') + '</select>';
+  }
+  function medal(n) { return n === 1 ? '🥇' : n === 2 ? '🥈' : n === 3 ? '🥉' : '#' + n; }
+
+  function board(caseId) {
+    stop();
+    if (!onlineMember()) { needMember('Leaderboard'); return; }
+    if (caseId === null) { var v = allCases().filter(function (c) { return visibility(c).mode === 'live'; })[0]; location.replace(v ? '#board/' + encodeURIComponent(v.id) : '#board/all'); return; }
+    var c = caseId ? caseById(caseId) : null;
+    app.className = 'home page';
+    app.innerHTML = '<a class="back" href="#">← PIXEL ER</a><h1 class="page-h">🏆 Leaderboard</h1>' + caseOptions(caseId, true) +
+      (c ? '<p class="muted">' + esc(c.title) + (c.schedule && c.schedule.closeAt ? ' · ' + (new Date(c.schedule.closeAt) > new Date() ? 'closes ' : 'closed ') + esc(fmtDate(c.schedule.closeAt)) : '') + '</p>' : '<p class="muted">Total XP from official attempts across all cases.</p>') +
+      '<div class="board-body"><p class="muted">Loading…</p></div>';
+    app.querySelector('.case-pick').onchange = function (e) { location.hash = '#board' + (e.target.value ? '/' + encodeURIComponent(e.target.value) : '/all'); };
+    var body = app.querySelector('.board-body');
+    var jobs = caseId ? [Online.leaderboard(caseId), Online.participation(caseId), Online.participation(null)] : [Online.overall(), Online.participation(null), Promise.resolve(null)];
+    Promise.all(jobs).then(function (r) {
+      var rows = r[0], me = rows.filter(function (x) { return x.is_me; })[0], top = rows.slice(0, 50);
+      if (me && top.indexOf(me) === -1) top = top.concat([{ gap: true }, me]);
+      var html = '';
+      if (me) html += '<div class="me-card">Your position: <b>' + medal(Number(me.rank)) + '</b> of ' + rows.length + ' · ' + (caseId ? '<b>' + me.score + '/100</b>' : '<b>' + me.total_xp + ' XP</b>') + '</div>';
+      else if (caseId) html += '<div class="me-card muted">You haven\'t submitted an official attempt for this case yet.</div>';
+      html += rows.length ? '<table class="board"><thead><tr><th>Rank</th><th>Name</th><th>Year</th><th>' + (caseId ? 'Score</th><th>Time' : 'Total XP</th><th>Cases') + '</th></tr></thead><tbody>' + top.map(function (x) {
+        if (x.gap) return '<tr class="gap"><td colspan="5">…</td></tr>';
+        var n = Number(x.rank);
+        return '<tr class="' + (x.is_me ? 'me' : '') + (n <= 3 ? ' podium' : '') + '"><td class="rk">' + medal(n) + '</td><td>' + esc(x.name) + '</td><td>' + esc(x.study_level || '—') + '</td>' +
+          (caseId ? '<td><b>' + x.score + '</b></td><td>' + x.sim_minutes + ' min</td>' : '<td><b>' + x.total_xp + '</b></td><td>' + x.cases_played + '</td>') + '</tr>';
+      }).join('') + '</tbody></table><p class="fine">Ties are broken by less time inside the case, then by who submitted first. Only each member\'s first completed shift (official attempt) counts.</p>' : '<p class="muted">No official attempts yet — be the first!</p>';
+      html += '<h2 class="home-h">Most participating years' + (caseId ? ' — this case' : ' — all cases') + '</h2>' + bars(r[1]);
+      if (caseId && r[2]) html += '<h2 class="home-h">Most participating years — all cases</h2>' + bars(r[2]);
+      body.innerHTML = html;
+    }, function (e) { body.innerHTML = '<p class="err">Couldn\'t load the leaderboard: ' + esc(e.message || e) + '</p>'; });
+  }
+
+  /* ---------------- results (admins & faculty supervisors) ---------------- */
+  function csvCell(v) { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function results(caseId) {
+    stop();
+    if (!onlineMember() || !Online.canManage()) { needMember('Results'); if (onlineMember()) app.querySelector('p').textContent = 'Results are for club admins and faculty supervisors.'; return; }
+    var list = allCases();
+    if (!caseId && list.length) { var lv = list.filter(function (c) { return visibility(c).mode === 'live'; })[0] || list[0]; location.replace('#results/' + encodeURIComponent(lv.id)); return; }
+    var c = caseById(caseId);
+    app.className = 'home page wide';
+    app.innerHTML = '<a class="back" href="#">← PIXEL ER</a><h1 class="page-h">📊 Results</h1><select class="case-pick">' + list.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === caseId ? ' selected' : '') + '>' + esc(x.title) + ' (' + esc(Core.STATUS_LABELS[x.status] || x.status) + ')</option>'; }).join('') + '</select><div class="res-body"><p class="muted">Loading…</p></div>';
+    app.querySelector('.case-pick').onchange = function (e) { location.hash = '#results/' + encodeURIComponent(e.target.value); };
+    var body = app.querySelector('.res-body');
+    Online.results(caseId).then(function (rows) {
+      var off = rows.filter(function (r) { return r.official; });
+      var avg = off.length ? Math.round(off.reduce(function (a, r) { return a + r.score; }, 0) / off.length) : 0;
+      var dom = {}; off.forEach(function (r) { Object.keys(r.breakdown || {}).forEach(function (k) { var d = dom[k] || (dom[k] = { p: 0, of: 0 }); d.p += Number(r.breakdown[k].points); d.of += Number(r.breakdown[k].of); }); });
+      var endings = {}; off.forEach(function (r) { endings[r.ending] = (endings[r.ending] || 0) + 1; });
+      var actLabel = function (id) { var a = c && (c.actions || []).filter(function (x) { return x.id === id; })[0]; return a ? a.label : id.indexOf('__wait:') === 0 ? 'Wait ' + id.slice(7) + ' min' : id; };
+      var endTitle = function (id) { var e = c && (c.endings || []).filter(function (x) { return x.id === id; })[0]; return e ? e.title : id; };
+      var html = '<div class="stats"><div><b>' + off.length + '</b><span>official attempts</span></div><div><b>' + avg + '</b><span>average score</span></div><div><b>' + (rows.length - off.length) + '</b><span>practice attempts</span></div></div>';
+      if (off.length) {
+        html += '<h2 class="home-h">Class performance by domain</h2><div class="years">' + Core.DOMAINS.filter(function (k) { return dom[k]; }).map(function (k) {
+          var pc = Math.round(dom[k].p / dom[k].of * 100); return '<div class="yr"><span>' + esc(Core.DOMAIN_LABELS[k]) + '</span><div><i style="width:' + Math.max(0, pc) + '%"></i></div><b>' + pc + '%</b></div>';
+        }).join('') + '</div><h2 class="home-h">Outcomes</h2><ul class="endings">' + Object.keys(endings).map(function (k) { return '<li>' + esc(endTitle(k)) + ': <b>' + endings[k] + '</b></li>'; }).join('') + '</ul>';
+      }
+      html += '<p><button class="px-btn sm ghost" data-csv>⬇ Download CSV</button></p><div class="tbl-wrap"><table class="board res"><thead><tr><th>Name</th><th>Year</th><th>Committee</th><th>Type</th><th>Score</th><th>XP</th><th>Time</th><th>Outcome</th><th>Submitted</th><th></th></tr></thead><tbody>' +
+        rows.map(function (r, i) {
+          return '<tr class="' + (r.official ? '' : 'practice') + '"><td>' + esc(r.full_name) + '</td><td>' + esc(r.study_level || '—') + '</td><td>' + esc(r.committee || '—') + '</td><td>' + (r.official ? 'Official' : 'Practice') + '</td><td><b>' + r.score + '</b></td><td>' + r.xp + '</td><td>' + r.sim_minutes + ' min</td><td>' + esc(endTitle(r.ending)) + '</td><td>' + esc(fmtDate(r.created_at)) + '</td><td><button class="linkbtn" data-tl="' + i + '">Timeline</button></td></tr>' +
+            '<tr class="tl" hidden data-tlrow="' + i + '"><td colspan="10"><ol>' + (r.history || []).map(function (h) { return '<li>' + esc(actLabel(h)) + '</li>'; }).join('') + '</ol></td></tr>';
+        }).join('') + '</tbody></table></div>';
+      if (!rows.length) html = '<p class="muted">No attempts yet.</p>';
+      body.innerHTML = html;
+      Array.prototype.forEach.call(body.querySelectorAll('[data-tl]'), function (b) { b.onclick = function () { var row = body.querySelector('[data-tlrow="' + b.getAttribute('data-tl') + '"]'); row.hidden = !row.hidden; }; });
+      var csv = body.querySelector('[data-csv]');
+      if (csv) csv.onclick = function () {
+        var lines = [['name', 'study_year', 'committee', 'type', 'score', 'xp', 'sim_minutes', 'outcome', 'submitted_at'].join(',')].concat(rows.map(function (r) {
+          return [r.full_name, r.study_level, r.committee, r.official ? 'official' : 'practice', r.score, r.xp, r.sim_minutes, endTitle(r.ending), r.created_at].map(csvCell).join(',');
+        }));
+        var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + lines.join('\n')], { type: 'text/csv' })); a.download = 'pixel-er-' + caseId + '-results.csv'; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 500);
+      };
+    }, function (e) { body.innerHTML = '<p class="err">Couldn\'t load results: ' + esc(e.message || e) + '</p>'; });
+  }
+
+  /* ---------------- builder ---------------- */
   function admin() {
     stop();
     var el = document.createElement('div'); app.innerHTML = ''; app.appendChild(el); app.className = 'admin';
     var b = new root.PXBuilder.Builder(el, {
-      cases: CASES, config: CONFIG,
+      cases: LOCAL, config: CONFIG, online: Online,
       onPreview: function (c) { try { sessionStorage.setItem('pxer.preview', JSON.stringify(c)); } catch (e) { /* ignore */ } previewCase = c; location.hash = '#preview'; },
-      onExit: function () { location.hash = ''; }
+      onExit: function () { location.hash = ''; },
+      onPublished: function () { Online.loadCases(); }
     });
-    b.mount(); current = null;
+    b.mount(); current = null; builderRef = b;
   }
+  var builderRef = null;
 
   var previewCase = null;
   function route() {
     var hsh = location.hash || '';
+    if (/access_token|error_description/.test(hsh)) { home(); return; }
     if (hsh.indexOf('#play/') === 0) {
+      if (connecting) { stop(); app.className = 'home page'; app.innerHTML = '<p class="muted">Connecting to the club server…</p>'; return; }   /* so members never start in the wrong mode */
       var c = caseById(decodeURIComponent(hsh.slice(6)));
-      if (c && Core.caseVisibility(c, new Date(), { preview: CONFIG.showUnreviewed }).visible) play(c, {}); else home();
-    } else if (hsh === '#admin') admin();
+      if (c && visibility(c).visible) play(c, {}); else home();
+    } else if (hsh.indexOf('#board') === 0) {
+      var rest = hsh.slice(7);                       /* #board → this week · #board/all → total XP · #board/<id> */
+      board(hsh === '#board' ? null : rest === 'all' ? '' : decodeURIComponent(rest));
+    }
+    else if (hsh.indexOf('#results') === 0) results(hsh.length > 9 ? decodeURIComponent(hsh.slice(9)) : '');
+    else if (hsh === '#admin') admin();
     else if (hsh === '#preview') {
       var pc = previewCase;
       if (!pc) { try { pc = JSON.parse(sessionStorage.getItem('pxer.preview')); } catch (e) { pc = null; } }
@@ -2485,6 +2965,14 @@ a { color: #1d63b8; }
   }
   root.addEventListener('hashchange', route);
   route();
+
+  /* Connect to the club server in the background; re-render when the account state is known. */
+  function rerender() {
+    if (location.hash === '#admin' && builderRef) builderRef.refreshOnline();   /* never remount the builder mid-edit */
+    else if (!current || !current.running) route();
+  }
+  Online.onChange(rerender);
+  Online.init(CONFIG).then(function () { connecting = false; rerender(); });
 })(window);
 </script>
 </body>

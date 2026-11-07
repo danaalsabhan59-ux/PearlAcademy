@@ -15,7 +15,8 @@ function check(name, ok, extra) { console.log((ok ? '  ✓ ' : '  ✗ ') + name 
 (async () => {
   const browser = await chromium.launch();
   const errors = [];
-  const watch = p => { p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error') errors.push(m.text()); }); p.on('dialog', d => d.accept()); };
+  /* never touch the real club server from tests: the game must work offline */
+  const watch = p => { p.route('**/@supabase/**', r => r.abort()); p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); }); /* the blocked CDN request is expected */ p.on('dialog', d => d.accept()); };
 
   /* ---- play the ACS case through the UI ---- */
   const page = await browser.newPage({ viewport: { width: 1200, height: 860 } }); watch(page);
