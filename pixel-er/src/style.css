@@ -321,3 +321,8 @@ a { color: #1d63b8; }
 .endings { margin: 0; padding-left: 20px; }
 .bd-online { font-size: 12px; color: #a9bdd3; } .bd-online.on { color: #3dffa0; }
 .bd-dbmsg.ok { color: var(--green); font-weight: 700; } .bd-dbmsg.err { color: var(--red); font-weight: 700; }
+
+.px-clock .px-left { color: #a9bdd3; }
+.px-clock.warn b, .px-clock.warn .px-left { color: #ffb020; }
+.px-clock.low { animation: blink 1s steps(2) infinite; }
+.px-clock.low b, .px-clock.low .px-left { color: #ff5a5a; }

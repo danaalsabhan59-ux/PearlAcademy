@@ -126,7 +126,7 @@
       (saved.seen || []).forEach(function (id) { self2.seen[id] = 1; });
       this.collectResponses();
       if (this.sim.S.ended) { store(this.saveKey, null); this.sim = new Core.Sim(this.c); this.medic.present = true; this.responses = {}; this.seen = {}; this.handover(); }
-      else this.toast('Shift resumed where you left off.');
+      else { this.toast('Shift resumed where you left off.'); this.warned = {}; var lft = this.sim.timeLimit - this.sim.S.t; if (lft <= this.sim.timeLimit / 2) this.warned.w0 = 1; if (lft <= this.sim.timeLimit / 4) this.warned.w1 = 1; if (lft <= 10) this.warned.w2 = 1; }
     } else this.handover();
     this.updateHud();
     this.running = true; this.last = performance.now();
@@ -150,6 +150,7 @@
     var self = this;
     (ho.lines || []).forEach(function (l) { self.say(who, name, l); });
     this.say(this.opts.avatar === 'doctor_f' ? 'doctor_f' : 'doctor_m', 'You', 'Thanks. I\'ll take it from here.', function () { self.medic.leaving = true; });
+    this.say('nurse', 'Nurse', 'Quick tip, doctor: the clock at the top is shift time, not real time. Every action uses the minutes shown on its button. You have ' + this.sim.timeLimit + ' minutes on the clock, so think as long as you like. Only your actions move the clock.');
   };
 
   /* ---------------- input ---------------- */
@@ -300,12 +301,33 @@
   /* ---------------- HUD ---------------- */
   Game.prototype.updateHud = function () {
     var S = this.sim.S, lim = this.sim.timeLimit;
-    $('.px-clock', this.el).innerHTML = '⏱ <b>T+' + S.t + '</b> / ' + lim + ' min';
+    var left = Math.max(0, lim - S.t), clock = $('.px-clock', this.el);
+    clock.innerHTML = '⏱ <b>T+' + S.t + '</b> / ' + lim + ' min <span class="px-left">· ' + left + ' left</span>';
+    clock.className = 'px-clock' + (left <= 10 ? ' low' : left <= lim / 4 ? ' warn' : '');
     var pill = $('.px-pill', this.el); pill.textContent = S.state; pill.className = 'px-pill st-' + S.state;
     var v = S.vitals, vEl = $('.px-vitals', this.el);
     if (S.flags.indexOf('monitor') !== -1)
       vEl.innerHTML = '<span>HR <b>' + v.hr + '</b></span><span>BP <b class="' + (v.sbp < 90 ? 'bad' : '') + '">' + v.sbp + '/' + v.dbp + '</b></span><span>SpO₂ <b class="' + (v.spo2 < 92 ? 'bad' : '') + '">' + v.spo2 + '</b></span>';
     else vEl.innerHTML = '<span class="muted">Monitor not attached</span>';
+  };
+
+  /* Nurse reminders as the shift clock runs down (once each; none for thresholds already passed on resume). */
+  Game.prototype.timeWarnings = function () {
+    var S = this.sim.S, lim = this.sim.timeLimit, left = lim - S.t;
+    if (S.ended) return;
+    this.warned = this.warned || {};
+    var marks = [[lim / 2, 'Doctor, we\'re halfway through the shift: ' + Math.round(left) + ' minutes left. What\'s the plan?'],
+                 [lim / 4, 'Only ' + Math.round(left) + ' minutes left on the shift, doctor. Time to decide where he\'s going.'],
+                 [10, 'Ten minutes left! Make your final decision now.']];
+    for (var i = 0; i < marks.length; i++) {
+      var k = 'w' + i;
+      if (left <= marks[i][0] && !this.warned[k]) {
+        for (var j = i; j < marks.length; j++) if (left <= marks[j][0]) this.warned['w' + j] = 1;   /* skip earlier ones if several were crossed at once */
+        var last = i; for (var m = marks.length - 1; m >= 0; m--) if (left <= marks[m][0]) { last = m; break; }
+        this.say('nurse', 'Nurse', marks[last][1]);
+        break;
+      }
+    }
   };
 
   /* ---------------- actions ---------------- */
@@ -322,7 +344,7 @@
       } else if (m.kind === 'result') self.toast(m.text, 'info');
       if (m.ref && m.kind !== 'event' && m.kind !== 'system' && m.kind !== 'result') self.responses[m.ref] = m.text;
     });
-    this.updateHud(); this.save();
+    this.updateHud(); this.save(); this.timeWarnings();
     if (out.ended) {
       store(this.saveKey, null);
       this.closePanel();

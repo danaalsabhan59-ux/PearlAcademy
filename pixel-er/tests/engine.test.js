@@ -93,7 +93,7 @@ test('diagnosis group is exclusive', () => {
 });
 
 test('time limit ends the case with the timeout ending', () => {
-  const sim = core.replay(acs, ['__wait:30', '__wait:30']);
+  const sim = core.replay(acs, ['__wait:30', '__wait:30', '__wait:30']);
   assert.ok(sim.S.ended);
   assert.strictEqual(sim.S.ended.endingId, 'end_timeout');
 });
