@@ -1,0 +1,532 @@
+/* =====================================================================
+   PIXEL ER — Clinical engine (pure logic, no DOM)
+   ---------------------------------------------------------------------
+   Every case is DATA (see docs/CASE_SCHEMA.md). This file interprets it.
+   The simulation is fully deterministic: the same list of actions always
+   produces the same patient course and the same score. That makes saves,
+   replays and (later) server-side score verification trivial.
+   ===================================================================== */
+(function (root) {
+  'use strict';
+
+  var SCHEMA_VERSION = 1;
+
+  var CATEGORIES = ['history', 'exam', 'reassess', 'treatment', 'procedure',
+                    'investigation', 'diagnosis', 'disposition'];
+  var DOMAINS = ['assessment', 'reasoning', 'investigations', 'management', 'safety', 'reassessment'];
+  var DOMAIN_LABELS = {
+    assessment: 'Initial assessment', reasoning: 'Clinical reasoning',
+    investigations: 'Investigations & interpretation', management: 'Management priorities',
+    safety: 'Patient safety', reassessment: 'Reassessment'
+  };
+  var DEFAULT_WEIGHTS = { assessment: 20, reasoning: 20, investigations: 15, management: 25, safety: 15, reassessment: 5 };
+  var STATES = ['stable', 'improving', 'unchanged', 'deteriorating', 'critical'];
+  var STATUSES = ['draft', 'ai_reviewed', 'faculty_review', 'faculty_approved', 'scheduled', 'published', 'archived'];
+  var STATUS_LABELS = {
+    draft: 'Draft', ai_reviewed: 'AI reviewed', faculty_review: 'Faculty review required',
+    faculty_approved: 'Faculty approved', scheduled: 'Scheduled', published: 'Published', archived: 'Archived'
+  };
+  var VITAL_KEYS = ['hr', 'sbp', 'dbp', 'rr', 'spo2', 'temp', 'gcs', 'glucose'];
+  var VITAL_LABELS = { hr: 'HR', sbp: 'SBP', dbp: 'DBP', rr: 'RR', spo2: 'SpO₂', temp: 'Temp', gcs: 'GCS', glucose: 'Glucose' };
+  /* Which station in the ER handles each category (a case may override per action). */
+  var STATION_FOR = {
+    history: 'patient', exam: 'patient', reassess: 'patient',
+    treatment: 'nurse', procedure: 'nurse',
+    investigation: 'workstation', diagnosis: 'workstation', disposition: 'workstation'
+  };
+
+  function clone(o) { return o === undefined ? undefined : JSON.parse(JSON.stringify(o)); }
+  function isObj(o) { return o && typeof o === 'object' && !Array.isArray(o); }
+
+  /* ------------------------------------------------------------------
+     Conditions — a small JSON language used by requires / events /
+     endings / rubric.  See docs/CASE_SCHEMA.md for the full list.
+     ------------------------------------------------------------------ */
+  var COND_TYPES = ['all', 'any', 'not', 'done', 'notDone', 'last', 'flag', 'noFlag', 'before', 'after',
+                    'within', 'withinAfter', 'count', 'vital', 'state', 'time'];
+
+  function compare(a, op, b) {
+    switch (op) {
+      case '<': return a < b; case '<=': return a <= b;
+      case '>': return a > b; case '>=': return a >= b;
+      case '==': case '=': return a === b; case '!=': return a !== b;
+    }
+    return false;
+  }
+
+  function firstDone(S, id) {
+    for (var i = 0; i < S.done.length; i++) if (S.done[i].id === id) return S.done[i];
+    return null;
+  }
+  function lastDone(S, id) {
+    for (var i = S.done.length - 1; i >= 0; i--) if (S.done[i].id === id) return S.done[i];
+    return null;
+  }
+
+  function evalCond(c, S) {
+    if (c === undefined || c === null || c === true) return true;
+    if (c === false) return false;
+    if (!isObj(c)) return false;
+    var k = Object.keys(c)[0], v = c[k], a, b;
+    switch (k) {
+      case 'all': return (v || []).every(function (x) { return evalCond(x, S); });
+      case 'any': return (v || []).some(function (x) { return evalCond(x, S); });
+      case 'not': return !evalCond(v, S);
+      case 'done': return !!firstDone(S, v);
+      case 'notDone': return !firstDone(S, v);
+      case 'last': return S.done.length > 0 && S.done[S.done.length - 1].id === v;
+      case 'flag': return S.flags.indexOf(v) !== -1;
+      case 'noFlag': return S.flags.indexOf(v) === -1;
+      case 'before': /* [a, b]: a was done, and b was not done or done later */
+        a = firstDone(S, v[0]); b = firstDone(S, v[1]);
+        return !!a && (!b || a.idx < b.idx);
+      case 'after': /* [a, b]: a was done at some point after b's first time */
+        b = firstDone(S, v[1]); a = lastDone(S, v[0]);
+        return !!a && !!b && a.idx > b.idx;
+      case 'within': /* [id, minutes]: done no later than N minutes from arrival */
+        a = firstDone(S, v[0]); return !!a && a.t <= v[1];
+      case 'withinAfter': /* [a, b, minutes]: b done no later than N min after a */
+        a = firstDone(S, v[0]); b = firstDone(S, v[1]);
+        return !!a && !!b && b.idx > a.idx && (b.t - a.t) <= v[2];
+      case 'count':
+        return compare(S.done.filter(function (d) { return d.id === v[0]; }).length, v[1], v[2]);
+      case 'vital': return compare(S.vitals[v[0]], v[1], v[2]);
+      case 'state': return S.state === v;
+      case 'time': return compare(S.t, v[0], v[1]);
+    }
+    return false;
+  }
+
+  /* Collect every action id / flag a condition mentions (used by the validator). */
+  function condRefs(c, out) {
+    out = out || { actions: [], flags: [] };
+    if (!isObj(c)) return out;
+    var k = Object.keys(c)[0], v = c[k];
+    if (k === 'all' || k === 'any') (v || []).forEach(function (x) { condRefs(x, out); });
+    else if (k === 'not') condRefs(v, out);
+    else if (k === 'done' || k === 'notDone' || k === 'last') out.actions.push(v);
+    else if (k === 'flag' || k === 'noFlag') out.flags.push(v);
+    else if (k === 'before' || k === 'after') { out.actions.push(v[0]); out.actions.push(v[1]); }
+    else if (k === 'within' || k === 'count') out.actions.push(v[0]);
+    else if (k === 'withinAfter') { out.actions.push(v[0]); out.actions.push(v[1]); }
+    return out;
+  }
+
+  /* Plain-English description of a condition (shown in the builder). */
+  function describeCond(c, labelOf) {
+    labelOf = labelOf || function (x) { return x; };
+    if (c === undefined || c === null || c === true) return 'always';
+    if (!isObj(c)) return String(c);
+    var k = Object.keys(c)[0], v = c[k];
+    switch (k) {
+      case 'all': return (v || []).map(function (x) { return describeCond(x, labelOf); }).join(' AND ') || 'always';
+      case 'any': return '(' + (v || []).map(function (x) { return describeCond(x, labelOf); }).join(' OR ') + ')';
+      case 'not': return 'NOT ' + describeCond(v, labelOf);
+      case 'done': return '“' + labelOf(v) + '” done';
+      case 'notDone': return '“' + labelOf(v) + '” NOT done';
+      case 'last': return '“' + labelOf(v) + '” just done';
+      case 'flag': return 'flag ' + v;
+      case 'noFlag': return 'no flag ' + v;
+      case 'before': return '“' + labelOf(v[0]) + '” before “' + labelOf(v[1]) + '”';
+      case 'after': return '“' + labelOf(v[0]) + '” after “' + labelOf(v[1]) + '”';
+      case 'within': return '“' + labelOf(v[0]) + '” within ' + v[1] + ' min of arrival';
+      case 'withinAfter': return '“' + labelOf(v[1]) + '” within ' + v[2] + ' min of “' + labelOf(v[0]) + '”';
+      case 'count': return '“' + labelOf(v[0]) + '” done ' + v[1] + ' ' + v[2] + ' times';
+      case 'vital': return (VITAL_LABELS[v[0]] || v[0]) + ' ' + v[1] + ' ' + v[2];
+      case 'state': return 'patient ' + v;
+      case 'time': return 'clock ' + v[0] + ' ' + v[1] + ' min';
+    }
+    return JSON.stringify(c);
+  }
+
+  /* ------------------------------------------------------------------
+     Simulation
+     ------------------------------------------------------------------ */
+  function Sim(caseData) {
+    this.c = caseData;
+    this.actionsById = {};
+    var self = this;
+    (caseData.actions || []).forEach(function (a) { self.actionsById[a.id] = a; });
+    this.eventsById = {};
+    (caseData.events || []).forEach(function (e) { self.eventsById[e.id] = e; });
+    var init = caseData.initial || {};
+    this.S = {
+      t: 0,
+      vitals: Object.assign({}, init.vitals || {}),
+      state: init.state || 'stable',
+      flags: (init.flags || []).slice(),
+      done: [],            /* {id, t, idx} */
+      results: [],         /* {id, orderedAt, readyAt, notified} */
+      scheduled: [],       /* {id, due} */
+      fired: [],           /* event ids */
+      armed: [],           /* event ids whose condition became true (delayed) */
+      log: [],             /* {t, kind, speaker, text, ref} */
+      history: [],         /* raw input log: action ids and "__wait:N" */
+      vitalsTrail: [],     /* {t, vitals, state} */
+      ended: null
+    };
+    if (init.monitorAttached) this.S.flags.push('monitor');
+    this.S.vitalsTrail.push({ t: 0, vitals: clone(this.S.vitals), state: this.S.state });
+    this.timeLimit = (caseData.setting && caseData.setting.timeLimitMin) || 60;
+  }
+
+  Sim.prototype.say = function (kind, speaker, text, ref) {
+    var m = { t: this.S.t, kind: kind, speaker: speaker || '', text: text, ref: ref || null };
+    this.S.log.push(m);
+    return m;
+  };
+
+  Sim.prototype.applyEffects = function (fx, out) {
+    if (!fx) return;
+    var S = this.S, changed = false;
+    if (fx.vitals) {
+      Object.keys(fx.vitals).forEach(function (k) {
+        if (fx.vitals[k] !== '' && fx.vitals[k] !== null && fx.vitals[k] !== undefined) { S.vitals[k] = Number(fx.vitals[k]); changed = true; }
+      });
+    }
+    if (fx.state && STATES.indexOf(fx.state) !== -1 && fx.state !== S.state) { S.state = fx.state; changed = true; }
+    (fx.flags || []).forEach(function (f) { if (S.flags.indexOf(f) === -1) S.flags.push(f); });
+    (fx.unflags || []).forEach(function (f) { var i = S.flags.indexOf(f); if (i !== -1) S.flags.splice(i, 1); });
+    if (changed) {
+      S.vitalsTrail.push({ t: S.t, vitals: clone(S.vitals), state: S.state });
+      if (out) out.vitalsChanged = true;
+    }
+  };
+
+  /* Can this action be performed right now? */
+  Sim.prototype.check = function (a) {
+    var S = this.S;
+    if (S.ended) return { ok: false, why: 'The case has ended.' };
+    var repeatable = a.repeatable !== undefined ? a.repeatable : (a.category === 'reassess');
+    if (!repeatable && firstDone(S, a.id)) return { ok: false, why: 'Already done.', done: true };
+    if (a.group) {
+      var self = this;
+      var taken = S.done.some(function (d) { var x = self.actionsById[d.id]; return x && x.group === a.group; });
+      if (taken) return { ok: false, why: 'You already made this choice.', done: !!firstDone(S, a.id) };
+    }
+    if (a.requires && !evalCond(a.requires, S)) return { ok: false, why: a.requiresText || 'Not possible yet.' };
+    return { ok: true };
+  };
+
+  Sim.prototype.available = function (station) {
+    var self = this;
+    return (this.c.actions || []).filter(function (a) {
+      return !station || (a.station || STATION_FOR[a.category]) === station;
+    }).map(function (a) { var r = self.check(a); return { action: a, ok: r.ok, why: r.why, done: !!firstDone(self.S, a.id) || r.done }; });
+  };
+
+  Sim.prototype.stateText = function () {
+    var st = this.c.stateText || {};
+    return st[this.S.state] || ('Patient is ' + this.S.state + '.');
+  };
+
+  Sim.prototype.vitalsLine = function () {
+    var v = this.S.vitals;
+    return 'HR ' + v.hr + ' · BP ' + v.sbp + '/' + v.dbp + ' · RR ' + v.rr + ' · SpO₂ ' + v.spo2 + '%' +
+      (v.temp !== undefined ? ' · T ' + v.temp + '°C' : '') + (v.gcs !== undefined ? ' · GCS ' + v.gcs : '');
+  };
+
+  /* Advance the clock, firing due events / results in time order. */
+  Sim.prototype.advance = function (minutes, out) {
+    var S = this.S, target = S.t + Math.max(0, minutes || 0);
+    var guard = 0;
+    while (guard++ < 500) {
+      var next = Infinity, kind = null, item = null;
+      S.scheduled.forEach(function (s) { if (s.due <= target && s.due < next) { next = s.due; kind = 'event'; item = s; } });
+      S.results.forEach(function (r) { if (!r.notified && r.readyAt <= target && r.readyAt < next) { next = r.readyAt; kind = 'result'; item = r; } });
+      if (kind === null) break;
+      S.t = Math.max(S.t, next);
+      if (kind === 'event') {
+        S.scheduled.splice(S.scheduled.indexOf(item), 1);
+        this.fireEvent(this.eventsById[item.id], out);
+      } else {
+        item.notified = true;
+        var a = this.actionsById[item.id];
+        out.messages.push(this.say('result', 'System', 'Result available: ' + (a ? a.label : item.id) + '.', item.id));
+      }
+      this.checkEvents(out);
+    }
+    S.t = target;
+    this.checkEvents(out);
+  };
+
+  Sim.prototype.fireEvent = function (e, out) {
+    if (!e || this.S.fired.indexOf(e.id) !== -1) return;
+    this.S.fired.push(e.id);
+    this.applyEffects(e.effects, out);
+    if (e.message) out.messages.push(this.say('event', e.speaker || 'Nurse', e.message, e.id));
+    if (e.effects && e.effects.endCase) this.end(out);
+  };
+
+  /* Arm events whose condition is now true. */
+  Sim.prototype.checkEvents = function (out) {
+    var S = this.S, self = this, again = true, loops = 0;
+    while (again && loops++ < 20 && !S.ended) {
+      again = false;
+      (this.c.events || []).forEach(function (e) {
+        if (S.ended || S.fired.indexOf(e.id) !== -1 || S.armed.indexOf(e.id) !== -1) return;
+        if (!evalCond(e.when, S)) return;
+        if (e.delay && e.delay > 0) { S.armed.push(e.id); S.scheduled.push({ id: e.id, due: S.t + e.delay }); }
+        else { S.armed.push(e.id); self.fireEvent(e, out); again = true; }
+      });
+    }
+  };
+
+  Sim.prototype.perform = function (id) {
+    var out = { messages: [], vitalsChanged: false, ended: false, response: null };
+    var a = this.actionsById[id];
+    if (!a) return out;
+    var r = this.check(a);
+    if (!r.ok) { out.blocked = r.why; return out; }
+    var S = this.S;
+    S.history.push(id);
+    S.done.push({ id: id, t: S.t + (a.time || 0), idx: S.done.length });
+    /* time passes while the action happens */
+    var doneRec = S.done[S.done.length - 1];
+    this.advanceKeepingLast(a.time || 0, out, doneRec);
+
+    var text = a.response || '';
+    if (a.category === 'reassess') text = (text ? text + ' ' : '') + this.stateText() + ' Vitals: ' + this.vitalsLine() + '.';
+    var speaker = a.speaker || ({ history: this.c.patient && this.c.patient.name || 'Patient', exam: 'Finding', reassess: 'Finding',
+      treatment: 'Nurse', procedure: 'Nurse', investigation: 'System', diagnosis: 'You', disposition: 'System' })[a.category];
+    if (text) { out.response = this.say(a.category, speaker, text, id); out.messages.push(out.response); }
+    else out.messages.push(this.say('action', 'You', a.label, id));
+
+    if (a.result) {
+      var delay = Number(a.result.delay || 0);
+      var res = { id: id, orderedAt: S.t, readyAt: S.t + delay, notified: delay <= 0 };
+      S.results.push(res);
+      if (delay > 0) out.messages.push(this.say('system', 'System', a.label + ' requested — result in about ' + delay + ' min.', id));
+    }
+    this.applyEffects(a.effects, out);
+    this.checkEvents(out);
+    if (a.endCase && !S.ended) this.end(out);
+    if (!S.ended && S.t >= this.timeLimit) { S.flags.push('timeout'); out.messages.push(this.say('event', 'Senior', 'Time is up — the shift is being handed over.')); this.end(out); }
+    out.ended = !!S.ended;
+    return out;
+  };
+
+  /* Like advance(), but makes sure "last" still points at the action just done
+     (events fired during the action's duration must not steal "last"). */
+  Sim.prototype.advanceKeepingLast = function (minutes, out, rec) {
+    this.advance(minutes, out);
+    var S = this.S, i = S.done.indexOf(rec);
+    if (i !== -1 && i !== S.done.length - 1) { S.done.splice(i, 1); S.done.push(rec); S.done.forEach(function (d, j) { d.idx = j; }); }
+  };
+
+  Sim.prototype.wait = function (minutes) {
+    var out = { messages: [], vitalsChanged: false, ended: false };
+    if (this.S.ended) return out;
+    minutes = minutes || 5;
+    this.S.history.push('__wait:' + minutes);
+    this.say('system', 'System', minutes + ' minutes pass.');
+    this.advance(minutes, out);
+    if (!this.S.ended && this.S.t >= this.timeLimit) { this.S.flags.push('timeout'); out.messages.push(this.say('event', 'Senior', 'Time is up — the shift is being handed over.')); this.end(out); }
+    out.ended = !!this.S.ended;
+    return out;
+  };
+
+  Sim.prototype.resultReady = function (id) {
+    var r = null; this.S.results.forEach(function (x) { if (x.id === id) r = x; });
+    if (!r) return null;
+    return { ready: r.readyAt <= this.S.t, readyAt: r.readyAt, orderedAt: r.orderedAt };
+  };
+
+  Sim.prototype.end = function (out) {
+    var S = this.S, self = this;
+    if (S.ended) return;
+    var endings = this.c.endings || [];
+    var chosen = null;
+    for (var i = 0; i < endings.length; i++) { if (evalCond(endings[i].when, S)) { chosen = endings[i]; break; } }
+    if (!chosen) chosen = endings[endings.length - 1] || { id: 'end', title: 'Case complete', outcome: 'fair', text: '' };
+    S.ended = { endingId: chosen.id, t: S.t };
+    if (out) { out.ended = true; out.messages.push(self.say('end', 'System', chosen.title)); }
+  };
+
+  Sim.prototype.ending = function () {
+    if (!this.S.ended) return null;
+    var id = this.S.ended.endingId, e = null;
+    (this.c.endings || []).forEach(function (x) { if (x.id === id) e = x; });
+    return e;
+  };
+
+  /* ------------------------------------------------------------------
+     Scoring — computed from the action log only.
+     ------------------------------------------------------------------ */
+  Sim.prototype.score = function () {
+    var S = this.S, c = this.c;
+    var weights = Object.assign({}, DEFAULT_WEIGHTS, (c.scoring && c.scoring.weights) || {});
+    var dom = {};
+    DOMAINS.forEach(function (d) { dom[d] = { earned: 0, max: 0, items: [] }; });
+    var hits = [], misses = [], penalties = [];
+    ((c.scoring && c.scoring.rubric) || []).forEach(function (r) {
+      var d = dom[r.domain]; if (!d) return;
+      if (r.appliesIf !== undefined && !evalCond(r.appliesIf, S)) return;
+      var pts = Number(r.points) || 0, ok = evalCond(r.when, S);
+      if (pts >= 0) {
+        if (r.countInMax !== false) d.max += pts;
+        if (ok) { d.earned += pts; if (r.good) hits.push({ id: r.id, domain: r.domain, text: r.good, points: pts }); }
+        else if (r.countInMax !== false && r.missed) misses.push({ id: r.id, domain: r.domain, text: r.missed, points: pts });
+      } else if (ok) {
+        d.earned += pts;
+        penalties.push({ id: r.id, domain: r.domain, text: r.missed || r.good || r.id, points: pts });
+      }
+      d.items.push({ id: r.id, ok: ok, points: pts });
+    });
+    /* Redistribute weight of domains that have nothing to score. */
+    var activeW = 0;
+    DOMAINS.forEach(function (d) { if (dom[d].max > 0) activeW += Number(weights[d]) || 0; });
+    var total = 0, breakdown = [];
+    DOMAINS.forEach(function (d) {
+      var x = dom[d], w = Number(weights[d]) || 0;
+      var frac = x.max > 0 ? Math.max(0, Math.min(1, x.earned / x.max)) : null;
+      var eff = (x.max > 0 && activeW > 0) ? w * 100 / activeW : 0;
+      if (frac !== null) total += frac * eff;
+      breakdown.push({ domain: d, label: DOMAIN_LABELS[d], weight: w, fraction: frac, points: frac === null ? null : Math.round(frac * eff * 10) / 10, of: Math.round(eff * 10) / 10 });
+    });
+    total = Math.round(total);
+    var maxXP = Number(c.maxXP) || 100;
+    return {
+      total: total, xp: Math.round(total / 100 * maxXP), maxXP: maxXP,
+      breakdown: breakdown, hits: hits, misses: misses,
+      penalties: penalties,
+      safety: penalties.filter(function (p) { return p.domain === 'safety'; })
+    };
+  };
+
+  function replay(caseData, history) {
+    var sim = new Sim(caseData);
+    (history || []).forEach(function (h) {
+      if (sim.S.ended) return;
+      if (typeof h === 'string' && h.indexOf('__wait:') === 0) sim.wait(Number(h.slice(7)) || 5);
+      else sim.perform(h);
+    });
+    return sim;
+  }
+
+  /* ------------------------------------------------------------------
+     Validator — used by the Case Builder, the build script tests and
+     before a case can be exported.
+     ------------------------------------------------------------------ */
+  function validateCase(c) {
+    var errors = [], warnings = [];
+    function err(m) { errors.push(m); }
+    function warn(m) { warnings.push(m); }
+    if (!isObj(c)) return { errors: ['Case is not an object.'], warnings: [] };
+    if (c.schemaVersion !== SCHEMA_VERSION) warn('schemaVersion should be ' + SCHEMA_VERSION + '.');
+    if (!c.id || !/^[a-z0-9][a-z0-9-_]*$/.test(c.id)) err('Case id is required (lowercase letters, numbers, - or _).');
+    if (!c.title) err('Title is required.');
+    if (c.status && STATUSES.indexOf(c.status) === -1) err('Unknown status “' + c.status + '”.');
+    if (!c.patient || !c.patient.chiefComplaint) err('Patient chief complaint is required.');
+    if (!c.initial || !isObj(c.initial.vitals)) err('Initial vitals are required.');
+    else ['hr', 'sbp', 'dbp', 'rr', 'spo2'].forEach(function (k) {
+      if (typeof c.initial.vitals[k] !== 'number' || isNaN(c.initial.vitals[k])) err('Initial vital “' + k + '” must be a number.');
+    });
+    if (c.initial && c.initial.state && STATES.indexOf(c.initial.state) === -1) err('Unknown initial state.');
+    var ids = {}, flagsSet = {};
+    (c.initial && c.initial.flags || []).forEach(function (f) { flagsSet[f] = 1; });
+    flagsSet.monitor = 1; flagsSet.timeout = 1;
+    var actions = c.actions || [];
+    if (!actions.length) err('A case needs at least one action.');
+    actions.forEach(function (a, i) {
+      var where = 'Action #' + (i + 1) + (a.label ? ' (“' + a.label + '”)' : '');
+      if (!a.id) err(where + ': id is required.');
+      else if (ids[a.id]) err(where + ': duplicate id “' + a.id + '”.');
+      ids[a.id] = a;
+      if (!a.label) err(where + ': label is required.');
+      if (CATEGORIES.indexOf(a.category) === -1) err(where + ': unknown category “' + a.category + '”.');
+      if (a.time !== undefined && (typeof a.time !== 'number' || a.time < 0)) err(where + ': time must be a number ≥ 0.');
+      if (a.result) {
+        var rt = a.result.type;
+        if (['text', 'labs', 'ecg', 'image'].indexOf(rt) === -1) err(where + ': result type must be text, labs, ecg or image.');
+        if (rt === 'labs' && !(a.result.labs || []).length) warn(where + ': labs result has no rows.');
+        if (rt === 'image' && a.result.image && a.result.image.url && !a.result.image.license) err(where + ': images need a license / source.');
+      }
+      if (a.effects) (a.effects.flags || []).forEach(function (f) { flagsSet[f] = 1; });
+    });
+    var evIds = {};
+    (c.events || []).forEach(function (e, i) {
+      var where = 'Event #' + (i + 1);
+      if (!e.id) err(where + ': id is required.');
+      else if (evIds[e.id]) err(where + ': duplicate id “' + e.id + '”.');
+      evIds[e.id] = 1;
+      if (e.when === undefined) warn(where + ' (' + e.id + '): has no condition — it fires at the start.');
+      if (e.effects) (e.effects.flags || []).forEach(function (f) { flagsSet[f] = 1; });
+    });
+    function checkCond(cond, where) {
+      if (cond === undefined || cond === null || cond === true) return;
+      (function walk(x) {
+        if (!isObj(x)) { err(where + ': condition is not valid.'); return; }
+        var k = Object.keys(x)[0];
+        if (COND_TYPES.indexOf(k) === -1) { err(where + ': unknown condition “' + k + '”.'); return; }
+        if (k === 'all' || k === 'any') (x[k] || []).forEach(walk);
+        if (k === 'not') walk(x[k]);
+      })(cond);
+      var refs = condRefs(cond);
+      refs.actions.forEach(function (id) { if (!ids[id]) err(where + ': refers to unknown action “' + id + '”.'); });
+      refs.flags.forEach(function (f) { if (!flagsSet[f]) warn(where + ': flag “' + f + '” is never set by any action or event.'); });
+    }
+    actions.forEach(function (a) { checkCond(a.requires, 'Action ' + a.id + ' requires'); });
+    (c.events || []).forEach(function (e) { checkCond(e.when, 'Event ' + e.id); });
+    var endings = c.endings || [];
+    if (!endings.length) err('At least one ending is required.');
+    var endIds = {};
+    endings.forEach(function (e, i) {
+      if (!e.id) err('Ending #' + (i + 1) + ': id is required.');
+      endIds[e.id] = 1;
+      if (!e.title) err('Ending ' + (e.id || i + 1) + ': title is required.');
+      checkCond(e.when, 'Ending ' + e.id);
+    });
+    if (endings.length && endings[endings.length - 1].when !== undefined && endings[endings.length - 1].when !== true)
+      warn('The last ending has a condition. Make the last ending unconditional so there is always a fallback.');
+    if (!actions.some(function (a) { return a.endCase; })) warn('No action ends the case — it will only end at the time limit.');
+    var sc = c.scoring || {};
+    var w = Object.assign({}, DEFAULT_WEIGHTS, sc.weights || {}), sum = 0;
+    DOMAINS.forEach(function (d) { sum += Number(w[d]) || 0; });
+    if (Math.abs(sum - 100) > 0.01) err('Scoring weights must add up to 100 (now ' + sum + ').');
+    var rIds = {};
+    (sc.rubric || []).forEach(function (r, i) {
+      var where = 'Rubric #' + (i + 1) + (r.id ? ' (' + r.id + ')' : '');
+      if (!r.id) err(where + ': id is required.');
+      else if (rIds[r.id]) err(where + ': duplicate id.');
+      rIds[r.id] = 1;
+      if (DOMAINS.indexOf(r.domain) === -1) err(where + ': unknown domain “' + r.domain + '”.');
+      if (typeof r.points !== 'number') err(where + ': points must be a number.');
+      checkCond(r.when, where);
+      if (r.appliesIf !== undefined) checkCond(r.appliesIf, where + ' appliesIf');
+    });
+    if (!(sc.rubric || []).length) warn('No scoring rubric — every attempt will score 0.');
+    if (!(c.references || []).length) warn('No references listed.');
+    if (c.status === 'published' || c.status === 'scheduled') {
+      if (!c.review || !c.review.facultyReviewer) err('Published or scheduled cases need a named faculty reviewer.');
+    }
+    return { errors: errors, warnings: warnings };
+  }
+
+  /* Which cases a player should see, given the date. */
+  function caseVisibility(c, now, opts) {
+    opts = opts || {};
+    now = now || new Date();
+    var st = c.status || 'draft';
+    var pub = c.schedule && c.schedule.publishAt ? new Date(c.schedule.publishAt) : null;
+    var close = c.schedule && c.schedule.closeAt ? new Date(c.schedule.closeAt) : null;
+    if (st === 'archived') return { visible: true, mode: 'archive' };
+    if (st === 'published' || st === 'scheduled' || st === 'faculty_approved') {
+      if (pub && now < pub) return { visible: false, mode: 'upcoming' };
+      if (close && now > close) return { visible: true, mode: 'archive' };
+      if (st === 'faculty_approved' && !pub) return { visible: !!opts.preview, mode: 'preview' };
+      return { visible: true, mode: 'live' };
+    }
+    return { visible: !!opts.preview, mode: 'preview' };
+  }
+
+  var api = {
+    SCHEMA_VERSION: SCHEMA_VERSION, CATEGORIES: CATEGORIES, DOMAINS: DOMAINS, DOMAIN_LABELS: DOMAIN_LABELS,
+    DEFAULT_WEIGHTS: DEFAULT_WEIGHTS, STATES: STATES, STATUSES: STATUSES, STATUS_LABELS: STATUS_LABELS,
+    VITAL_KEYS: VITAL_KEYS, VITAL_LABELS: VITAL_LABELS, STATION_FOR: STATION_FOR, COND_TYPES: COND_TYPES,
+    Sim: Sim, replay: replay, evalCond: evalCond, condRefs: condRefs, describeCond: describeCond,
+    validateCase: validateCase, caseVisibility: caseVisibility, clone: clone
+  };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.PXCore = api;
+})(typeof window !== 'undefined' ? window : this);

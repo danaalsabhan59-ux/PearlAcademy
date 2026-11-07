@@ -14,3 +14,6 @@ One of the primary goals is to develop high-quality interactive educational webs
 
 ## Status
 🚧 Currently under active development.
+
+## Projects
+- [`pixel-er/`](pixel-er/) — **PIXEL ER**, the Emergency Medicine Club's interactive Case of the Week: a data-driven Pixel Art clinical game with a no-code Case Builder.
