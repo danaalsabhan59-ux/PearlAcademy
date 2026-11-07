@@ -46,8 +46,8 @@
     } else {
       var me = Online.me || {};
       h += '<div class="acct-in"><div>👋 <b>' + esc(Online.displayName() || Online.email()) + '</b>' + (me.study_level ? ' · ' + esc(me.study_level) : '') +
-        (me.is_supervisor ? ' · <span class="chip">Faculty supervisor</span>' : me.is_admin ? ' · <span class="chip">Club admin</span>' : '') + '</div>' +
-        '<div class="acct-links"><a href="#board">🏆 Leaderboards</a>' + (Online.canManage() ? ' <a href="#results">📊 Results</a> <a href="#admin">🛠 Case Builder</a>' : '') +
+        (me.is_admin ? ' · <span class="chip">Club admin</span>' : me.is_supervisor ? ' · <span class="chip">Supervisor</span>' : '') + '</div>' +
+        '<div class="acct-links"><a href="#board">🏆 Leaderboards</a>' + (Online.canManage() ? ' <a href="#results">📊 Results</a>' : '') + (Online.canPublish() ? ' <a href="#admin">🛠 Case Builder</a>' : '') +
         ' <button class="linkbtn" data-acct="out">Sign out</button></div></div>';
       if (Online.setupMissing) h += '<p class="warnbox">Connected, but PIXEL ER isn\'t set up on the club database yet (see <code>pixel-er/README.md</code>). Playing in practice mode for now.</p>';
     }
@@ -56,7 +56,7 @@
 
   function card(c, mode) {
     var p = c.patient || {}, best = store('pxer.best.' + c.id), mine = Online.mine[c.id];
-    var chip = mode === 'live' ? '<span class="chip live">THIS WEEK</span>' : mode === 'archive' ? '<span class="chip">ARCHIVE · practice</span>' : '<span class="chip warn">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet faculty-approved</span>';
+    var chip = mode === 'live' ? '<span class="chip live">THIS WEEK</span>' : mode === 'archive' ? '<span class="chip">ARCHIVE · practice</span>' : '<span class="chip warn">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet approved</span>';
     var closes = mode === 'live' && c.schedule && c.schedule.closeAt ? '<span class="muted">Closes ' + esc(fmtDate(c.schedule.closeAt)) + '</span>' : '';
     var status = '';
     if (onlineMember() && Online.me && Online.me.member_id) {
@@ -102,7 +102,7 @@
         '<li>Every action takes simulated minutes, and the patient responds to your decisions. Results come back after a realistic delay. Use <b>⏱ Wait</b> when you need time to pass.</li>' +
         '<li>No time to walk? <b>☰ Stations</b> opens any station directly.</li>' +
         '<li>Your score rewards safe, structured care, not speed. <b>Your first completed shift each week is your official score</b>; replays are practice.</li></ol></details>' +
-      '<footer class="home-foot"><p>Educational simulation for medical students. It is not clinical decision support. Cases follow the club\'s faculty review workflow.</p>' +
+      '<footer class="home-foot"><p>Educational simulation for medical students. It is not clinical decision support. Every case is reviewed and approved by the club before it is published.</p>' +
         '<a href="#admin" class="admin-link">Case Builder (club admins)</a></footer>';
     Array.prototype.forEach.call(app.querySelectorAll('[data-av]'), function (b) {
       root.PXArt.drawPortrait(b.querySelector('canvas'), b.getAttribute('data-av'));
@@ -211,11 +211,11 @@
     }, function (e) { body.innerHTML = '<p class="err">Couldn\'t load the leaderboard: ' + esc(e.message || e) + '</p>'; });
   }
 
-  /* ---------------- results (admins & faculty supervisors) ---------------- */
+  /* ---------------- results (club admins; supervisors can view) ---------------- */
   function csvCell(v) { v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
   function results(caseId) {
     stop();
-    if (!onlineMember() || !Online.canManage()) { needMember('Results'); if (onlineMember()) app.querySelector('p').textContent = 'Results are for club admins and faculty supervisors.'; return; }
+    if (!onlineMember() || !Online.canManage()) { needMember('Results'); if (onlineMember()) app.querySelector('p').textContent = 'Results are for club admins.'; return; }
     var list = allCases();
     if (!caseId && list.length) { var lv = list.filter(function (c) { return visibility(c).mode === 'live'; })[0] || list[0]; location.replace('#results/' + encodeURIComponent(lv.id)); return; }
     var c = caseById(caseId);

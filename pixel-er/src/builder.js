@@ -88,8 +88,8 @@
     if (!o || o.status === 'offline') return { can: false, text: 'Offline — file export only' };
     if (o.status !== 'signed-in' || !o.me) return { can: false, text: 'Not signed in — sign in on the home page to publish to the club database' };
     if (o.setupMissing) return { can: false, text: 'Club database not set up for PIXEL ER yet' };
-    if (!o.canManage()) return { can: false, text: 'Signed in as ' + o.displayName() + ' — only club admins and faculty supervisors can publish' };
-    return { can: true, text: (o.isSupervisor() ? 'Faculty supervisor: ' : 'Club admin: ') + o.displayName() };
+    if (!o.canPublish()) return { can: false, text: 'Signed in as ' + o.displayName() + ' — only the club president and vice-president can publish' };
+    return { can: true, text: 'Club admin: ' + o.displayName() };
   };
   Builder.prototype.refreshOnline = function () {
     var el = this.el.querySelector('.bd-online'); if (!el) return;
@@ -382,7 +382,7 @@
       '</div>' + fld('Tagline', 'tagline', c.tagline) + fld('Learning objectives (one per line)', 'objectives', c.objectives, 'lines', { rows: 4 }) +
       '<h2>Review &amp; schedule</h2><div class="bd-grid">' +
       fld('Status', 'status', c.status, 'select', { options: Core.STATUSES.map(function (s) { return [s, Core.STATUS_LABELS[s]]; }) }) +
-      fld('Faculty reviewer (name)', 'review.facultyReviewer', c.review && c.review.facultyReviewer, 'text', { help: 'Required before a case can be Scheduled or Published.' }) +
+      fld('Approved by (name)', 'review.facultyReviewer', c.review && c.review.facultyReviewer, 'text', { help: 'Filled in automatically by the server when the president or vice-president approves.' }) +
       fld('Last reviewed', 'review.lastReviewed', c.review && c.review.lastReviewed, 'date') +
       fld('Publish at', 'schedule.publishAt', c.schedule && c.schedule.publishAt, 'datetime-local', { help: 'Members see the case from this moment.' }) +
       fld('Competition closes', 'schedule.closeAt', c.schedule && c.schedule.closeAt, 'datetime-local', { help: 'After this it moves to the archive (practice only).' }) +
@@ -558,12 +558,12 @@
       (v.warnings.length ? '<div class="bd-box warn"><b>Warnings:</b><ul>' + v.warnings.map(function (e) { return '<li>' + esc(e) + '</li>'; }).join('') + '</ul></div>' : '') +
       '<p><button class="px-btn" data-b="play">▶ Play this case (preview)</button></p>' +
       '<h2>Review workflow</h2><ol class="bd-flow">' + Core.STATUSES.map(function (s) { return '<li class="' + (s === c.status ? 'on' : '') + '">' + Core.STATUS_LABELS[s] + '</li>'; }).join('') + '</ol>' +
-      '<p class="bd-help">AI review is never faculty approval. Only set <b>Faculty approved</b> once a named faculty member has played the case and checked the findings, results, decision logic, patient responses, scoring and feedback. Change the status in <b>Basics</b>.</p>' +
-      '<p>Right now members would see this case as: <b>' + (vis.visible ? ({ live: 'This week’s case (live)', archive: 'Archive — practice', preview: 'Preview (marked “not yet approved by faculty”)' })[vis.mode] : 'Hidden (' + vis.mode + ')') + '</b></p>' +
-      this.dbBox(c, v) +
+      '<p class="bd-help">AI review is not approval. Set <b>Approved</b> or <b>Published</b> only after someone has played the case and checked the findings, results, decision logic, patient responses, scoring and feedback. Change the status in <b>Basics</b>.</p>' +
+      '<p>Right now members would see this case as: <b>' + (vis.visible ? ({ live: 'This week’s case (live)', archive: 'Archive — practice', preview: 'Preview (marked “not yet approved”)' })[vis.mode] : 'Hidden (' + vis.mode + ')') + '</b></p>' +
+      this.dbBox(c, this.dbValidation(c)) +
       '<h2>Or: publish as a file</h2><ol class="bd-steps"><li>Choose which cases go into the game file.</li><li>Click <b>Download game file</b>. You get an <code>index.html</code> with the game and these cases inside.</li><li>Upload it to the PIXEL ER site on Netlify (drag and drop on the Deploys page). Members see the update immediately.</li></ol>' +
       '<div class="bd-pick">' + this.cases.map(function (x) { var vv = Core.validateCase(x); return '<label class="bd-chk"><input type="checkbox" data-pick="' + esc(x.id) + '"' + (x.status === 'draft' && x.id !== c.id && self.embeddedIds.indexOf(x.id) === -1 ? '' : ' checked') + (vv.errors.length ? ' disabled' : '') + '> ' + esc(x.title) + ' <span class="st st-' + esc(x.status) + '">' + esc(Core.STATUS_LABELS[x.status]) + '</span>' + (vv.errors.length ? ' <span class="err">has errors</span>' : '') + '</label>'; }).join('') + '</div>' +
-      '<label class="bd-chk"><input type="checkbox" data-cfg="showUnreviewed"' + (this.config.showUnreviewed ? ' checked' : '') + '> Let members play cases that are not yet faculty-approved (they are clearly marked as such)</label>' +
+      '<label class="bd-chk"><input type="checkbox" data-cfg="showUnreviewed"' + (this.config.showUnreviewed ? ' checked' : '') + '> Let members play cases that are not yet approved (they are clearly marked as such)</label>' +
       '<p class="bd-actions"><button class="px-btn" data-x="game">⬇ Download game file (index.html)</button> <button class="px-btn ghost" data-x="json">⬇ Download this case (.json)</button> <button class="px-btn ghost" data-x="all">⬇ Download all cases (.json backup)</button></p>' +
       '<p class="bd-help">Keep the downloaded .json files as backups. You can re-import them at any time with <b>⇪ Import .json</b>.</p>';
     f.querySelector('[data-cfg]').onchange = function (e) { self.config.showUnreviewed = e.target.checked; };
@@ -579,15 +579,23 @@
   };
 
   /* ---------- club database ---------- */
+  /* For the database, "Approved by" is filled in by the server, so it is not an error here. */
+  Builder.prototype.withApprover = function (c) {
+    var APPROVED = ['faculty_approved', 'scheduled', 'published', 'archived'];
+    if (APPROVED.indexOf(c.status) !== -1 && !(c.review && c.review.facultyReviewer) && this.online && this.online.canPublish()) {
+      c.review = c.review || {}; c.review.facultyReviewer = this.online.displayName() || 'club admin';
+    }
+    return c;
+  };
+  Builder.prototype.dbValidation = function (c) { return Core.validateCase(this.withApprover(Core.clone(c))); };
   Builder.prototype.dbBox = function (c, v) {
-    var st = this.onlineState(), APPROVED = ['faculty_approved', 'scheduled', 'published', 'archived'];
+    var st = this.onlineState();
     var h = '<h2>Publish to the club database <small>recommended</small></h2>';
     if (!st.can) return h + '<div class="bd-box warn">' + esc(st.text) + '.</div>';
     h += '<div class="bd-box ok"><b>' + esc(st.text) + '</b></div>' +
       '<ul class="bd-help"><li>Members see the case when its status is <b>Published</b> or <b>Scheduled</b> and the <b>Publish at</b> time has passed. Official attempts close at <b>Competition closes</b>.</li>' +
-      '<li>Only a <b>faculty supervisor</b> can move a case to Faculty approved / Scheduled / Published. The server records their name and the date automatically.</li>' +
-      '<li>Once approved, the medical content is locked. To change it, set the status back to <b>Faculty review required</b> and ask for approval again. The schedule can still be changed.</li></ul>' +
-      (APPROVED.indexOf(c.status) !== -1 && !this.online.isSupervisor() && !(c.review && c.review.facultyReviewer) ? '<div class="bd-box warn">Only a faculty supervisor can save a case with this status.</div>' : '') +
+      '<li>Only the <b>president or vice-president</b> can set a case to Approved / Scheduled / Published. The server records who approved it and the date automatically.</li>' +
+      '<li>If an approved case\'s medical content is edited later, the server records it as a new approval by whoever saved it.</li></ul>' +
       '<p class="bd-actions"><button class="px-btn" data-db="save"' + (v.errors.length ? ' disabled title="Fix the errors first"' : '') + '>⬆ Save this case to the club database</button> <button class="px-btn ghost" data-db="load">⬇ Load cases from the database</button></p><p class="bd-dbmsg" aria-live="polite"></p>';
     return h;
   };
@@ -595,8 +603,7 @@
     var self = this, msg = f.querySelector('.bd-dbmsg');
     var save = f.querySelector('[data-db="save"]'), load = f.querySelector('[data-db="load"]');
     if (save) save.onclick = function () {
-      var APPROVED = ['faculty_approved', 'scheduled', 'published', 'archived'];
-      if (self.online.isSupervisor() && APPROVED.indexOf(c.status) !== -1) { c.review = c.review || {}; if (!c.review.facultyReviewer) c.review.facultyReviewer = self.online.displayName(); }
+      self.withApprover(c);   /* the server overwrites this with the real approver */
       var v = Core.validateCase(c); if (v.errors.length) { msg.className = 'bd-dbmsg err'; msg.textContent = 'Fix the errors above first.'; return; }
       save.disabled = true; msg.className = 'bd-dbmsg'; msg.textContent = 'Saving…';
       self.online.saveCase(c).then(function (row) {

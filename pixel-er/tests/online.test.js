@@ -127,9 +127,10 @@ async function playIdeal(p) {
   await p.click('[data-sec="publish"]');
   await p.click('[data-db="save"]'); await p.waitForSelector('.bd-dbmsg.ok');
   check('admin saves a draft to the database', await p.evaluate(() => window.__mock.upserts.some(u => u.data.title === 'Week 2 draft')));
-  await p.click('[data-sec="basics"]'); await p.selectOption('[data-p="status"]', 'published'); await p.fill('[data-p="review.facultyReviewer"]', 'Someone');
-  await p.click('[data-sec="publish"]'); await p.click('[data-db="save"]'); await p.waitForSelector('.bd-dbmsg.err');
-  check('server refusal (faculty only) is shown to the admin', /faculty supervisor/.test(await p.textContent('.bd-dbmsg')));
+  await p.click('[data-sec="basics"]'); await p.selectOption('[data-p="status"]', 'published');
+  await p.click('[data-sec="publish"]'); await p.click('[data-db="save"]'); await p.waitForSelector('.bd-dbmsg.ok');
+  check('president can approve and publish', await p.evaluate(() => window.__mock.upserts.some(u => u.data.title === 'Week 2 draft' && u.status === 'published')));
+  await p.goto(FILE + '#admin');
   check('no page errors (admin)', p.errors.length === 0, p.errors.join(' | '));
 
   console.log('Phone');

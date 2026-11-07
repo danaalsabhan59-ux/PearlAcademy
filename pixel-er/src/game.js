@@ -58,7 +58,7 @@
     this.el.innerHTML = '';
     this.el.className = 'px-game';
     var draftBanner = (c.status !== 'published' && c.status !== 'archived' && c.status !== 'scheduled')
-      ? '<div class="px-ribbon">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet approved by faculty</div>' : '';
+      ? '<div class="px-ribbon">' + esc(Core.STATUS_LABELS[c.status] || 'Draft') + ' — not yet approved</div>' : '';
     var modeBanner = ({
       official: '<div class="px-ribbon official">🏆 OFFICIAL ATTEMPT — your first completed shift counts for the leaderboard</div>',
       practice: '<div class="px-ribbon practice">Practice mode — your official score for this case is already recorded</div>',

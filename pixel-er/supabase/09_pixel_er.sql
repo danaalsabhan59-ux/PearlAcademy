@@ -19,12 +19,14 @@ create table if not exists public.pixel_cases (
   publish_at   timestamptz,            -- يظهر للأعضاء من هذا الوقت
   close_at     timestamptz,            -- بعده: أرشيف (تدريب فقط، لا محاولات رسمية)
   data         jsonb not null,         -- الحالة كاملة بصيغة PIXEL ER
-  approved_by  uuid references public.supervisors(id) on delete set null,
+  approved_by  uuid references public.supervisors(id) on delete set null,   -- (قديم) غير مستخدم
+  approved_by_member uuid references public.members(id) on delete set null,
   approved_at  timestamptz,
   updated_by   uuid references public.members(id) on delete set null,
   updated_at   timestamptz not null default now(),
   constraint pixel_cases_id_matches check (data ->> 'id' = id)
 );
+alter table public.pixel_cases add column if not exists approved_by_member uuid references public.members(id) on delete set null;
 
 
 -- ============================================================================
@@ -51,49 +53,47 @@ create index if not exists pixel_attempts_board
 
 
 -- ============================================================================
---  ٣)  حماية سير الاعتماد الأكاديمي
---      - فقط المشرف الأكاديمي (جدول supervisors) يعتمد الحالة.
---      - الحالة المعتمدة لا يتغيّر محتواها الطبي إلا بإعادة الاعتماد.
---      - اسم المشرف المعتمِد وتاريخ الاعتماد يُسجَّلان تلقائيًا (لا يُكتبان يدويًا).
+--  ٣)  سير الاعتماد
+--      - الاعتماد والنشر: رئيس النادي أو نائبه فقط  (is_admin)
+--      - اسم من اعتمد وتاريخ الاعتماد يُسجَّلان تلقائيًا من الخادم (لا يُكتبان يدويًا)
+--      - أي تعديل على محتوى حالة معتمدة يُسجَّل كاعتماد جديد باسم من عدّل
 -- ============================================================================
 create or replace function public.pixel_guard_case()
 returns trigger language plpgsql security definer set search_path = public as $$
 declare
-  approved   constant text[] := array['faculty_approved','scheduled','published','archived'];
-  old_status text := case when tg_op = 'UPDATE' then old.status else null end;
-  sup_id     uuid := public.me_sup_id();
-  sup_name   text;
+  approved      constant text[] := array['faculty_approved','scheduled','published','archived'];
+  old_status    text := case when tg_op = 'UPDATE' then old.status else null end;
+  newly         boolean;
+  content_moved boolean;
+  who           text;
 begin
   -- العمودان title و status يتبعان محتوى الحالة دائمًا
   new.title  := coalesce(new.data ->> 'title', new.title, '');
   new.status := coalesce(new.data ->> 'status', 'draft');
 
-  -- الانتقال إلى حالة معتمدة: للمشرف الأكاديمي فقط
-  if new.status = any(approved) and (old_status is null or not (old_status = any(approved))) then
-    if sup_id is null then
-      raise exception 'Only a faculty supervisor can approve a case. Ask a supervisor to sign in and set the status to "Faculty approved".';
+  if new.status = any(approved) then
+    newly := old_status is null or not (old_status = any(approved));
+    content_moved := tg_op = 'UPDATE' and (new.data - 'schedule' - 'status' - 'review') is distinct from (old.data - 'schedule' - 'status' - 'review');
+    if newly or content_moved then
+      if not public.is_admin() then
+        raise exception 'Only the club president or vice-president can approve or publish a case.';
+      end if;
+      select m.full_name into who from public.members m where m.id = public.me_id();
+      new.data := jsonb_set(new.data, '{review}',
+        coalesce(new.data -> 'review', '{}'::jsonb)
+        || jsonb_build_object('facultyReviewer', coalesce(who, ''),
+                              'lastReviewed', to_char(now() at time zone 'Asia/Riyadh', 'YYYY-MM-DD')));
+      new.approved_by_member := public.me_id();
+      new.approved_at := now();
+    else
+      -- تغيير الموعد أو الحالة فقط: يبقى اسم المعتمِد وتاريخه كما هما
+      new.data := jsonb_set(new.data, '{review}', coalesce(old.data -> 'review', '{}'::jsonb));
+      new.approved_by_member := old.approved_by_member;
+      new.approved_at := old.approved_at;
     end if;
-    select btrim(coalesce(s.title,'') || ' ' || s.name) into sup_name from public.supervisors s where s.id = sup_id;
-    new.data := jsonb_set(new.data, '{review}',
-      coalesce(new.data -> 'review', '{}'::jsonb)
-      || jsonb_build_object('facultyReviewer', sup_name,
-                            'lastReviewed', to_char(now() at time zone 'Asia/Riyadh', 'YYYY-MM-DD')));
-    new.approved_by := sup_id;
-    new.approved_at := now();
-  end if;
-
-  if tg_op = 'UPDATE' and old.status = any(approved) and new.status = any(approved) and sup_id is null then
-    -- المحتوى الطبي مقفل بعد الاعتماد (الجدولة والحالة فقط قابلة للتعديل)
-    if (new.data - 'schedule' - 'status' - 'review') is distinct from (old.data - 'schedule' - 'status' - 'review') then
-      raise exception 'This case is faculty-approved, so its content is locked. To edit it: set the status to "Faculty review required", save, then ask a supervisor to approve it again.';
-    end if;
-    new.data := jsonb_set(new.data, '{review}', coalesce(old.data -> 'review', '{}'::jsonb));
-    new.approved_by := old.approved_by;
-    new.approved_at := old.approved_at;
-  end if;
-
-  if new.status <> all(approved) then
+  else
     new.approved_by := null;
+    new.approved_by_member := null;
     new.approved_at := null;
   end if;
 
@@ -124,7 +124,7 @@ drop policy if exists pixel_del_cases   on public.pixel_cases;
 drop policy if exists pixel_read_att    on public.pixel_attempts;
 drop policy if exists pixel_del_att     on public.pixel_attempts;
 
--- الأعضاء: الحالات المنشورة التي حان وقتها + الأرشيف.  الإدارة والمشرفون: كل شيء.
+-- الأعضاء: الحالات المنشورة التي حان وقتها + الأرشيف.  الإدارة والمشرفون: كل شيء (المشرفون قراءة فقط).
 create policy pixel_read_cases on public.pixel_cases for select to authenticated
   using (
     public.is_admin() or public.is_supervisor()
@@ -133,9 +133,9 @@ create policy pixel_read_cases on public.pixel_cases for select to authenticated
         and (publish_at is null or publish_at <= now()))
   );
 create policy pixel_add_cases  on public.pixel_cases for insert to authenticated
-  with check (public.is_admin() or public.is_supervisor());
+  with check (public.is_admin());
 create policy pixel_edit_cases on public.pixel_cases for update to authenticated
-  using (public.is_admin() or public.is_supervisor());
+  using (public.is_admin());
 create policy pixel_del_cases  on public.pixel_cases for delete to authenticated
   using (public.is_admin());
 

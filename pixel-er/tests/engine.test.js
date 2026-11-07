@@ -130,9 +130,9 @@ test('catches broken references and weights', () => {
   assert.ok(r.errors.some(e => e.includes('duplicate id “hx_onset”')));
 });
 
-test('published case requires a faculty reviewer', () => {
+test('published case requires the approver name', () => {
   const c = core.clone(acs); c.status = 'published'; c.review.facultyReviewer = '';
-  assert.ok(core.validateCase(c).errors.some(e => e.includes('faculty reviewer')));
+  assert.ok(core.validateCase(c).errors.some(e => e.includes('person who approved')));
 });
 
 test('visibility follows status and schedule', () => {

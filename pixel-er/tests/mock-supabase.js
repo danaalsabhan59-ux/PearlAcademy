@@ -40,7 +40,6 @@
         if (payload) {
           var m = me();
           if (!m || m.role !== 'president') out = { data: null, error: { message: 'new row violates row-level security policy' } };
-          else if (['faculty_approved', 'scheduled', 'published'].indexOf(payload.status) !== -1) out = { data: null, error: { message: 'Only a faculty supervisor can approve a case.' } };
           else { S.upserts.push(payload); var i = S.cases.findIndex(function (c) { return c.id === payload.id; }); var row = { id: payload.id, status: payload.status, publish_at: payload.publish_at, close_at: payload.close_at, data: payload.data }; if (i === -1) S.cases.push(row); else S.cases[i] = row; out = { data: row, error: null }; }
         } else if (table === 'pixel_cases') {
           var mm = me(); rows = rows.filter(function (r) { return (mm && mm.role === 'president') || (['published', 'scheduled', 'archived'].indexOf(r.status) !== -1 && (!r.publish_at || new Date(r.publish_at) <= new Date())); });

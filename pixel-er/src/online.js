@@ -77,7 +77,8 @@
     },
 
     email: function () { return this.session && this.session.user ? this.session.user.email : ''; },
-    canManage: function () { return !!(this.me && (this.me.is_admin || this.me.is_supervisor)); },
+    canManage: function () { return !!(this.me && (this.me.is_admin || this.me.is_supervisor)); },   /* see results */
+    canPublish: function () { return !!(this.me && this.me.is_admin); },                               /* approve + publish: president / vice */
     isSupervisor: function () { return !!(this.me && this.me.is_supervisor); },
     displayName: function () { return this.me ? (this.me.supervisor_name || this.me.full_name || '') : ''; },
 

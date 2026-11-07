@@ -35,8 +35,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
   var STATES = ['stable', 'improving', 'unchanged', 'deteriorating', 'critical'];
   var STATUSES = ['draft', 'ai_reviewed', 'faculty_review', 'faculty_approved', 'scheduled', 'published', 'archived'];
   var STATUS_LABELS = {
-    draft: 'Draft', ai_reviewed: 'AI reviewed', faculty_review: 'Faculty review required',
-    faculty_approved: 'Faculty approved', scheduled: 'Scheduled', published: 'Published', archived: 'Archived'
+    draft: 'Draft', ai_reviewed: 'AI reviewed', faculty_review: 'Review required',
+    faculty_approved: 'Approved', scheduled: 'Scheduled', published: 'Published', archived: 'Archived'
   };
   var VITAL_KEYS = ['hr', 'sbp', 'dbp', 'rr', 'spo2', 'temp', 'gcs', 'glucose'];
   var VITAL_LABELS = { hr: 'HR', sbp: 'SBP', dbp: 'DBP', rr: 'RR', spo2: 'SpO₂', temp: 'Temp', gcs: 'GCS', glucose: 'Glucose' };
@@ -510,7 +510,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
     if (!(sc.rubric || []).length) warn('No scoring rubric — every attempt will score 0.');
     if (!(c.references || []).length) warn('No references listed.');
     if (c.status === 'published' || c.status === 'scheduled') {
-      if (!c.review || !c.review.facultyReviewer) err('Published or scheduled cases need a named faculty reviewer.');
+      if (!c.review || !c.review.facultyReviewer) err('Published or scheduled cases need the name of the person who approved them.');
     }
     return { errors: errors, warnings: warnings };
   }

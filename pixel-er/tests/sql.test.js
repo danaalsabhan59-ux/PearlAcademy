@@ -72,21 +72,26 @@ function check(name, ok, extra) { if (ok) { passed++; console.log('  ✓ ' + nam
   await as('pres@s.mu.edu.sa', () => db.query('insert into public.pixel_cases (id, data) values ($1, $2)', [CASE.id, draft]));
   check('admin can save a draft', (await svc('select status from public.pixel_cases')).rows[0].status === 'faculty_review');
 
-  err = await expectError(as('pres@s.mu.edu.sa', () => db.query('update public.pixel_cases set data = $1 where id = $2', [pub, CASE.id])));
-  check('admin cannot approve/publish (faculty only)', /Only a faculty supervisor/.test(err || ''), err);
+  err = await expectError(as('faisal@mu.edu.sa', () => db.query('update public.pixel_cases set data = $1 where id = $2', [pub, CASE.id])));
+  check('supervisors cannot publish (president / vice only)', /row-level security|0 rows/.test(err || '0 rows') && (await svc('select status from public.pixel_cases')).rows[0].status === 'faculty_review', err);
 
-  await as('faisal@mu.edu.sa', () => db.query('update public.pixel_cases set data = $1, publish_at = now() - interval \'1 hour\', close_at = now() + interval \'6 days\' where id = $2', [pub, CASE.id]));
-  let row = (await svc('select status, approved_by, data from public.pixel_cases')).rows[0];
-  check('supervisor publishes; reviewer recorded automatically', row.status === 'published' && row.approved_by && row.data.review.facultyReviewer === 'د. فيصل الحسيني', JSON.stringify(row.data.review));
-
-  const edited = JSON.parse(JSON.stringify(row.data)); edited.actions[0].response = 'changed';
-  err = await expectError(as('pres@s.mu.edu.sa', () => db.query('update public.pixel_cases set data = $1 where id = $2', [edited, CASE.id])));
-  check('approved content is locked for non-supervisors', /content is locked/.test(err || ''), err);
+  await as('pres@s.mu.edu.sa', () => db.query('update public.pixel_cases set data = $1, publish_at = now() - interval \'1 hour\', close_at = now() + interval \'6 days\' where id = $2', [Object.assign({}, pub, { review: Object.assign({}, CASE.review, { facultyReviewer: 'Fake Name' }) }), CASE.id]));
+  let row = (await svc('select status, approved_by_member, data from public.pixel_cases')).rows[0];
+  check('president publishes; approver name recorded by the server (typed name ignored)', row.status === 'published' && !!row.approved_by_member && row.data.review.facultyReviewer === 'نورة سعد الدوسري', JSON.stringify(row.data.review));
 
   const resched = JSON.parse(JSON.stringify(row.data)); resched.schedule = { publishAt: '2026-11-01T20:00', closeAt: '2026-11-30T20:00' }; resched.review.facultyReviewer = 'Fake Name';
   await as('pres@s.mu.edu.sa', () => db.query('update public.pixel_cases set data = $1 where id = $2', [resched, CASE.id]));
   row = (await svc('select data from public.pixel_cases')).rows[0];
-  check('admin can reschedule; cannot fake the reviewer name', row.data.schedule.closeAt === '2026-11-30T20:00' && row.data.review.facultyReviewer === 'د. فيصل الحسيني');
+  check('rescheduling keeps the original approver; name cannot be faked', row.data.schedule.closeAt === '2026-11-30T20:00' && row.data.review.facultyReviewer === 'نورة سعد الدوسري');
+
+  await svc(`insert into public.members (email, full_name, role, study_level) values ('vice@s.mu.edu.sa', 'هند علي القحطاني', 'vice', 'السنة السادسة')`);
+  const edited = JSON.parse(JSON.stringify(row.data)); edited.actions[0].response = 'changed';
+  await as('vice@s.mu.edu.sa', () => db.query('update public.pixel_cases set data = $1 where id = $2', [edited, CASE.id]));
+  row = (await svc('select data from public.pixel_cases')).rows[0];
+  check('vice-president edits approved content → recorded as a new approval by her', row.data.actions[0].response === 'changed' && row.data.review.facultyReviewer === 'هند علي القحطاني');
+
+  err = await expectError(as('sara@s.mu.edu.sa', () => db.query(`update public.pixel_cases set data = jsonb_set(data, '{status}', '"draft"') where id = $1 returning id`, [CASE.id]).then(r => { if (!r.rows.length) throw new Error('0 rows'); })));
+  check('ordinary members cannot change a published case', /0 rows|row-level security/.test(err || ''), err);
 
   const seen = await as('sara@s.mu.edu.sa', () => db.query('select id from public.pixel_cases'));
   check('member sees the published case', seen.rows.length === 1);
