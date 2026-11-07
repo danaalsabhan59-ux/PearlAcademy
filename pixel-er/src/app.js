@@ -23,6 +23,7 @@
   function caseById(id) { return allCases().filter(function (c) { return c.id === id; })[0]; }
   function visibility(c) { return Core.caseVisibility(c, new Date(), { preview: onlineMember() ? Online.canManage() : CONFIG.showUnreviewed }); }
   function attemptMode(c, vis) {
+    if (onlineMember() && Online.me && Online.me.is_supervisor) return 'supervisor';   /* faculty play freely, off the student leaderboard (even if also listed as a member) */
     if (!onlineMember() || !Online.me || !Online.me.member_id) return 'guest';
     var mine = Online.mine[c.id];
     return vis.mode === 'live' && !(mine && mine.official) ? 'official' : 'practice';
@@ -149,6 +150,7 @@
         if (!slot) return;
         if (mode === 'preview') return;
         slot.hidden = false;
+        if (mode === 'supervisor') { slot.className = 'px-submit info'; slot.innerHTML = 'Supervisor play: your score is shown here only and is not added to the student leaderboard. <a href="#board/' + encodeURIComponent(c.id) + '">🏆 View the student leaderboard</a>'; return; }
         if (mode === 'guest') { slot.className = 'px-submit info'; slot.innerHTML = 'Practice score — <a href="#">sign in with your club email</a> to compete on the leaderboard.'; return; }
         slot.className = 'px-submit wait'; slot.textContent = mode === 'official' ? 'Saving your official attempt…' : 'Saving your practice attempt…';
         Online.submit(c.id, res.history).then(function (r) {

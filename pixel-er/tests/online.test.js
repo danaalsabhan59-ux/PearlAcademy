@@ -133,6 +133,19 @@ async function playIdeal(p) {
   await p.goto(FILE + '#admin');
   check('no page errors (admin)', p.errors.length === 0, p.errors.join(' | '));
 
+  console.log('Faculty supervisor');
+  p = await pageWith(browser, { email: 'faisal@mu.edu.sa', cases: [ROW], attempts: OTHERS });
+  await p.goto(FILE); await p.waitForSelector('.acct-in');
+  check('supervisor recognised by name', /فيصل الحسيني/.test(await p.textContent('.acct')) && /Supervisor/.test(await p.textContent('.acct')));
+  check('supervisor sees the published case', (await p.locator('.home-card h3').allTextContents()).includes('The Heavy Chest'));
+  check('supervisor has no Case Builder link', await p.locator('.acct-in a[href="#admin"]').count() === 0);
+  await p.click('text=Start shift');
+  check('supervisor ribbon in game', /Supervisor mode/.test(await p.locator('.px-ribbon').first().textContent()));
+  await playIdeal(p);
+  await p.waitForSelector('.px-submit.info');
+  check('supervisor result not sent to the leaderboard', /not added to the student leaderboard/.test(await p.textContent('.px-submit')) && await p.evaluate(() => window.__mock.attempts.length) === 2);
+  check('no page errors (supervisor)', p.errors.length === 0, p.errors.join(' | '));
+
   console.log('Phone');
   p = await pageWith(browser, { email: 'sara@s.mu.edu.sa', cases: [ROW], attempts: OTHERS }, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   await p.goto(FILE + '#board/' + ACS.id); await p.waitForSelector('table.board');

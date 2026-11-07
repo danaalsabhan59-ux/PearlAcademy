@@ -62,6 +62,7 @@
     var modeBanner = ({
       official: '<div class="px-ribbon official">🏆 OFFICIAL ATTEMPT — your first completed shift counts for the leaderboard</div>',
       practice: '<div class="px-ribbon practice">Practice mode — your official score for this case is already recorded</div>',
+      supervisor: '<div class="px-ribbon practice">Supervisor mode — play freely; your score is not added to the student leaderboard</div>',
       guest: '<div class="px-ribbon practice">Practice mode — sign in with your club email on the home page to compete</div>',
       preview: '<div class="px-ribbon">PREVIEW — nothing is saved</div>'
     })[this.opts.mode] || '';
