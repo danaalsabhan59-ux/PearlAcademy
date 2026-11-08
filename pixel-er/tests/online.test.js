@@ -54,26 +54,32 @@ async function playIdeal(p) {
 (async () => {
   const browser = await chromium.launch();
 
-  console.log('Offline (server unreachable)');
+  console.log('Members only');
   let p = await pageWith(browser, null);
   await p.goto(FILE); await p.waitForTimeout(400);
-  check('home says offline / practice', /Offline/.test(await p.locator('.acct').textContent()));
-  check('built-in case still playable', (await p.locator('.home-card h3').allTextContents()).includes('The Heavy Chest'));
-  await p.goto(FILE + '#play/acs-inferior-stemi'); await p.waitForSelector('.px-canvas');
-  check('guest ribbon shown in game', /sign in with your club email/i.test(await p.locator('.px-ribbon').first().textContent()));
+  check('offline: game is closed with a clear message', /تحتاج اتصال بالإنترنت/.test(await p.textContent('#app')));
+  await p.goto(FILE + '#play/acs-inferior-stemi'); await p.waitForTimeout(300);
+  check('offline: cannot start a case', await p.locator('.px-canvas').count() === 0);
   check('no page errors (offline)', p.errors.length === 0, p.errors.join(' | '));
-
-  console.log('Signed out');
   p = await pageWith(browser, { cases: [ROW] });
-  await p.goto(FILE); await p.waitForSelector('.acct-form');
-  await p.fill('#acct-mail', 'sara@s.mu.edu.sa'); await p.click('.acct-form button');
-  await p.waitForSelector('text=We sent a sign-in link');
-  check('sign-in link requested for the typed email', await p.evaluate(() => window.__mock.otp) === 'sara@s.mu.edu.sa');
+  await p.goto(FILE); await p.waitForSelector('.gate-card h2');
+  check('signed out: members-only message + link to the platform', /لأعضاء النادي فقط/.test(await p.textContent('.gate-card')) && (await p.getAttribute('.gate-card a.px-btn', 'href')).includes('emergencyclubmu'));
+  check('signed out: no email sign-in form in the game', await p.locator('input[type=email]').count() === 0);
+  await p.goto(FILE + '#play/acs-inferior-stemi'); await p.waitForTimeout(300);
+  check('signed out: cannot start a case', await p.locator('.px-canvas').count() === 0);
   await p.goto(FILE + '#board'); await p.waitForTimeout(300);
-  check('leaderboard asks guests to sign in', /for club members/.test(await p.textContent('#app')));
+  check('signed out: leaderboard closed', /لأعضاء النادي فقط/.test(await p.textContent('#app')));
+  p = await pageWith(browser, { email: 'stranger@gmail.com', cases: [ROW] });
+  await p.goto(FILE); await p.waitForSelector('.gate-card h2');
+  check('signed in but not a member: refused', /غير مسجّل كعضو/.test(await p.textContent('.gate-card')));
+  await p.goto(FILE + '#admin'); await p.waitForTimeout(400);
+  check('builder closed to non-admins', await p.locator('.bd').count() === 0);
 
   console.log('Member: official attempt → leaderboard');
   p = await pageWith(browser, { email: 'sara@s.mu.edu.sa', cases: [ROW], attempts: OTHERS });
+  await p.goto(FILE); await p.waitForSelector('.acct-in');
+  await p.goto(FILE + '#admin'); await p.waitForTimeout(400);
+  check('builder closed to ordinary members', await p.locator('.bd').count() === 0 && /للرئيسة والنائبة/.test(await p.textContent('#app')));
   await p.goto(FILE); await p.waitForSelector('.acct-in');
   const acct = await p.locator('.acct').textContent();
   check('shows full name and study year', acct.includes('سارة محمد عبدالله العتيبي') && acct.includes('السنة الرابعة'), acct);

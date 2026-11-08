@@ -44,7 +44,7 @@
       var self = this;
       try {
         this.sb = root.supabase.createClient(this.cfg.supabaseUrl, this.cfg.supabaseKey, {
-          auth: { detectSessionInUrl: true, persistSession: true, storageKey: 'pxer-auth' }
+          auth: { detectSessionInUrl: true, persistSession: true }   /* default storage key = the club platform's, so a platform sign-in carries over */
         });
       } catch (e) { this.status = 'offline'; return Promise.resolve(this); }
       return this.sb.auth.getSession().then(function (r) {

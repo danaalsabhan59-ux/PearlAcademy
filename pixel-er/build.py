@@ -23,6 +23,8 @@ CONFIG = {
     "supabaseUrl": "https://cbswqehpufnlnczhznti.supabase.co",
     "supabaseKey": "sb_publishable_ZZCyodaZrGNXyvUMBKf11g_Nb-FS9jF",
     "submitFunction": "pixel-er-submit",
+    "membersOnly": True,                 # only signed-in club members / supervisors can play
+    "platformUrl": "https://emergencyclubmu.netlify.app/",
 }
 
 

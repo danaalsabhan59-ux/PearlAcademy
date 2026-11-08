@@ -15,8 +15,11 @@ function check(name, ok, extra) { console.log((ok ? '  ✓ ' : '  ✗ ') + name 
 (async () => {
   const browser = await chromium.launch();
   const errors = [];
-  /* never touch the real club server from tests: the game must work offline */
-  const watch = p => { p.route('**/@supabase/**', r => r.abort()); p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); }); /* the blocked CDN request is expected */ p.on('dialog', d => d.accept()); };
+  /* never touch the real club server: a signed-in member against the mock server (tests/mock-supabase.js) */
+  const MOCK = fs.readFileSync(path.join(__dirname, 'mock-supabase.js'), 'utf8');
+  const CASE = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'cases', 'acs-inferior-stemi.json'), 'utf8'));
+  const SEED = { email: 'pres@s.mu.edu.sa', cases: [{ id: CASE.id, status: 'published', publish_at: new Date(Date.now() - 864e5).toISOString(), close_at: new Date(Date.now() + 6 * 864e5).toISOString(), data: Object.assign({}, CASE, { status: 'published' }) }] };
+  const watch = p => { p.addInitScript(s => { window.__MOCK_SEED = s; }, SEED); p.route('**/@supabase/**', r => r.fulfill({ contentType: 'application/javascript', body: MOCK })); p.on('pageerror', e => errors.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); }); /* the blocked CDN request is expected */ p.on('dialog', d => d.accept()); };
 
   /* ---- play the ACS case through the UI ---- */
   const page = await browser.newPage({ viewport: { width: 1200, height: 860 } }); watch(page);
@@ -67,13 +70,13 @@ function check(name, ok, extra) { console.log((ok ? '  ✓ ' : '  ✗ ') + name 
   await b.click('[data-b="dup"]');
   await b.fill('[data-p="title"]', 'Builder Test Case');
   await b.click('[data-sec="publish"]');
-  check('duplicated case validates', await b.locator('.bd-box.ok').isVisible());
+  check('duplicated case validates', await b.locator('.bd-box.ok', { hasText: 'No errors' }).isVisible());
   const [dl] = await Promise.all([b.waitForEvent('download'), b.click('[data-x="game"]')]);
   const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'pxer-')), 'index.html');
   await dl.saveAs(out);
-  const p2 = await (await browser.newContext()).newPage(); watch(p2);
-  await p2.goto('file://' + out);
-  check('exported game lists the new case', (await p2.locator('.home-card h3').allTextContents()).includes('Builder Test Case'));
+  /* members play cases from the club database; the exported file is the offline/backup copy */
+  const exported = fs.readFileSync(out, 'utf8').match(/<script type="application\/json" id="px-cases">([\s\S]*?)<\/script>/);
+  check('exported game file contains the new case', !!exported && JSON.parse(exported[1]).some(c => c.title === 'Builder Test Case'));
 
   /* ---- phone ---- */
   const m = await (await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })).newPage(); watch(m);

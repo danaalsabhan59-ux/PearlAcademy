@@ -31,28 +31,27 @@
   function fmtDate(v) { var d = new Date(v); return isNaN(d) ? '' : d.toLocaleString(undefined, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); }
 
   /* ---------------- home ---------------- */
+  /* Members-only: the game reuses the club platform's sign-in (same site, same session). */
+  function allowed() { return onlineMember() && !!Online.me && !!(Online.me.member_id || Online.me.is_supervisor); }
+  function gate(kind) {
+    stop();
+    app.className = 'home gate';
+    var msg;
+    if (connecting) msg = '<p class="g-muted">جاري الاتصال بمنصة النادي…</p>';
+    else if (kind === 'admin' && allowed()) msg = '<h2>إدارة الحالات للرئيسة والنائبة فقط</h2><p><a class="px-btn" href="#">← رجوع للعبة</a></p>';
+    else if (Online.status === 'offline') msg = '<h2>تحتاج اتصال بالإنترنت</h2><p>PIXEL ER مربوطة بمنصة النادي، فتأكد من اتصالك وحدّث الصفحة.</p><p><button class="px-btn" onclick="location.reload()">↻ تحديث</button></p>';
+    else if (Online.setupMissing) msg = '<h2>اللعبة غير متاحة حاليًا</h2><p>حاول مرة ثانية بعد شوي.</p>';
+    else if (Online.status === 'not-member') msg = '<h2>هذا الحساب غير مسجّل كعضو في النادي</h2><p>PIXEL ER لأعضاء نادي طب الطوارئ فقط.<br>إذا كنت عضوًا، سجّل دخولك في المنصة بالإيميل المسجّل في النادي.</p><p><a class="px-btn" href="' + esc(CONFIG.platformUrl || '/') + '">الذهاب لمنصة النادي</a></p>';
+    else msg = '<h2>PIXEL ER لأعضاء النادي فقط</h2><p>سجّل دخولك في <b>منصة النادي</b> أولًا،<br>ثم افتح اللعبة من القائمة: <b>التعلّم ← PIXEL ER</b></p><p><a class="px-btn" href="' + esc(CONFIG.platformUrl || '/') + '">تسجيل الدخول في المنصة</a></p>';
+    app.innerHTML = '<div class="gate-card" dir="rtl"><img class="logo" src="/*LOGO*/" alt="نادي طب الطوارئ"><h1 class="pixel-title" dir="ltr">PIXEL&nbsp;ER</h1><p class="tagline" dir="ltr">Your Shift. Your Decisions.</p>' + msg + '</div>';
+  }
   function accountBar() {
-    if (!CONFIG.supabaseUrl) return '';
-    var h = '<section class="acct" aria-live="polite">';
-    if (connecting) h += '<p class="muted">Connecting to the club server…</p>';
-    else if (Online.status === 'offline') h += '<p>📴 <b>Offline</b> — you can play in practice mode. Scores are not saved to the leaderboard.</p>';
-    else if (Online.status === 'signed-out') {
-      h += sentTo
-        ? '<p>✉️ We sent a sign-in link to <b>' + esc(sentTo) + '</b>. Open it <b>on this device</b> to come back signed in.</p><button class="linkbtn" data-acct="again">Use a different email</button>'
-        : '<form class="acct-form"><label for="acct-mail"><b>Sign in to compete</b> — use the email you use on the club platform</label>' +
-          '<div class="acct-row"><input id="acct-mail" type="email" required autocomplete="email" placeholder="name@s.mu.edu.sa"><button class="px-btn sm" type="submit">Send sign-in link</button></div>' +
-          '<small>No password. Without signing in you can still play for practice.</small></form>';
-    } else if (Online.status === 'not-member') {
-      h += '<p>Signed in as <b>' + esc(Online.email()) + '</b>, but this email isn\'t registered as a club member, so your scores won\'t go on the leaderboard. You can still play for practice.</p><button class="linkbtn" data-acct="out">Sign out</button>';
-    } else {
-      var me = Online.me || {};
-      h += '<div class="acct-in"><div>👋 <b>' + esc(Online.displayName() || Online.email()) + '</b>' + (me.study_level ? ' · ' + esc(me.study_level) : '') +
-        (me.is_admin ? ' · <span class="chip">Club admin</span>' : me.is_supervisor ? ' · <span class="chip">Supervisor</span>' : '') + '</div>' +
-        '<div class="acct-links"><a href="#board">🏆 Leaderboards</a>' + (Online.canManage() ? ' <a href="#results">📊 Results</a>' : '') + (Online.canPublish() ? ' <a href="#admin">🛠 Case Builder</a>' : '') +
-        ' <button class="linkbtn" data-acct="out">Sign out</button></div></div>';
-      if (Online.setupMissing) h += '<p class="warnbox">Connected, but PIXEL ER isn\'t set up on the club database yet (see <code>pixel-er/README.md</code>). Playing in practice mode for now.</p>';
-    }
-    return h + '</section>';
+    if (!allowed()) return '';
+    var me = Online.me || {};
+    return '<section class="acct"><div class="acct-in"><div>👋 <b>' + esc(Online.displayName() || Online.email()) + '</b>' + (me.study_level ? ' · ' + esc(me.study_level) : '') +
+      (me.is_admin ? ' · <span class="chip">Club admin</span>' : me.is_supervisor ? ' · <span class="chip">Supervisor</span>' : '') + '</div>' +
+      '<div class="acct-links"><a href="#board">🏆 Leaderboards</a>' + (Online.canManage() ? ' <a href="#results">📊 Results</a>' : '') + (Online.canPublish() ? ' <a href="#admin">🛠 Case Builder</a>' : '') +
+      ' <a href="' + esc(CONFIG.platformUrl || '/') + '">↩ منصة النادي</a></div></div></section>';
   }
 
   function card(c, mode) {
@@ -76,6 +75,7 @@
   }
 
   function home() {
+    if (CONFIG.membersOnly !== false && !allowed()) { gate(); return; }
     stop();
     app.className = 'home';
     var live = [], prev = [], arch = [];
@@ -109,19 +109,6 @@
       root.PXArt.drawPortrait(b.querySelector('canvas'), b.getAttribute('data-av'));
       b.onclick = function () { store('pxer.avatar', b.getAttribute('data-av')); Array.prototype.forEach.call(app.querySelectorAll('[data-av]'), function (x) { x.setAttribute('aria-pressed', x === b); }); };
     });
-    var form = app.querySelector('.acct-form');
-    if (form) form.onsubmit = function (e) {
-      e.preventDefault();
-      var mail = form.querySelector('input').value.trim(), btn = form.querySelector('button');
-      btn.disabled = true; btn.textContent = 'Sending…';
-      Online.signIn(mail).then(function (r) {
-        if (r && r.error) { btn.disabled = false; btn.textContent = 'Send sign-in link'; alertMsg(form, r.error.message); return; }
-        sentTo = mail; home();
-      });
-    };
-    Array.prototype.forEach.call(app.querySelectorAll('[data-acct]'), function (b) {
-      b.onclick = function () { if (b.getAttribute('data-acct') === 'out') Online.signOut().then(home); else { sentTo = ''; home(); } };
-    });
   }
   function alertMsg(el, msg) { var p = el.querySelector('.err') || el.appendChild(document.createElement('p')); p.className = 'err'; p.textContent = msg; }
 
@@ -139,6 +126,7 @@
   function play(c, opts) {
     stop();
     opts = opts || {};
+    if (CONFIG.membersOnly !== false && !opts.preview && !allowed()) { gate(); return; }
     var vis = visibility(c), mode = opts.preview ? 'preview' : attemptMode(c, vis);
     var el = document.createElement('div'); app.innerHTML = ''; app.appendChild(el); app.className = 'playing';
     var g = new G.Game(el, c, Object.assign({
@@ -166,6 +154,7 @@
 
   /* ---------------- leaderboard ---------------- */
   function needMember(title) {
+    if (CONFIG.membersOnly !== false) { gate(); return; }
     app.className = 'home page';
     app.innerHTML = '<a class="back" href="#">← PIXEL ER</a><h1 class="page-h">' + title + '</h1>' +
       (connecting ? '<p class="muted">Connecting…</p>' : '<p>Leaderboards are for club members. <a href="#">Sign in on the home page</a> with your club email.</p>');
@@ -258,6 +247,7 @@
 
   /* ---------------- builder ---------------- */
   function admin() {
+    if (CONFIG.membersOnly !== false && !Online.canPublish()) { gate('admin'); return; }
     stop();
     var el = document.createElement('div'); app.innerHTML = ''; app.appendChild(el); app.className = 'admin';
     var b = new root.PXBuilder.Builder(el, {
