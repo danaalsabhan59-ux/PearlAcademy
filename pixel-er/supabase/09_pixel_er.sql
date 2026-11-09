@@ -251,3 +251,14 @@ revoke execute on function public.pixel_leaderboard(text), public.pixel_leaderbo
   public.pixel_participation(text), public.pixel_results(text), public.pixel_whoami() from anon, public;
 grant execute on function public.pixel_leaderboard(text), public.pixel_leaderboard_overall(),
   public.pixel_participation(text), public.pixel_results(text), public.pixel_whoami() to authenticated;
+
+
+-- ============================================================================
+--  ٧)  صلاحيات دالة الخادم pixel-er-submit (تعمل بدور service_role)
+--      في هذا المشروع لا يملك service_role صلاحيات افتراضية على الجداول،
+--      فنعطيه أقل ما يحتاجه فقط: معرفة العضو، قراءة الحالة، وحفظ المحاولة.
+-- ============================================================================
+grant usage on schema public to service_role;
+grant select on public.members to service_role;
+grant select on public.pixel_cases to service_role;
+grant select, insert on public.pixel_attempts to service_role;

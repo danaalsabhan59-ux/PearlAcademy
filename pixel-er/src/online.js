@@ -124,7 +124,7 @@
           var p = ctx && typeof ctx.json === 'function' ? ctx.json().catch(function () { return null; }) : Promise.resolve(null);
           return p.then(function (body) {
             var code = (body && body.error) || 'network';
-            if (code === 'network' || code === 'server_error' || code === 'save_failed') self.queuePending(caseId, history);
+            if (code === 'network' || code === 'server_error' || code === 'save_failed' || code === 'member_lookup_failed') self.queuePending(caseId, history);   /* server-side problems: retry later */
             return { error: code, detail: body && body.detail };
           });
         }

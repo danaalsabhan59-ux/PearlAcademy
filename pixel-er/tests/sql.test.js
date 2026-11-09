@@ -34,8 +34,7 @@ create function public.is_supervisor() returns boolean language sql stable secur
   select public.me_sup_id() is not null; $$;
 grant usage on schema public to anon, authenticated, service_role;
 grant select on public.members, public.committees, public.supervisors to authenticated;
-grant all on all tables in schema public to service_role;
-alter default privileges in schema public grant all on tables to service_role;  -- as in Supabase
+-- like the club project: service_role has NO default table privileges (only what 09_pixel_er.sql grants)
 insert into public.committees (name_ar) values ('اللجنة العلمية');
 insert into public.members (email, full_name, role, study_level, committee_id) values
   ('pres@s.mu.edu.sa', 'نورة سعد الدوسري', 'president', 'السنة الخامسة', null),
@@ -60,7 +59,8 @@ function check(name, ok, extra) { if (ok) { passed++; console.log('  ✓ ' + nam
     try { return await fn(); } finally { await db.exec(`reset role; select set_config('request.jwt.claims', '', false);`); }
   }
   async function expectError(p) { try { await p; return null; } catch (e) { return e.message; } }
-  const svc = async (sql, params) => { await db.exec('set role service_role'); try { return await db.query(sql, params); } finally { await db.exec('reset role'); } };
+  const svc = (sql, params) => db.query(sql, params);   /* test setup / inspection as the owner */
+  const asService = async (sql, params) => { await db.exec('set role service_role'); try { return await db.query(sql, params); } finally { await db.exec('reset role'); } };
 
   const draft = Object.assign({}, CASE, { status: 'faculty_review' });
   const pub = Object.assign({}, CASE, { status: 'published' });
@@ -98,6 +98,18 @@ function check(name, ok, extra) { if (ok) { passed++; console.log('  ✓ ' + nam
   await svc(`insert into public.pixel_cases (id, data) values ('hidden-case', $1)`, [Object.assign({}, CASE, { id: 'hidden-case', status: 'draft' })]).catch(e => { throw e; });
   const seen2 = await as('sara@s.mu.edu.sa', () => db.query('select id from public.pixel_cases order by id'));
   check('member does not see drafts', seen2.rows.map(r => r.id).join() === CASE.id, seen2.rows.map(r => r.id).join());
+
+  console.log('Server function permissions (service_role)');
+  const sara = (await svc(`select id from public.members where email = 'sara@s.mu.edu.sa'`)).rows[0].id;
+  let e2 = await expectError(asService(`select id, email from public.members where lower(email) = 'sara@s.mu.edu.sa'`));
+  check('service_role can look up members by email', !e2, e2);
+  e2 = await expectError(asService(`select id, status, data from public.pixel_cases where id = $1`, [CASE.id]));
+  check('service_role can read cases', !e2, e2);
+  e2 = await expectError(asService(`insert into public.pixel_attempts (case_id, member_id, official, score, history) values ($1, $2, false, 50, '[]')`, [CASE.id, sara]));
+  check('service_role can save attempts', !e2, e2);
+  e2 = await expectError(asService(`delete from public.members where email = 'nobody'`));
+  check('service_role cannot change members', /permission denied/.test(e2 || ''), e2);
+  await svc(`delete from public.pixel_attempts where score = 50 and not official`);
 
   console.log('Attempts & leaderboard');
   err = await expectError(as('sara@s.mu.edu.sa', () => db.query(`insert into public.pixel_attempts (case_id, member_id, official, score, history) values ($1, public.me_id(), true, 100, '[]')`, [CASE.id])));

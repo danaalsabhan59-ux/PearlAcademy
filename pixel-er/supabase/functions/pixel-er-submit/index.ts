@@ -634,9 +634,10 @@ Deno.serve(async (req: Request) => {
     const { data: auth, error: authErr } = await db.auth.getUser(token);
     const email = auth?.user?.email?.toLowerCase();
     if (authErr || !email) return json({ error: 'not_signed_in' }, 401);
-    const { data: found } = await db.from('members').select('id, email').ilike('email', email.replace(/[\\%_]/g, '\\$&'));
+    const { data: found, error: findErr } = await db.from('members').select('id, email').ilike('email', email.replace(/[\\%_]/g, '\\$&'));
+    if (findErr) return json({ error: 'member_lookup_failed', detail: findErr.message }, 500);
     const member = (found || []).find((m: any) => (m.email || '').toLowerCase() === email);
-    if (!member) return json({ error: 'not_a_member' }, 403);
+    if (!member) return json({ error: 'not_a_member', detail: 'rows=' + (found || []).length }, 403);
 
     // 2) What did they play?
     let body: any;

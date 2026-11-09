@@ -120,6 +120,7 @@
     not_finished: 'The case wasn\'t finished.',
     invalid_history: 'The server couldn\'t verify this attempt, so it wasn\'t recorded.',
     too_many_attempts: 'You\'ve reached the attempt limit for this case.',
+    member_lookup_failed: 'The club server had a problem saving this attempt. It is kept on this device and will be sent automatically next time you open PIXEL ER.',
     network: 'Couldn\'t reach the club server. Your attempt is saved on this device and will be sent automatically next time you open PIXEL ER.'
   };
 
