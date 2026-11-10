@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@600;800&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF3FF;--ink:#16224A;--ink2:#4A5B85;--muted:#7D8CB0;--teal:#0FB5B5;--sun:#F5A524;--coral:#F2545B;--lime:#2FBF71;--grape:#7C5CE0;--pink:#E85D9E;--line:#DCE5F7}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--bg)}
+body{font-family:'Tajawal',sans-serif;color:var(--ink);position:relative}
+.bg{position:absolute;inset:0;background:
+ radial-gradient(900px 700px at 90% 5%,#E4DCFF 0,transparent 60%),
+ radial-gradient(900px 800px at 0% 100%,#D3F5F2 0,transparent 60%),
+ radial-gradient(700px 600px at 10% 30%,#FFF1D9 0,transparent 60%),var(--bg)}
+.float{position:absolute;font-size:72px;filter:drop-shadow(0 12px 20px rgba(22,34,74,.15))}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0}
+.h{font-family:'Baloo Bhaijaan 2';font-weight:800;line-height:1.15;text-align:center}
+.grad{background:linear-gradient(90deg,var(--teal),var(--grape));-webkit-background-clip:text;background-clip:text;color:transparent}
+.grad2{background:linear-gradient(90deg,var(--sun),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:#fff;border-radius:44px;box-shadow:0 30px 80px rgba(22,34,74,.14);border:2px solid var(--line)}
+.chip{display:inline-block;padding:16px 34px;border-radius:999px;font-weight:700;font-size:38px;background:#fff;border:2px solid var(--line);box-shadow:0 10px 30px rgba(22,34,74,.08)}
+.cap{position:absolute;top:150px;left:0;right:0;text-align:center}
+.cap .k{font-family:'Baloo Bhaijaan 2';font-weight:800;font-size:96px;line-height:1.1}
+.cap .s{font-size:44px;color:var(--ink2);font-weight:500;margin-top:18px}
+.icon{width:260px;height:260px;border-radius:72px;background:linear-gradient(135deg,var(--teal),#3BA4E8 50%,var(--grape));display:flex;align-items:center;justify-content:center;font-size:150px;box-shadow:0 30px 70px rgba(124,92,224,.35)}
+.stat{width:440px;height:290px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.stat b{font-family:'Baloo Bhaijaan 2';font-size:120px;line-height:1;color:var(--sun)}
+.stat span{font-size:42px;color:var(--ink2);font-weight:700;margin-top:14px}
+.shot{position:absolute;width:960px;border-radius:40px;overflow:hidden;box-shadow:0 40px 90px rgba(22,34,74,.22);border:10px solid #fff;background:#fff}
+.shot img{display:block;width:100%}
+.tag{position:absolute;padding:20px 38px;border-radius:30px;color:#fff;font-weight:900;font-size:44px;box-shadow:0 16px 40px rgba(22,34,74,.2);white-space:nowrap}
+.btn{padding:24px 34px;border-radius:32px;color:#fff;font-weight:900;font-size:40px;white-space:nowrap;box-shadow:0 16px 36px rgba(22,34,74,.18)}
+.team{width:470px;height:330px;border-radius:44px;color:#fff;padding:40px 44px;position:relative;box-shadow:0 22px 50px rgba(22,34,74,.18)}
+.team .n{font-size:48px;font-weight:900}
+.team .p{font-family:'Baloo Bhaijaan 2';font-size:130px;line-height:1;margin-top:26px;text-align:left}
+.tool{width:300px;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.tool i{font-style:normal;font-size:110px}
+.tool span{font-size:38px;font-weight:900;text-align:center;line-height:1.2}
+</style></head><body>
+<div class="bg"></div>
+<div id="floats"></div>
+
+<!-- A: hook -->
+<div class="scene" id="A">
+  <div class="h" style="font-size:88px;color:var(--ink2)" id="A1">معلّمتي…</div>
+  <div class="h" style="font-size:118px;margin-top:30px" id="A2">ماذا لو صارت حصّتك</div>
+  <div class="h grad" style="font-size:150px;margin-top:10px" id="A3">أمتعَ حصّة</div>
+  <div class="h" style="font-size:118px" id="A4">في يوم طالباتك؟ ✨</div>
+</div>
+
+<!-- B: logo -->
+<div class="scene" id="B">
+  <div class="chip" id="B0" style="color:#5B47B8;background:#F1ECFF;border-color:#DCD2FF">📗 وفق كتاب وزارة التعليم</div>
+  <div class="icon" id="B1" style="margin-top:70px">🕌</div>
+  <div class="h" id="B2" style="font-size:180px;margin-top:60px">الصف <span class="grad">التفاعلي</span></div>
+  <div class="h" id="B3" style="font-size:66px;margin-top:20px">الدراسات الإسلامية</div>
+  <div id="B4" style="font-size:48px;color:var(--ink2);font-weight:700;margin-top:16px">الصف الأول المتوسط · الفصل الدراسي الأول</div>
+</div>
+
+<!-- C: stats -->
+<div class="scene" id="C">
+  <div class="cap" style="top:230px"><div class="k">كل الفصل <span class="grad">جاهز</span></div><div class="s">محتوى كامل مبني على الكتاب المدرسي</div></div>
+  <div style="display:grid;grid-template-columns:440px 440px;gap:40px;margin-top:180px">
+    <div class="card stat" id="C1"><b data-n="54">0</b><span>درسًا تفاعليًا</span></div>
+    <div class="card stat" id="C2"><b data-n="481" style="color:var(--teal)">0</b><span>سؤالًا من الكتاب</span></div>
+    <div class="card stat" id="C3"><b data-n="244" style="color:var(--grape)">0</b><span>نشاطًا ممتعًا</span></div>
+    <div class="card stat" id="C4"><b data-n="54" style="color:var(--lime)">0</b><span>وقفة إيمانية</span></div>
+  </div>
+  <div style="display:flex;gap:22px;margin-top:70px;flex-wrap:wrap;justify-content:center">
+    <div class="chip" id="U1">🕌 التوحيد</div><div class="chip" id="U2">📖 التفسير</div>
+    <div class="chip" id="U3">🌿 الحديث</div><div class="chip" id="U4">💧 الفقه</div>
+  </div>
+</div>
+
+<!-- D: lessons -->
+<div class="scene" id="D">
+  <div class="cap"><div class="k">دروس تُعرض <span class="grad">بلمسة</span></div><div class="s">شرائح جاهزة لكل درس… اعرضيها على السبورة مباشرة</div></div>
+  <div class="shot" id="D1"><img src="c_s2.png"></div>
+  <div class="shot" id="D2"><img src="c_s5.png"></div>
+  <div class="shot" id="D3"><img src="c_s1.png"></div>
+  <div class="tag" id="T1" style="background:var(--sun)">⚡ تحميات صح أو خطأ</div>
+  <div class="tag" id="T2" style="background:var(--grape)">🧩 أنشطة تصنيف وسحب</div>
+  <div class="tag" id="T3" style="background:var(--lime)">🌿 وقفات إيمانية</div>
+</div>
+
+<!-- E: wheel -->
+<div class="scene" id="E">
+  <div class="cap"><div class="k">🎡 عجلة <span class="grad2">الأسماء</span></div><div class="s">كل طالبة لها فرصة… والحماس لا يتوقف</div></div>
+  <div style="position:absolute;top:520px;left:50%;margin-left:-380px;width:760px;height:760px" id="Ewrap">
+    <svg width="760" height="760" viewBox="-380 -380 760 760" style="position:absolute;inset:0">
+      <g id="wheel"></g>
+      <circle r="62" fill="#fff" stroke="#16224A" stroke-width="10"/>
+      <circle r="26" fill="#F2545B"/>
+    </svg>
+    <svg width="90" height="100" viewBox="0 0 90 100" style="position:absolute;top:-46px;left:335px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.25))"><path d="M5 5 H85 L45 95 Z" fill="#F2545B" stroke="#fff" stroke-width="6" stroke-linejoin="round"/></svg>
+  </div>
+  <div id="Epick" class="chip" style="position:absolute;top:1330px;font-size:60px;font-weight:900;padding:22px 60px;color:var(--grape)">🌟 الطالبة المحظوظة!</div>
+  <div style="position:absolute;top:1500px;display:flex;gap:24px">
+    <div class="btn" id="E1" style="background:var(--lime)">✅ صحيحة <span dir="ltr">+١٠</span></div>
+    <div class="btn" id="E2" style="background:var(--sun)">🌟 متميّزة <span dir="ltr">+١٥</span></div>
+    <div class="btn" id="E3" style="background:var(--grape)">🙋 مشاركة <span dir="ltr">+٥</span></div>
+  </div>
+</div>
+
+<!-- F: teams -->
+<div class="scene" id="F">
+  <div class="cap"><div class="k">👥 تحدّي <span class="grad">الفِرَق</span></div><div class="s">نقاط فورية ولوحة شرف تُشعل المنافسة</div></div>
+  <div style="display:grid;grid-template-columns:470px 470px;gap:40px;margin-top:200px">
+    <div class="team" id="F1" style="background:linear-gradient(135deg,#0FB5B5,#3BCFCB)"><div class="n">الفريق الفيروزي</div><div class="p" data-n="85">0</div><div class="crown"></div></div>
+    <div class="team" id="F2" style="background:linear-gradient(135deg,#F5A524,#F7BE55)"><div class="n">الفريق الذهبي</div><div class="p" data-n="120">0</div></div>
+    <div class="team" id="F3" style="background:linear-gradient(135deg,#E85D9E,#F08ABA)"><div class="n">الفريق الوردي</div><div class="p" data-n="95">0</div></div>
+    <div class="team" id="F4" style="background:linear-gradient(135deg,#7C5CE0,#A08BF0)"><div class="n">الفريق البنفسجي</div><div class="p" data-n="70">0</div></div>
+  </div>
+  <div id="Fcrown" style="position:absolute;font-size:130px">👑</div>
+  <div class="chip" id="F5" style="margin-top:80px;font-size:46px;font-weight:900">🏆 لوحة الفصل · 🥇 نجمات الأسبوع</div>
+</div>
+
+<!-- G: tools -->
+<div class="scene" id="G">
+  <div class="cap"><div class="k">كل أدواتك <span class="grad">في مكان واحد</span></div><div class="s">وفّري وقتك… وركّزي على طالباتك</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,300px);gap:34px;margin-top:220px" id="Ggrid">
+    <div class="card tool"><i>📋</i><span>التحضير<br>والكشوف</span></div>
+    <div class="card tool"><i>🗓️</i><span>التقويم<br>الدراسي</span></div>
+    <div class="card tool"><i>📊</i><span>التقارير<br>الطلابية</span></div>
+    <div class="card tool"><i>✍️</i><span>السبورة<br>الذكية</span></div>
+    <div class="card tool"><i>⏱️</i><span>مؤقّت<br>الأنشطة</span></div>
+    <div class="card tool"><i>🖥️</i><span>وضع<br>العرض</span></div>
+    <div class="card tool"><i>📜</i><span>قوانين<br>صفّنا</span></div>
+    <div class="card tool"><i>👥</i><span>الطالبات<br>والفِرَق</span></div>
+    <div class="card tool"><i>💾</i><span>نسخ<br>احتياطي</span></div>
+  </div>
+</div>
+
+<!-- H: CTA -->
+<div class="scene" id="H">
+  <div class="icon" id="H1">🕌</div>
+  <div class="h" id="H2" style="font-size:170px;margin-top:60px">الصف <span class="grad">التفاعلي</span></div>
+  <div class="h" id="H3" style="font-size:76px;margin-top:20px;color:var(--ink2)">حصّة تُشرك <span class="grad2">كل طالبة</span> 💛</div>
+  <div class="btn" id="H4" style="margin-top:90px;font-size:62px;padding:36px 80px;border-radius:44px;background:linear-gradient(90deg,var(--teal),var(--grape))">🚀 ابدئي حصّتك الآن</div>
+  <div id="H5" style="margin-top:60px;font-size:42px;font-weight:700;color:var(--ink2)">يعمل من المتصفح مباشرة · بدون تثبيت · بدون إنترنت</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const eo=x=>1-Math.pow(1-clamp(x),3);
+const back=x=>{x=clamp(x);const c=1.70158;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const prog=(t,a,d)=>clamp((t-a)/d);
+function pop(el,t,a,d=.5,dy=60){const p=prog(t,a,d);el.style.opacity=clamp(p*2);el.style.transform=`translateY(${(1-eo(p))*dy}px) scale(${.6+.4*back(p)})`;}
+function rise(el,t,a,d=.6,dy=80){const p=eo(prog(t,a,d));el.style.opacity=p;el.style.transform=`translateY(${(1-p)*dy}px)`;}
+const SC={A:[0,4.6],B:[4.6,9.8],C:[9.8,15.6],D:[15.6,22.6],E:[22.6,29.4],F:[29.4,35.2],G:[35.2,40.6],H:[40.6,47]};
+const DUR=47;
+// floats
+const fl=['🕌','📿','🌙','⭐','📖','✨','🌿','🎯'];const FP=[];
+fl.forEach((e,i)=>{const d=document.createElement('div');d.className='float';d.textContent=e;$('floats').appendChild(d);FP.push({d,x:[40,950,30,960,60,940,500,260][i],y:[60,90,1500,1640,1800,1780,40,1830][i],ph:i*1.3});});
+// wheel
+const cols=['#0FB5B5','#F5A524','#F2545B','#2FBF71','#7C5CE0','#E85D9E','#3BA4E8','#F08A3C'];
+const N=16,g=$('wheel');let html='';
+for(let i=0;i<N;i++){const a0=i/N*2*Math.PI-Math.PI/2,a1=(i+1)/N*2*Math.PI-Math.PI/2,r=360;
+ html+=`<path d="M0 0 L${r*Math.cos(a0)} ${r*Math.sin(a0)} A${r} ${r} 0 0 1 ${r*Math.cos(a1)} ${r*Math.sin(a1)} Z" fill="${cols[i%8]}" stroke="#fff" stroke-width="6"/>`;
+ const am=(a0+a1)/2;html+=`<text x="${250*Math.cos(am)}" y="${250*Math.sin(am)}" font-size="58" text-anchor="middle" dominant-baseline="central">${['⭐','🌸','🦋','🌙','💎','🌟','🍀','🎈'][i%8]}</text>`;}
+html='<circle r="372" fill="#16224A"/>'+html;g.innerHTML=html;
+
+window.seek=function(t){
+ // floats
+ FP.forEach(f=>{f.d.style.left=f.x+'px';f.d.style.top=(f.y+Math.sin(t*1.1+f.ph)*22)+'px';f.d.style.transform=`rotate(${Math.sin(t*.8+f.ph)*10}deg)`;f.d.style.opacity=.3;});
+ for(const k in SC){const [a,b]=SC[k];const el=$(k);let o=0;if(t>=a&&t<b){o=Math.min(prog(t,a,.35),k=='H'?1:prog(b-t,0,.35)||0);if(k!='H'&&t>b-.35)o=clamp((b-t)/.35);}
+  el.style.opacity=o;el.style.transform=`scale(${1+(1-clamp((t-a)/.5))*0.04})`;el.style.display=o>0?'flex':'none';}
+ // A
+ let a=SC.A[0];['A1','A2','A3','A4'].forEach((id,i)=>i==2?pop($(id),t,a+.3+i*.6,.6):rise($(id),t,a+.3+i*.6));
+ // B
+ a=SC.B[0];pop($('B1'),t,a+.2,.7,0);$('B1').style.transform+=` rotate(${(1-eo(prog(t,a+.2,.8)))*-25}deg)`;rise($('B0'),t,a+.7);rise($('B2'),t,a+1.0);rise($('B3'),t,a+1.4);rise($('B4'),t,a+1.7);
+ // C
+ a=SC.C[0];['C1','C2','C3','C4'].forEach((id,i)=>{pop($(id),t,a+.4+i*.25,.6);const b=$(id).querySelector('b');b.textContent=Math.round(+b.dataset.n*eo(prog(t,a+.6+i*.25,1.8))).toLocaleString('ar-EG');});
+ ['U1','U2','U3','U4'].forEach((id,i)=>pop($(id),t,a+2.4+i*.18,.5));
+ // D: three screenshots stacked carousel
+ a=SC.D[0];const ds=['D1','D2','D3'],ts=['T1','T2','T3'];
+ ds.forEach((id,i)=>{const el=$(id);const s=a+.3+i*2.1;const p=eo(prog(t,s,.7));const out=eo(prog(t,s+2.1,.6));
+  const last=i==2;const o=last?p:p*(1-out);el.style.opacity=o;el.style.left='60px';el.style.top='640px';
+  el.style.transform=`translateX(${(1-p)*-700+(last?0:out*700)}px) rotate(${(1-p)*-6}deg) scale(${1-(last?0:out*.1)})`;
+  const tg=$(ts[i]);const tp=prog(t,s+.5,.5);tg.style.opacity=last?clamp(tp*2):clamp(tp*2)*(1-out);tg.style.top='1300px';tg.style.left='50%';
+  tg.style.transform=`translateX(-50%) scale(${.5+.5*back(tp)})`;});
+ // E: wheel
+ a=SC.E[0];pop($('Ewrap'),t,a+.2,.6,0);
+ const sp=eo(prog(t,a+.8,3.2));$('wheel').setAttribute('transform',`rotate(${sp*1440+11.25+22.5*5})`);
+ pop($('Epick'),t,a+4.0,.5);['E1','E2','E3'].forEach((id,i)=>pop($(id),t,a+4.5+i*.25,.5));
+ // F
+ a=SC.F[0];['F1','F2','F3','F4'].forEach((id,i)=>{pop($(id),t,a+.3+i*.2,.6);const p=$(id).querySelector('.p');p.textContent=Math.round(+p.dataset.n*eo(prog(t,a+1.2,2.6))).toLocaleString('ar-EG');});
+ const cp=prog(t,a+3.6,.6);const f2=$('F2').getBoundingClientRect();const cr=$('Fcrown');cr.style.left=(f2.left+f2.width/2-65)+'px';cr.style.top=(f2.top-110-(1-back(cp))*80)+'px';cr.style.opacity=clamp(cp*2);cr.style.transform=`rotate(${Math.sin(t*4)*6}deg)`;
+ pop($('F5'),t,a+3.9,.5);
+ // G
+ a=SC.G[0];[...$('Ggrid').children].forEach((el,i)=>pop(el,t,a+.3+i*.13,.5));
+ // H
+ a=SC.H[0];pop($('H1'),t,a+.2,.7,0);rise($('H2'),t,a+.6);rise($('H3'),t,a+1.0);pop($('H4'),t,a+1.6,.6);
+ if(t>a+2.3){$('H4').style.transform+=` scale(${1+Math.sin((t-a)*5)*.03})`;}rise($('H5'),t,a+2.1);
+};
+window.DUR=DUR;seek(0);
+</script></body></html>
