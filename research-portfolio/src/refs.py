@@ -286,6 +286,103 @@ REFS = {
         doi="10.2147/OAEM.S419028"),
 }
 
+# ---- additional references verified for the 20-idea condensed portfolio ----
+REFS.update({
+    "brandow2020": dict(
+        authors="Brandow AM, et al.",
+        title="American Society of Hematology 2020 guidelines for sickle cell disease: management of acute and chronic pain",
+        journal="Blood Adv", year="2020", details="4(12):2656-2701",
+        doi="10.1182/bloodadvances.2020001851", pmid="32559294"),
+    "abuhaimed2025": dict(
+        authors="Abu Haimed AK, et al.",
+        title="Use of Emergency Severity Index 2 reduces time to first analgesia in sickle cell disease vaso-occlusive crisis",
+        journal="Blood Adv", year="2025", details="",
+        doi="10.1182/bloodadvances.2025016538",
+        note="Full author list and DOI to be confirmed on the journal page."),
+    "alhelail2024": dict(
+        authors="Alhelail M, Albelali A, Alkanhal R, Salam M.",
+        title="Severity of scorpion envenomation in Saudi Arabia: a systematic review",
+        journal="Toxicol Rep", year="2024", details="13:101749",
+        doi="10.1016/j.toxrep.2024.101749"),
+    "bashekah2023": dict(
+        authors="Bashekah KA, Alqahtani R, Aljifri AM, et al.",
+        title="The knowledge, attitudes, and associated factors regarding first aid among the general public in Saudi Arabia",
+        journal="Cureus", year="2023", details="15(7):e41387",
+        doi="10.7759/cureus.41387"),
+    "hassan2024": dict(
+        authors="Hassan A, Alhuthaili A, Mudawi M, et al.",
+        title="The knowledge, attitudes, and practices regarding diabetic ketoacidosis among diabetic patients in the Northern and Western regions of Saudi Arabia",
+        journal="Cureus", year="2024", details="16(3):e55617",
+        doi="10.7759/cureus.55617"),
+    "ushersmith2012": dict(
+        authors="Usher-Smith JA, Thompson M, Ercole A, Walter FM.",
+        title="Variation between countries in the frequency of diabetic ketoacidosis at first presentation of type 1 diabetes in children: a systematic review",
+        journal="Diabetologia", year="2012", details="55(11):2878-2894",
+        doi="10.1007/s00125-012-2690-2"),
+    "goronfolah2019": dict(
+        authors="Goronfolah L, Abulaban A, Barnawi AI, Jawi M, Alhadhrami W, Baatiah NY.",
+        title="The effectiveness of written asthma action plan at the National Guard Health Affairs' asthma clinic",
+        journal="Cureus", year="2019", details="11(11):e6247",
+        doi="10.7759/cureus.6247"),
+    "gina": dict(
+        authors="Global Initiative for Asthma (GINA).",
+        title="Global Strategy for Asthma Management and Prevention (updated annually)",
+        journal="GINA reports", year="accessed 2026", details="",
+        url="https://ginasthma.org/reports/"),
+    "shelton2024": dict(
+        authors="Shelton SK, Rice JD, Knoepke CE, Matlock DD, Havranek EP, Daugherty SL, Perman SM.",
+        title="Examining the impact of layperson rescuer gender on the receipt of bystander CPR for women in cardiac arrest",
+        journal="Circ Cardiovasc Qual Outcomes", year="2024", details="17(4):e010249",
+        doi="10.1161/CIRCOUTCOMES.123.010249", pmid="38533649"),
+    "alsabri2024": dict(
+        authors="Alsabri M, Alqeeq BF, Elshanbary AA, Soliman Y, Zaazouee MS, Yu R.",
+        title="Knowledge and skill level among non-healthcare providers regarding cardiopulmonary resuscitation (CPR) training in the Middle East (Arab countries): a systematic review and meta-analysis",
+        journal="BMC Public Health", year="2024", details="24(1)",
+        doi="10.1186/s12889-024-19575-7"),
+    "beshyah2023": dict(
+        authors="Beshyah AS, Elamouri JS, Almagdub I, Abdulrahman H, Hafidh K, Beshyah SA.",
+        title="Burden and patterns of medical emergencies during Ramadan fasting: a narrative review",
+        journal="Ibnosina J Med Biomed Sci", year="2023", details="15(1):5-19",
+        doi="10.1055/s-0043-1764355"),
+    "mclernon2025": dict(
+        authors="Mc Lernon S, et al.",
+        title="Public awareness of stroke risk factors in high-income countries: a systematic review",
+        journal="J Stroke Cerebrovasc Dis", year="2025", details="34(12):108501",
+        url="https://discovery.ucl.ac.uk/id/eprint/10217941",
+        note="DOI not located during verification; link is the UCL open-access repository record."),
+    "batt2021": dict(
+        authors="Batt AM, Lanos C, Delport S, Al-Hasan D, Knox S, Alhmoudi A, Anderson ML, Fares S, Cummins F.",
+        title="Out-of-hospital cardiac arrest in countries of the Gulf Cooperation Council: a scoping review",
+        journal="East Mediterr Health J", year="2021", details="27(7):707-717",
+        doi="10.26719/emhj.20.141", pmid="34369586"),
+    "alenezi2023": dict(
+        authors="Alenezi EZ, AlQahtani AM, Althunayan SF, et al.",
+        title="Prevalence and determinants of road traffic accidents in Saudi Arabia: a systematic review",
+        journal="Cureus", year="2023", details="15(12):e51205",
+        doi="10.7759/cureus.51205"),
+    "alghnam2019": dict(
+        authors="Alghnam S, Towhari J, Alkelya M, Alsaif A, Alrowaily M, Alrabeeah F, Albabtain I.",
+        title="The association between mobile phone use and severe traffic injuries: a case-control study from Saudi Arabia",
+        journal="Int J Environ Res Public Health", year="2019", details="16(15):2706",
+        doi="10.3390/ijerph16152706"),
+    "alhomoud2025": dict(
+        authors="Alhomoud F.",
+        title="'That's enough' - workplace violence against physicians, pharmacists, and nurses in Saudi Arabia: a systematic review of prevalence, causes, and consequences",
+        journal="Risk Manag Healthc Policy", year="2025", details="18:373-408",
+        doi="10.2147/RMHP.S509895",
+        note="DOI taken from a repository record; confirm on the journal page."),
+    "liu2019": dict(
+        authors="Liu J, Gan Y, Jiang H, et al.",
+        title="Prevalence of workplace violence against healthcare workers: a systematic review and meta-analysis",
+        journal="Occup Environ Med", year="2019", details="76(12):927-937",
+        doi="10.1136/oemed-2019-105849", pmid="31611310"),
+    "alsahabi2023": dict(
+        authors="Alsahabi I, Alenizi G, Eskandarani R.",
+        title="Snake bites in the Arabian Peninsula: a scoping review",
+        journal="J Med Law Public Health", year="2023", details="3(3)",
+        doi="10.52609/jmlph.v3i3.93"),
+})
+
 
 def ref_url(r):
     if r.get("doi"):

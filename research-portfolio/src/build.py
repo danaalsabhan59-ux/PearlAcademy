@@ -55,6 +55,7 @@ LINK = "#127A77"
 
 PAGE_W, PAGE_H = A4
 COVER_TAGLINE = "Research gaps \u2022 Study designs \u2022 Prioritisation matrix \u2022 Implementation roadmap"
+COVER_SUB = "14 Evidence-Based Research Proposals"
 COVER_DOC = "Proposals for supervisor review and research selection"
 LM = RM = 2.2 * cm
 TM = 2.5 * cm
@@ -354,7 +355,7 @@ def draw_cover(c, doc):
     c.line(x, PAGE_H - 7.75 * cm, x + 4.2 * cm, PAGE_H - 7.75 * cm)
     c.setFillColor(colors.HexColor("#D6E4F0"))
     c.setFont("Head", 16)
-    c.drawString(x, PAGE_H - 8.9 * cm, "14 Evidence-Based Research Proposals")
+    c.drawString(x, PAGE_H - 8.9 * cm, COVER_SUB)
     c.setFont("Head-Italic", 11.5)
     c.setFillColor(colors.HexColor("#AFC3D8"))
     c.drawString(x, PAGE_H - 9.8 * cm, COVER_TAGLINE)

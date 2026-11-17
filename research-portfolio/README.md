@@ -1,6 +1,7 @@
 # Emergency Medicine Club – Scientific Research Portfolio (2026–2027)
 
 **Deliverables:**
+- `EM_Club_20_Research_Ideas_Surveys_and_Reviews.pdf` – 20 ideas (10 cross-sectional surveys, 10 systematic reviews), one page each, 24 pages (build with `python3 src/build_ideas.py`)
 - `EM_Club_Research_Portfolio_2026-2027_Condensed.pdf` – condensed edition (18 pages, one page per proposal; build with `python3 src/build_brief.py`)
 - `EM_Club_Research_Portfolio_2026-2027.pdf` – full edition (81 pages)
 
