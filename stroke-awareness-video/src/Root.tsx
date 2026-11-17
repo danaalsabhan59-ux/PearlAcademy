@@ -3,6 +3,7 @@ import { BasiraAI } from "./basira/BasiraAI";
 import { BasiraMobile } from "./basira/mobile/BasiraMobile";
 import { PosterPrompts, PosterTools } from "./basira/poster/Poster";
 import * as BasiraTimeline from "./basira/data/timeline";
+import { DiabetesPoster } from "./diabetes/Poster";
 import { NuclearAwareness } from "./nuclear/NuclearAwareness";
 import { NuclearSilent } from "./nuclear/silent/NuclearSilent";
 import { SILENT_TOTAL } from "./nuclear/silent/timeline";
@@ -42,6 +43,7 @@ export const RemotionRoot: React.FC = () => {
       ))}
       <Still id="NuclearPartOverlay" component={PartOverlay} width={1080} height={1920} defaultProps={{ part: 0, mode: "badge" as "badge" | "next" }} />
       <Still id="NuclearCover" component={NuclearCover} width={1080} height={1920} />
+      <Still id="DiabetesPoster" component={DiabetesPoster} width={1080} height={1350} />
       <Composition id="NuclearSilent" component={NuclearSilent} durationInFrames={SILENT_TOTAL} fps={30} width={1080} height={1920} defaultProps={{ muted: false }} />
       <Composition
         id="NuclearAwareness"
