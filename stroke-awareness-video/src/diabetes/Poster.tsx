@@ -30,7 +30,7 @@ const Header: React.FC = () => (
 
 const S = 46; // icon size
 const st = { fill: "none", stroke: K.sky, strokeWidth: 3.2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
-const ICONS: Record<string, React.ReactNode> = {
+export const ICONS: Record<string, React.ReactNode> = {
   heart: (
     <svg width={S} height={S} viewBox="0 0 48 48"><path {...st} d="M24 40 C8 29 6 20 10 14 C14 8 21 9 24 15 C27 9 34 8 38 14 C42 20 40 29 24 40 Z" /><path {...st} d="M10 24 H18 L21 18 L25 30 L28 24 H38" stroke={K.amber} /></svg>
   ),
@@ -51,7 +51,7 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 };
 
-const SIGNS: [keyof typeof ICONS, string][] = [
+export const SIGNS: [keyof typeof ICONS, string][] = [
   ["shake", "رجفة"],
   ["sweat", "تعرّق"],
   ["dizzy", "دوخة"],
