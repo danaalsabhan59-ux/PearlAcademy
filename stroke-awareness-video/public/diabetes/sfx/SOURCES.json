@@ -1,0 +1,12 @@
+{
+ "licence": "Mixkit Sound Effects Free License (free for commercial use, no attribution required)",
+ "files": {
+  "pop-2356.mp3": "https://assets.mixkit.co/active_storage/sfx/2356/2356.wav",
+  "pop-2358.mp3": "https://assets.mixkit.co/active_storage/sfx/2358/2358.wav",
+  "pop-3005.mp3": "https://assets.mixkit.co/active_storage/sfx/3005/3005.wav",
+  "pop-2357.mp3": "https://assets.mixkit.co/active_storage/sfx/2357/2357.wav",
+  "pop-2925.mp3": "https://assets.mixkit.co/active_storage/sfx/2925/2925.wav",
+  "pop-2364.mp3": "https://assets.mixkit.co/active_storage/sfx/2364/2364.wav"
+ },
+ "processing": "leading silence trimmed, 0.25 s fade-out, loudness-normalised"
+}

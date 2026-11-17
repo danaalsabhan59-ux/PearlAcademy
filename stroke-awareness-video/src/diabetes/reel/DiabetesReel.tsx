@@ -237,24 +237,25 @@ const S5: React.FC<{ f: number }> = ({ f }) => {
 };
 
 // ------------------------------------------------------------------ audio
-const SFX: { src: string; at: number; v: number }[] = [
-  { src: "whoosh", at: 150, v: 0.22 },
-  { src: "title", at: 216, v: 0.26 },
-  ...[0, 1, 2, 3, 4, 5].map((i) => ({ src: "card", at: 245 + i * 13, v: 0.16 })),
-  { src: "whoosh", at: 360, v: 0.22 },
-  { src: "check", at: 380, v: 0.2 },
-  { src: "check", at: 540, v: 0.2 },
-  { src: "confirm", at: 640, v: 0.2 },
-  { src: "check", at: 700, v: 0.2 },
-  { src: "whoosh-big", at: 822, v: 0.18 },
-  { src: "whoosh-big", at: 1002, v: 0.18 },
-  { src: "end", at: 1080, v: 0.28 },
+/**
+ * No music — only short pop sounds, one per element as it appears (Mixkit Sound Effects Free License;
+ * IDs in the file names: 2356 dry pop, 2358 long pop, 3005 light pop, 2357 bubble pop, 2925 soap bubble, 2364 hard pop).
+ * `peak` = frames from file start to its loudest point, so the pop lands exactly on the visual.
+ */
+const POP = { dry: ["pop-2356", 0], long: ["pop-2358", 0], light: ["pop-3005", 1], bubble: ["pop-2357", 7], soap: ["pop-2925", 4], hard: ["pop-2364", 0] } as const;
+type PopKind = keyof typeof POP;
+const CUES: [number, PopKind, number][] = [
+  [12, "dry", 0.5], [60, "light", 0.35], [80, "soap", 0.55],
+  [160, "dry", 0.5], [222, "hard", 0.55],
+  ...[0, 1, 2, 3, 4, 5].map((i) => [245 + i * 13, i % 2 ? "light" : "long", 0.45] as [number, PopKind, number]),
+  [362, "soap", 0.5], [388, "bubble", 0.5], [548, "bubble", 0.5], [640, "dry", 0.45], [708, "bubble", 0.5],
+  [850, "hard", 0.5], [885, "dry", 0.5], [930, "soap", 0.55],
+  [1022, "long", 0.45], [1046, "dry", 0.5], [1062, "light", 0.4], [1090, "soap", 0.55], [1110, "dry", 0.4],
 ];
 const ReelAudio: React.FC = () => (
   <>
-    <Audio name="music" src={staticFile("nuclear/music/mixkit-441.mp3")} volume={(fr) => 0.55 * Math.min(1, fr / 30) * Math.min(1, Math.max(0, (REEL_TOTAL - 6 - fr) / 60))} />
-    {SFX.map((s, i) => (
-      <Audio key={i} name={s.src} src={staticFile(`basira/audio/mixkit-soft/${s.src}.mp3`)} from={s.at} volume={s.v} />
+    {CUES.map(([at, kind, v], i) => (
+      <Audio key={i} name={`${kind} @${at}`} src={staticFile(`diabetes/sfx/${POP[kind][0]}.mp3`)} from={Math.max(0, at - POP[kind][1])} volume={v} />
     ))}
   </>
 );
