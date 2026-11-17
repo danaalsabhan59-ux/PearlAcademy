@@ -1,0 +1,17 @@
+{
+ "majmaah-university": {
+  "w": 1143,
+  "h": 900,
+  "ratio": 1.27
+ },
+ "student-council": {
+  "w": 847,
+  "h": 900,
+  "ratio": 0.9411
+ },
+ "emergency-medicine-club": {
+  "w": 955,
+  "h": 1075,
+  "ratio": 0.8884
+ }
+}

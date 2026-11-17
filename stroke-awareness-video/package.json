@@ -1,0 +1,68 @@
+{
+  "name": "stroke-awareness-video",
+  "version": "1.0.0",
+  "description": "فيديو توعوي عن السكتة الدماغية بأسلوب Pixel Art — Remotion + Edge TTS",
+  "repository": {},
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24"
+  },
+  "private": true,
+  "dependencies": {
+    "@fontsource/cairo": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
+    "@fontsource/press-start-2p": "^5.3.0",
+    "@react-three/fiber": "^9.3.0",
+    "@remotion/cli": "4.0.539",
+    "@remotion/fonts": "4.0.539",
+    "@remotion/media": "4.0.539",
+    "@remotion/media-utils": "4.0.539",
+    "@remotion/three": "^4.0.539",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.539",
+    "three": "^0.178.0"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.539",
+    "@types/react": "19.2.7",
+    "@types/three": "^0.178.1",
+    "@types/web": "0.0.166",
+    "eslint": "10.12.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "preview": "remotion studio",
+    "voices": "python3 scripts/generate_voices.py",
+    "voices:force": "python3 scripts/generate_voices.py --force",
+    "voices:audition": "python3 scripts/audition_voices.py",
+    "sfx": "python3 scripts/generate_sfx.py",
+    "check:audio": "python3 scripts/check_audio.py",
+    "render": "npm run check:audio && remotion render StrokeAwareness out/stroke-awareness.mp4 --codec=h264 --audio-codec=aac --audio-bitrate=320k --crf=16",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc",
+    "sc:audio": "python3 scripts/generate_strokecode_audio.py",
+    "sc:preview": "remotion studio",
+    "sc:render": "remotion render StrokeCode out/stroke-code-world-stroke-day.mp4 --codec=h264 --image-format=png --crf=12 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k && bash scripts/master_audio.sh out/stroke-code-world-stroke-day.mp4",
+    "sc:render:muted": "remotion render StrokeCode out/stroke-code-world-stroke-day-muted.mp4 --codec=h264 --image-format=png --crf=12 --x264-preset=slow --pixel-format=yuv420p --muted",
+    "sc:qc": "node scripts/qc_strokecode.mjs",
+    "sc:music": "python3 scripts/generate_strokecode_tension.py",
+    "sc:music:electronic": "python3 scripts/generate_strokecode_music.py",
+    "sc:music:chiptune": "python3 scripts/generate_strokecode_chiptune.py",
+    "basira:preview": "remotion studio",
+    "basira:audio": "python3 scripts/generate_basira_audio.py",
+    "basira:render": "remotion render BasiraAI out/basira-ai-in-medicine.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k && bash scripts/master_audio.sh out/basira-ai-in-medicine.mp4",
+    "basira:mobile:sfx": "python3 scripts/generate_basira_mobile_sfx.py",
+    "basira:mobile:render": "remotion render BasiraMobile out/basirah/basirah-ai-mobile.mp4 --codec=h264 --image-format=png --crf=14 --x264-preset=slow --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=256k && bash scripts/finish_basira_mobile.sh",
+    "basira:poster": "remotion still BasiraPosterTools out/basirah/basirah-ai-poster.png --image-format=png && remotion still BasiraPosterPrompts out/basirah/basirah-ai-poster-2-prompts.png --image-format=png",
+    "nuclear:voice": "python3 scripts/generate_nuclear_voice.py",
+    "nuclear:ambience": "cd scripts && python3 generate_nuclear_ambience.py",
+    "nuclear:render": "remotion render NuclearAwareness out/nuclear/nuclear_radiation_awareness_EMC.mp4 --codec=h264 --crf=14 --x264-preset=slow --image-format=png --pixel-format=yuv420p --audio-codec=aac --audio-bitrate=320k --gl=swangle && bash scripts/master_audio.sh out/nuclear/nuclear_radiation_awareness_EMC.mp4"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}

@@ -1,0 +1,48 @@
+{
+ "licence": "Mixkit Sound Effects Free License (listed as sfxFree on mixkit.co): commercial and non-commercial use, no attribution required",
+ "accessed": "2026-11-17",
+ "project": "World Diabetes Day reel (Emergency Medicine Club)",
+ "files": {
+  "mixkit-2573.wav": {
+   "title": "Interface option select",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2573/2573.wav"
+  },
+  "mixkit-2568.wav": {
+   "title": "Cool interface click tone",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2568/2568.wav"
+  },
+  "mixkit-2574.wav": {
+   "title": "Software interface start",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2574/2574.wav"
+  },
+  "mixkit-2826.wav": {
+   "title": "Pouring water in a glass",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2826/2826.wav"
+  },
+  "mixkit-1050.wav": {
+   "title": "Slow tick-tock clock timer",
+   "source": "https://assets.mixkit.co/active_storage/sfx/1050/1050.wav"
+  },
+  "mixkit-2870.wav": {
+   "title": "Correct answer tone",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2870/2870.wav"
+  },
+  "mixkit-1107.wav": {
+   "title": "Page forward single chime",
+   "source": "https://assets.mixkit.co/active_storage/sfx/1107/1107.wav"
+  },
+  "mixkit-2344.wav": {
+   "title": "Magic notification ring",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2344/2344.wav"
+  },
+  "mixkit-2867.wav": {
+   "title": "Confirmation tone",
+   "source": "https://assets.mixkit.co/active_storage/sfx/2867/2867.wav"
+  },
+  "mixkit-1104.wav": {
+   "title": "Paper slide",
+   "source": "https://assets.mixkit.co/active_storage/sfx/1104/1104.wav"
+  }
+ },
+ "processing": "peak-normalised, gentle low-pass (~6.5 kHz), short fades, per-cue gain; see scripts/mix_diabetes_reel_sfx.py"
+}
