@@ -54,6 +54,8 @@ TEXT = colors.HexColor("#1E2329")
 LINK = "#127A77"
 
 PAGE_W, PAGE_H = A4
+COVER_TAGLINE = "Research gaps \u2022 Study designs \u2022 Prioritisation matrix \u2022 Implementation roadmap"
+COVER_DOC = "Proposals for supervisor review and research selection"
 LM = RM = 2.2 * cm
 TM = 2.5 * cm
 BM = 2.2 * cm
@@ -355,13 +357,12 @@ def draw_cover(c, doc):
     c.drawString(x, PAGE_H - 8.9 * cm, "14 Evidence-Based Research Proposals")
     c.setFont("Head-Italic", 11.5)
     c.setFillColor(colors.HexColor("#AFC3D8"))
-    c.drawString(x, PAGE_H - 9.8 * cm,
-                 "Research gaps • Study designs • Prioritisation matrix • Implementation roadmap")
+    c.drawString(x, PAGE_H - 9.8 * cm, COVER_TAGLINE)
     # details block
     rows = [("Institution", "Majmaah University – College of Medicine"),
             ("Prepared for", "Emergency Medicine Club Faculty Supervisor"),
             ("Academic Year", "2026–2027"),
-            ("Document", "Proposals for supervisor review and research selection")]
+            ("Document", COVER_DOC)]
     y = PAGE_H - top_h - 2.4 * cm
     for k, v in rows:
         c.setFont("Head-Bold", 9.5)

@@ -1,6 +1,8 @@
 # Emergency Medicine Club – Scientific Research Portfolio (2026–2027)
 
-**Deliverable:** `EM_Club_Research_Portfolio_2026-2027.pdf` (81 pages, A4, printer-friendly)
+**Deliverables:**
+- `EM_Club_Research_Portfolio_2026-2027_Condensed.pdf` – condensed edition (18 pages, one page per proposal; build with `python3 src/build_brief.py`)
+- `EM_Club_Research_Portfolio_2026-2027.pdf` – full edition (81 pages)
 
 14 evidence-based research proposals for the Emergency Medicine Club, Majmaah University – College of Medicine, prepared for the Faculty Supervisor. Contents:
 
