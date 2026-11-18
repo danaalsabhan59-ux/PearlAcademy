@@ -65,10 +65,10 @@ export const DiabetesInfographic: React.FC = () => (
       <div style={{ fontSize: 74, fontWeight: 700, lineHeight: 1 }}>١٤</div>
       <div style={{ fontSize: 28, fontWeight: 600, color: K.sky }}>نوفمبر</div>
     </div>
-    <div style={{ position: "absolute", top: 160, right: 60, width: 640 }}>
+    <div style={{ position: "absolute", top: 146, right: 60, width: 640 }}>
       <div style={{ fontSize: 28, fontWeight: 600, color: K.sky }}>اليوم العالمي</div>
-      <div style={{ fontSize: 92, fontWeight: 700, lineHeight: 1.1 }}>للسكري</div>
-      <div style={{ fontSize: 31, fontWeight: 700, marginTop: 8, lineHeight: 1.4 }}>
+      <div style={{ fontSize: 92, fontWeight: 700, lineHeight: 1.3 }}>للسكري</div>
+      <div style={{ fontSize: 31, fontWeight: 700, marginTop: 22, lineHeight: 1.4 }}>
         اعرفه<span style={{ color: K.muted, margin: "0 14px" }}>|</span><span style={{ color: K.sky }}>اكتشفه مبكراً</span><span style={{ color: K.muted, margin: "0 14px" }}>|</span><span style={{ color: K.amber }}>تصرّف في الطوارئ</span>
       </div>
     </div>
