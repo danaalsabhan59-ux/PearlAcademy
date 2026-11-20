@@ -57,6 +57,10 @@ PAGE_W, PAGE_H = A4
 COVER_TAGLINE = "Research gaps \u2022 Study designs \u2022 Prioritisation matrix \u2022 Implementation roadmap"
 COVER_SUB = "14 Evidence-Based Research Proposals"
 COVER_DOC = "Proposals for supervisor review and research selection"
+COVER_FOR = "Emergency Medicine Club Faculty Supervisor"
+COVER_FOOT = "Confidential working document for academic review. Printer-friendly layout with space for handwritten feedback."
+FOOTER_TEXT = "Academic Year 2026\u20132027  |  Prepared for the Emergency Medicine Club Faculty Supervisor"
+HEADER_RIGHT = "Majmaah University \u2013 College of Medicine"
 LM = RM = 2.2 * cm
 TM = 2.5 * cm
 BM = 2.2 * cm
@@ -312,7 +316,7 @@ class NumberedCanvas(rl_canvas.Canvas):
         self.line(LM, fy + 10, PAGE_W - RM, fy + 10)
         self.setFont("Head", 8.5)
         self.setFillColor(GREY)
-        self.drawString(LM, fy, "Academic Year 2026–2027  |  Prepared for the Emergency Medicine Club Faculty Supervisor")
+        self.drawString(LM, fy, FOOTER_TEXT)
         self.setFillColor(NAVY)
         self.setFont("Head-Bold", 8.5)
         self.drawRightString(PAGE_W - RM, fy, "Page %d of %d" % (self._pageNumber, total))
@@ -361,7 +365,7 @@ def draw_cover(c, doc):
     c.drawString(x, PAGE_H - 9.8 * cm, COVER_TAGLINE)
     # details block
     rows = [("Institution", "Majmaah University – College of Medicine"),
-            ("Prepared for", "Emergency Medicine Club Faculty Supervisor"),
+            ("Prepared for", COVER_FOR),
             ("Academic Year", "2026–2027"),
             ("Document", COVER_DOC)]
     y = PAGE_H - top_h - 2.4 * cm
@@ -379,7 +383,7 @@ def draw_cover(c, doc):
     c.line(x, 2.6 * cm, PAGE_W - 2.4 * cm, 2.6 * cm)
     c.setFont("Head", 9)
     c.setFillColor(GREY)
-    c.drawString(x, 2.0 * cm, "Confidential working document for academic review. Printer-friendly layout with space for handwritten feedback.")
+    c.drawString(x, 2.0 * cm, COVER_FOOT)
     c.restoreState()
 
 

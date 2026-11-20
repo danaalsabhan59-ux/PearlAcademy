@@ -383,6 +383,35 @@ REFS.update({
         doi="10.52609/jmlph.v3i3.93"),
 })
 
+# ---- references verified for the subspecialty edition ----
+REFS.update({
+    "abuguyan2024": dict(
+        authors="Abuguyan F, Almasry NW, Alzahrani AA.",
+        title="Barriers to point-of-care ultrasound utilization among emergency medicine residents in Riyadh, Saudi Arabia",
+        journal="Cureus", year="2024", details="16(7):e65765",
+        doi="10.7759/cureus.65765"),
+    "almulhim2024": dict(
+        authors="Almulhim KN, Alabdulqader RA, et al.",
+        title="Assessing point-of-care ultrasound knowledge and utilization among emergency physicians in Saudi Arabia: a cross-sectional survey",
+        journal="Indian J Crit Care Med", year="2024", details="28(8):769-776",
+        doi="10.5005/jp-journals-10071-24763"),
+    "aleid2023": dict(
+        authors="Aleid A, Bin Shuiel HK, Alyabis NA, et al.",
+        title="Predictors and outcomes of falls in older adults presenting to the emergency room in Saudi Arabia: a cross-sectional analysis",
+        journal="Cureus", year="2023", details="15(10):e47122",
+        doi="10.7759/cureus.47122", pmid="38022272"),
+    "megedbook2024": dict(
+        authors="Meged-Book T, Frenkel R, Nikonov A, Zeldetz V, Kosto A, Schwarzfuchs D, Freud T, Press Y.",
+        title="Delirium screening in the emergency department: evaluation and intervention",
+        journal="Isr J Health Policy Res", year="2024", details="13(1):16",
+        doi="10.1186/s13584-024-00603-1", pmid="38566243"),
+    "madadin2019": dict(
+        authors="Madadin M, Alsaffar GM, AlEssa SM, Khan A, Badghaish DA, Algarni SM, Menezes RG.",
+        title="Clinicians' attitudes towards do-not-resuscitate directives in a teaching hospital in Saudi Arabia",
+        journal="Cureus", year="2019", details="11(12):e6510",
+        doi="10.7759/cureus.6510"),
+})
+
 
 def ref_url(r):
     if r.get("doi"):
